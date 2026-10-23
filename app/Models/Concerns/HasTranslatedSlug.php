@@ -79,6 +79,18 @@ trait HasTranslatedSlug
     }
 
     /**
+     * Only rows that exist in the locale (slug filled), for public listings.
+     *
+     * @param  Builder<static>  $query
+     */
+    public function scopeTranslated($query, ?string $locale = null): void
+    {
+        $column = $this->qualifyColumn('slug').'->'.($locale ?? app()->getLocale());
+
+        $query->whereNotNull($column)->where($column, '!=', '');
+    }
+
+    /**
      * Lookup helper for controllers: `Service::whereSlug($slug)->firstOrFail()`.
      *
      * @param  Builder<static>  $query

@@ -5,7 +5,10 @@
 <title>{{ $seo->title() }}</title>
 <meta name="description" content="{{ $seo->description() }}">
 <meta name="theme-color" content="{{ app(\App\Settings\AppearanceSettings::class)->colors['deep'] ?? '#1B2A47' }}">
-@foreach (\Mcamara\LaravelLocalization\Facades\LaravelLocalization::getSupportedLanguagesKeys() as $alt)
+@if ($seo->noindex())
+    <meta name="robots" content="noindex, nofollow">
+@endif
+@foreach ($seo->availableLocales() as $alt)
     <link rel="alternate" hreflang="{{ $alt }}" href="{{ $seo->alternateUrl($alt) }}">
 @endforeach
 @include('site.partials.favicons')

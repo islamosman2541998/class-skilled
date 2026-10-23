@@ -6,10 +6,12 @@ import { registerConfirm } from './confirm';
 import { initHeader, registerDropdown } from './header';
 import { initMobileNav } from './mobile-nav';
 import { initReveal } from './reveal';
+import { registerLightbox } from './lightbox';
 
 registerToasts(Livewire);
 registerConfirm(Alpine);
 registerDropdown(Alpine);
+registerLightbox(Alpine);
 
 // Slider components: the Swiper chunk downloads only when a slider is on the page.
 const slider = (kind) => (options = {}) => ({

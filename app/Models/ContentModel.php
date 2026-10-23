@@ -17,6 +17,10 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @method $this forgetTranslation(string $key, string $locale)
  * @method list<string> getTranslatableAttributes()
  * @method string|null localizedUrl(?string $locale = null)
+ * @method bool hasLocale(string $locale)
+ * @method string seoTitle(?string $locale = null)
+ * @method string seoDescription(?string $locale = null)
+ * @method bool seoNoindex()
  * @method MorphOne<SeoMeta, $this> seo()
  * @method static void saveOrder(array<int, int|string> $ids)
  */

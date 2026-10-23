@@ -206,6 +206,41 @@ class Asset extends Model implements HasMedia
             ?: '');
     }
 
+    public function captionText(?string $locale = null): string
+    {
+        return (string) ($this->getTranslation('caption', $locale ?? app()->getLocale(), false) ?: '');
+    }
+
+    /**
+     * File extension in upper case for download lists ("PDF", "DOCX").
+     */
+    public function extensionLabel(): string
+    {
+        $extension = pathinfo((string) $this->original_name, PATHINFO_EXTENSION)
+            ?: pathinfo((string) $this->file()?->file_name, PATHINFO_EXTENSION);
+
+        return strtoupper($extension ?: (string) str($this->mime)->afterLast('/'));
+    }
+
+    /**
+     * "2.4 MB" without the intl extension (Western digits in both locales).
+     */
+    public function humanSize(): string
+    {
+        $units = ['B', 'KB', 'MB', 'GB'];
+        $size = (float) max(0, $this->size);
+        $unit = 0;
+
+        while ($size >= 1024 && $unit < count($units) - 1) {
+            $size /= 1024;
+            $unit++;
+        }
+
+        $number = $unit === 0 ? (string) (int) $size : rtrim(rtrim(number_format($size, 1, '.', ''), '0'), '.');
+
+        return $number.' '.$units[$unit];
+    }
+
     public function titleText(?string $locale = null): string
     {
         $locale ??= app()->getLocale();

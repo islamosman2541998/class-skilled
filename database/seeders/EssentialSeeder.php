@@ -13,6 +13,7 @@ use App\Models\RequestStatus;
 use App\Models\User;
 use App\Support\Permissions;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
@@ -114,6 +115,11 @@ class EssentialSeeder extends Seeder
         foreach (self::defaultStrings() as $group => $lines) {
             foreach ($lines as $key => $text) {
                 LanguageLine::query()->firstOrCreate(['group' => $group, 'key' => $key], ['text' => $text]);
+            }
+
+            // Seeders may run without model events, so the loader's per-group cache is cleared here.
+            foreach (['ar', 'en'] as $locale) {
+                Cache::forget(LanguageLine::getCacheKey($group, $locale));
             }
         }
     }

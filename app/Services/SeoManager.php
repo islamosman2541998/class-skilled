@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\ContentModel;
 use App\Settings\SeoSettings;
 use App\Support\Translate;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -19,6 +20,58 @@ class SeoManager
 
     /** @var array<string, string|null> */
     private array $alternates = [];
+
+    private bool $noindex = false;
+
+    private ?ContentModel $model = null;
+
+    /**
+     * Meta of a page-type model (HasSeo overrides, translated URLs).
+     */
+    public function forModel(ContentModel $model, bool $preview = false): static
+    {
+        $this->model = $model;
+        $this->title = $model->seoTitle() ?: null;
+        $this->description = $model->seoDescription() ?: null;
+        $this->noindex = $preview || $model->seoNoindex();
+
+        if (method_exists($model, 'localizedUrl')) {
+            $this->alternates = collect(LaravelLocalization::getSupportedLanguagesKeys())
+                ->mapWithKeys(fn (string $locale) => [$locale => $model->hasLocale($locale) ? $model->localizedUrl($locale) : null])
+                ->all();
+        }
+
+        return $this;
+    }
+
+    public function model(): ?ContentModel
+    {
+        return $this->model;
+    }
+
+    public function noindex(?bool $noindex = null): static|bool
+    {
+        if ($noindex !== null) {
+            $this->noindex = $noindex;
+
+            return $this;
+        }
+
+        return $this->noindex;
+    }
+
+    /**
+     * Locales the current page exists in (hreflang).
+     *
+     * @return list<string>
+     */
+    public function availableLocales(): array
+    {
+        return array_values(array_filter(
+            LaravelLocalization::getSupportedLanguagesKeys(),
+            fn (string $locale) => ! array_key_exists($locale, $this->alternates) || $this->alternates[$locale] !== null,
+        ));
+    }
 
     public function title(?string $title = null): static|string
     {

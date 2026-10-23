@@ -67,6 +67,7 @@ return [
         'quick_actions' => ['ar' => 'إجراءات سريعة', 'en' => 'Quick actions'],
         'minutes_read' => ['ar' => ':count دقائق قراءة', 'en' => ':count min read'],
         'photos_more' => ['ar' => '+:count', 'en' => '+:count'],
+        'pagination' => ['ar' => 'التنقل بين الصفحات', 'en' => 'Pagination'],
         'quote_short' => ['ar' => 'عرض سعر', 'en' => 'Get a quote'],
         'cta_title' => ['ar' => 'عندك مشروع؟ ابدأ بطلب عرض سعر', 'en' => 'Have a project? Start with a quote request'],
         'cta_text' => ['ar' => 'أرسل تفاصيل مشروعك ويتواصل معك فريقنا لتحديد موعد المعاينة.', 'en' => 'Send your project details and our team will contact you to book a site visit.'],

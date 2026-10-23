@@ -22,7 +22,7 @@ class Search
      */
     public static function apply(Builder $query, string $term, array $fields = [], array $translatable = []): Builder
     {
-        $like = '%'.addcslashes(trim($term), '%_\\').'%';
+        $like = static::like($term);
 
         return $query->where(function (Builder $q) use ($like, $fields, $translatable): void {
             foreach ($fields as $field) {
@@ -33,5 +33,13 @@ class Search
                 $q->orWhere($field.'->ar', 'like', $like)->orWhere($field.'->en', 'like', $like);
             }
         });
+    }
+
+    /**
+     * `%term%` with LIKE wildcards escaped.
+     */
+    public static function like(string $term): string
+    {
+        return '%'.addcslashes(trim($term), '%_\\').'%';
     }
 }

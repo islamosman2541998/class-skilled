@@ -11,7 +11,7 @@ Update this file at the end of every phase. Keep entries short and factual.
 | 04 Content modules | done | 2026-10-23 | phase-04 |
 | 05 Menu builder | done | 2026-10-23 | phase-05 |
 | 06 Site layout & home | done | 2026-10-23 | phase-06 |
-| 07 Inner pages | not started | | |
+| 07 Inner pages | done | 2026-10-24 | phase-07 |
 | 08 Forms & requests | not started | | |
 | 09 SEO, analytics, dashboard home | not started | | |
 | 10 Hardening & deploy | not started | | |
@@ -105,7 +105,23 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
 - `errors/500.blade.php` is self-contained (no DB/cache) and carries last-resort fallback texts in case the
   translation store is unreachable.
 
+- Public detail pages use `ResolvesPublicModels::findPublic()`: slug in the current locale, public or an active
+  signed preview (ribbon + noindex), then `SeoManager::forModel()` (HasSeo overrides + translated alternates; locales
+  without a translation are dropped from hreflang and the switch falls back to that locale's home).
+- `translated()` scope (HasTranslatedSlug) keeps English listings to items that exist in English.
+- Lists: `Livewire\Site\ProjectsIndex` (cat/service/sort/q in the query string, load more by 9),
+  `PostsIndex` (cat/q, featured post kept out of the grid, custom localized pagination view), `SearchPage`
+  (min 2 chars, 30 searches/min per IP, results escaped then highlighted by `Support\Highlight`).
+- Media on inner pages: Alpine `lightbox` (images, uploaded videos, YouTube/Vimeo) fed by `Support\Lightbox::items()`;
+  embeds are "lite" (iframe after click); before/after uses a native range input; file sizes via
+  `Asset::humanSize()` so the site does not depend on the intl extension.
+- Closed jobs (published but past `closes_at`) answer 410 with a link to open jobs. Quote/contact stay placeholders
+  until phase 08; the job page has an `#apply` slot that phase 08 fills (`site.partials.job-application`).
+
 ## Changes to earlier phases
+- Phase 01: `EssentialSeeder` clears the translation-loader cache per group after seeding UI strings (seeders run
+  without model events, so stale `language_lines` caches showed raw keys after `migrate:fresh --seed`).
+- Phase 00: `SetupTest` placeholder dataset reduced to quote/contact (other routes are real pages now).
 - Phase 00: `SetupTest` placeholder dataset no longer lists `home` (now a real page, covered by `SiteLayoutHomeTest`);
   `placeholder.blade.php` wraps its content in the site container.
 - Phase 03: `AppServiceProvider` registers `SiteContext`/`SeoManager` and an extra view composer.
@@ -216,3 +232,17 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
 - Acceptance: layout + home per §6 ✔; dropdown + off-canvas driven by menu builder ✔; cache flush updates the site ✔;
   Lighthouse not run (see known gaps); gates pass ✔.
 - Next: Phase 07
+
+### Phase 07 — Inner pages (2026-10-24)
+- Built: controllers for services, projects (+category), articles (+category), careers (+closed 410), FAQ, search,
+  custom pages; inner page header + breadcrumbs + preview ribbon; one Blade per block type (11); custom page main
+  media (image / video / lite embed / PDF card) → blocks → attachments (files list → video grid → image grid/masonry);
+  service detail (scope, numbered stages, gallery with "+N", FAQ accordion, sticky quote box with `?service=`, other
+  services, related projects slider); project detail (gallery + thumbs + swipe + lightbox, facts, similar-project CTA,
+  scope, before/after, videos, related slider); article detail (meta, prose, share links, related slider);
+  Livewire projects/articles listings and site search; FAQ page with client-side filter.
+- Tests: `InnerPagesTest` (11 tests: both locales, inactive/draft 404, preview, scheduled post, untranslated items,
+  lightbox markup, filters/sort/load more, posts search/category, search page, page structure order, FAQ/careers/410,
+  seeded legal pages). 82 tests green, larastan clean, 26 public URLs 200 in AR/EN, log clean.
+- Checked visually with headless Chrome at 1440 (project detail, projects index) and 390 (service detail, articles).
+- Next: Phase 08
