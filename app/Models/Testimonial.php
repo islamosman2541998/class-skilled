@@ -7,7 +7,6 @@ use App\Models\Concerns\HasAssets;
 use App\Models\Concerns\LogsModelActivity;
 use App\Models\Concerns\Sortable;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Spatie\Translatable\HasTranslations;
@@ -26,7 +25,7 @@ use Spatie\Translatable\HasTranslations;
  * @property Carbon|null $updated_at
  * @property-read Project|null $project
  */
-class Testimonial extends Model
+class Testimonial extends ContentModel
 {
     use ClearsSiteCache, HasAssets, HasTranslations, LogsModelActivity, Sortable;
 

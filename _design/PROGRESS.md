@@ -8,7 +8,7 @@ Update this file at the end of every phase. Keep entries short and factual.
 | 01 Data model & infrastructure | done | 2026-10-23 | phase-01 |
 | 02 Dashboard shell & component kit | done | 2026-10-23 | phase-02 |
 | 03 Media, settings, appearance, SEO | done | 2026-10-23 | phase-03 |
-| 04 Content modules | not started | | |
+| 04 Content modules | done | 2026-10-23 | phase-04 |
 | 05 Menu builder | not started | | |
 | 06 Site layout & home | not started | | |
 | 07 Inner pages | not started | | |
@@ -71,6 +71,20 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
 - robots.txt is served by a route (static public/robots.txt removed); non-production always disallows all.
 - Maintenance mode = MaintenanceMode middleware on the localized public group (users + allowed IPs bypass).
 - Backups: pure-PHP chunked SQL dump + optional media, zipped in storage/app/backups, signed 10-minute downloads.
+
+- Content editors share `ContentForm` (+ WithSeoForm, WithBlockEditor, PairLists); lists share `ContentIndex`;
+  small types (FAQs, testimonials, clients, team, certificates, categories) are schema-driven `SimpleResource`s
+  with a modal form. Routes use `{id}` (`/projects/{id}/edit`).
+- Content models extend `App\Models\ContentModel` (no behaviour, only method annotations for static analysis).
+  `Sortable::reorder()` was renamed `saveOrder()` (collided with Builder::reorder for analysis).
+- Draft preview: signed 30-min link (`admin.preview`) → session flag (`App\Support\Preview::allows()`) → public URL.
+  Public pages (phase 07) must honour it and show a ribbon + noindex.
+- Page attachments: groups files/videos/images in asset collections att_files/att_videos/att_images; per-item
+  title overrides stored in the pivot meta `{title: {ar, en}}`. Project before/after pairs: collection
+  `before_after` with meta `{pair, side}`.
+- Service FAQs are `faqs` rows with faqable = service, managed inline in the service form.
+- `HomeSectionResolver` resolves visible sections per locale (cached in SiteCache); list sections support
+  manual / all / featured / latest; empty sections are dropped.
 
 ## Changes to earlier phases
 -
@@ -135,3 +149,18 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
 - Shared: `WithAssetUploads` concern, `x-admin.uploader`, `x-admin.settings-frame`, `AdminLinks`.
 - Acceptance checklist: all ticked (72 tests green; all screens HTTP 200 for the real admin; larastan clean).
 - Next: Phase 04
+
+### Phase 04 — Content modules (2026-10-23)
+- Built: page builder (header + main media image/mobile/video/embed/PDF, 11 block types with drag/duplicate/
+  collapse, attachments files→videos→images with display options and per-item titles, parent/template/sitemap),
+  services (summary, cover, gallery, scope, ordered stages, blocks, inline FAQs), projects (category, services,
+  facts, gallery, before/after pairs, videos, scope, blocks), posts (rich body, category, author, reading time),
+  jobs (description, requirements, closing date, applications count), FAQs (general / per service), testimonials,
+  clients, team, certificates (expiry highlighting), project/post categories, home sections (drag order,
+  visibility, add by type, side-panel editor for all 15 section types, "fill from company" for facts).
+  Every list: search, status tabs, featured / missing-English filters, inline toggles, bulk actions, drag reorder,
+  Excel export; every editor: AR/EN tabs, SEO panel with Google snippet preview, publish/schedule panel,
+  translation status, unsaved-changes guard, signed previews.
+- Acceptance checklist: all ticked — 83 tests green (incl. every seeded demo record opening and saving without
+  validation errors), larastan clean, all screens HTTP 200.
+- Next: Phase 05

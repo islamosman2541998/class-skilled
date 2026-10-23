@@ -82,7 +82,7 @@ trait WithDataTable
     }
 
     /**
-     * @return array<string, callable(Model): mixed>
+     * @return array<string, \Closure>
      */
     protected function exportColumns(): array
     {

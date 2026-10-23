@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BackupDownloadController;
 use App\Http\Controllers\Admin\LocaleController;
+use App\Http\Controllers\Admin\PreviewController;
 use App\Livewire\Admin;
 use Illuminate\Support\Facades\Route;
 
@@ -11,10 +12,36 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::post('/locale/{locale}', LocaleController::class)->name('locale');
+Route::get('/preview/{type}/{id}/{locale}', PreviewController::class)->middleware(['signed', 'auth'])->whereIn('locale', ['ar', 'en'])->name('preview');
 
 Route::middleware(['auth', 'active'])->group(function (): void {
     Route::get('/', Admin\Dashboard::class)->name('dashboard');
     Route::get('/account', Admin\Account::class)->name('account');
+
+    // Content
+    Route::get('/pages', Admin\Content\Pages\Index::class)->name('pages.index');
+    Route::get('/pages/create', Admin\Content\Pages\Form::class)->name('pages.create');
+    Route::get('/pages/{id}/edit', Admin\Content\Pages\Form::class)->whereNumber('id')->name('pages.edit');
+    Route::get('/services', Admin\Content\Services\Index::class)->name('services.index');
+    Route::get('/services/create', Admin\Content\Services\Form::class)->name('services.create');
+    Route::get('/services/{id}/edit', Admin\Content\Services\Form::class)->whereNumber('id')->name('services.edit');
+    Route::get('/projects', Admin\Content\Projects\Index::class)->name('projects.index');
+    Route::get('/projects/create', Admin\Content\Projects\Form::class)->name('projects.create');
+    Route::get('/projects/{id}/edit', Admin\Content\Projects\Form::class)->whereNumber('id')->name('projects.edit');
+    Route::get('/posts', Admin\Content\Posts\Index::class)->name('posts.index');
+    Route::get('/posts/create', Admin\Content\Posts\Form::class)->name('posts.create');
+    Route::get('/posts/{id}/edit', Admin\Content\Posts\Form::class)->whereNumber('id')->name('posts.edit');
+    Route::get('/jobs', Admin\Content\Jobs\Index::class)->name('jobs.index');
+    Route::get('/jobs/create', Admin\Content\Jobs\Form::class)->name('jobs.create');
+    Route::get('/jobs/{id}/edit', Admin\Content\Jobs\Form::class)->whereNumber('id')->name('jobs.edit');
+    Route::get('/home-sections', Admin\Content\HomeSections::class)->name('home-sections.index');
+    Route::get('/project-categories', Admin\Content\ProjectCategories::class)->name('project-categories.index');
+    Route::get('/post-categories', Admin\Content\PostCategories::class)->name('post-categories.index');
+    Route::get('/faqs', Admin\Content\Faqs::class)->name('faqs.index');
+    Route::get('/testimonials', Admin\Content\Testimonials::class)->name('testimonials.index');
+    Route::get('/clients', Admin\Content\Clients::class)->name('clients.index');
+    Route::get('/team', Admin\Content\Team::class)->name('team.index');
+    Route::get('/certificates', Admin\Content\Certificates::class)->name('certificates.index');
 
     // Media
     Route::get('/media', Admin\Media\Library::class)->name('media.index');

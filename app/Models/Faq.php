@@ -24,7 +24,7 @@ use Spatie\Translatable\HasTranslations;
  * @property Carbon|null $updated_at
  * @property-read Model|null $faqable
  */
-class Faq extends Model
+class Faq extends ContentModel
 {
     use ClearsSiteCache, HasTranslations, LogsModelActivity, Sortable;
 

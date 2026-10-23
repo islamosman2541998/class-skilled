@@ -9,7 +9,6 @@ use App\Models\Concerns\LogsModelActivity;
 use App\Models\Concerns\Sortable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Spatie\Translatable\HasTranslations;
@@ -23,7 +22,7 @@ use Spatie\Translatable\HasTranslations;
  * @property Carbon|null $updated_at
  * @property-read Collection<int, Project> $projects
  */
-class ProjectCategory extends Model
+class ProjectCategory extends ContentModel
 {
     use ClearsSiteCache, HasSeo, HasTranslatedSlug, HasTranslations, LogsModelActivity, Sortable;
 

@@ -7,7 +7,6 @@ use App\Models\Concerns\HasAssets;
 use App\Models\Concerns\LogsModelActivity;
 use App\Models\Concerns\Sortable;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Spatie\Translatable\HasTranslations;
 
@@ -25,7 +24,7 @@ use Spatie\Translatable\HasTranslations;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-class Certificate extends Model
+class Certificate extends ContentModel
 {
     use ClearsSiteCache, HasAssets, HasTranslations, LogsModelActivity, Sortable;
 

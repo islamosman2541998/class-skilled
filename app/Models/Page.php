@@ -12,7 +12,6 @@ use App\Models\Concerns\LogsModelActivity;
 use App\Models\Concerns\Publishable;
 use App\Models\Concerns\Sortable;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
@@ -37,7 +36,7 @@ use Spatie\Translatable\HasTranslations;
  * @property-read Page|null $parent
  * @property-read Collection<int, Page> $children
  */
-class Page extends Model
+class Page extends ContentModel
 {
     use ClearsSiteCache, HasAssets, HasBlocks, HasSeo, HasTranslatedSlug, HasTranslations, LogsModelActivity, Publishable, Sortable;
 

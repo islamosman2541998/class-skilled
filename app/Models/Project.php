@@ -13,7 +13,6 @@ use App\Models\Concerns\Publishable;
 use App\Models\Concerns\Sortable;
 use App\Support\Translate;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -42,7 +41,7 @@ use Spatie\Translatable\HasTranslations;
  * @property-read ProjectCategory|null $category
  * @property-read Collection<int, Service> $services
  */
-class Project extends Model
+class Project extends ContentModel
 {
     use ClearsSiteCache, HasAssets, HasBlocks, HasSeo, HasTranslatedSlug, HasTranslations, LogsModelActivity, Publishable, Sortable;
 

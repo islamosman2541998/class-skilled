@@ -12,7 +12,6 @@ use App\Models\Concerns\Sortable;
 use App\Support\Translate;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Carbon;
@@ -35,7 +34,7 @@ use Spatie\Translatable\HasTranslations;
  * @property-read Collection<int, Project> $projects
  * @property-read Collection<int, Faq> $faqs
  */
-class Service extends Model
+class Service extends ContentModel
 {
     use ClearsSiteCache, HasAssets, HasBlocks, HasSeo, HasTranslatedSlug, HasTranslations, LogsModelActivity, Sortable;
 

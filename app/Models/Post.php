@@ -8,7 +8,6 @@ use App\Models\Concerns\HasSeo;
 use App\Models\Concerns\HasTranslatedSlug;
 use App\Models\Concerns\LogsModelActivity;
 use App\Models\Concerns\Publishable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Spatie\Translatable\HasTranslations;
@@ -30,7 +29,7 @@ use Spatie\Translatable\HasTranslations;
  * @property-read PostCategory|null $category
  * @property-read User|null $author
  */
-class Post extends Model
+class Post extends ContentModel
 {
     use ClearsSiteCache, HasAssets, HasSeo, HasTranslatedSlug, HasTranslations, LogsModelActivity, Publishable;
 

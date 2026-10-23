@@ -3,6 +3,7 @@
     <x-admin.table.status-tabs key="status" :value="$filters['status'] ?? ''" :tabs="['' => [__('admin.common.all'), 48], 'new' => ['جديد', 6]]" />
 --}}
 @props(['key' => 'status', 'tabs' => [], 'value' => ''])
+@if ($tabs)
 <div {{ $attributes->merge(['class' => 'mb-4 flex flex-wrap gap-2']) }} role="tablist">
     @foreach ($tabs as $tabValue => [$label, $count])
         <button type="button" role="tab" class="a-chip" aria-pressed="{{ (string) $value === (string) $tabValue ? 'true' : 'false' }}"
@@ -13,3 +14,4 @@
         </button>
     @endforeach
 </div>
+@endif

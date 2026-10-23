@@ -23,7 +23,7 @@ trait WithSortable
     {
         $model = $this->sortableModel();
         $this->authorize('update', new $model);
-        $model::reorder($ids);
+        $model::saveOrder($ids);
         unset($this->rows);
         $this->dispatch('toast', type: 'success', message: __('admin.common.reordered'));
     }

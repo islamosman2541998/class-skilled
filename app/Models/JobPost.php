@@ -12,7 +12,6 @@ use App\Models\Concerns\Sortable;
 use App\Support\Translate;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 use Spatie\Translatable\HasTranslations;
@@ -31,7 +30,7 @@ use Spatie\Translatable\HasTranslations;
  * @property Carbon|null $updated_at
  * @property-read Collection<int, JobApplication> $applications
  */
-class JobPost extends Model
+class JobPost extends ContentModel
 {
     use ClearsSiteCache, HasSeo, HasTranslatedSlug, HasTranslations, LogsModelActivity, Publishable, Sortable;
 

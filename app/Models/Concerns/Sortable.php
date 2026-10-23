@@ -36,7 +36,7 @@ trait Sortable
      *
      * @param  array<int, int|string>  $ids
      */
-    public static function reorder(array $ids): void
+    public static function saveOrder(array $ids): void
     {
         $ids = array_values(array_map('intval', $ids));
 
