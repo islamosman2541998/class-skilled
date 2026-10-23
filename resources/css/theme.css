@@ -1,0 +1,83 @@
+:root {
+    --c-navy: #2b4168;
+    --c-deep: #1b2a47;
+    --c-sky: #4fc3ee;
+    --c-ink: #24324d;
+    --c-muted: #5d6a80;
+    --c-line: #e8ecf1;
+    --c-paper: #f5f7fa;
+    --font-head: 'Cairo', sans-serif;
+    --font-body: 'Tajawal', sans-serif;
+}
+
+@theme inline {
+    --color-navy: var(--c-navy);
+    --color-deep: var(--c-deep);
+    --color-sky: var(--c-sky);
+    --color-ink: var(--c-ink);
+    --color-muted: var(--c-muted);
+    --color-line: var(--c-line);
+    --color-paper: var(--c-paper);
+    --font-heading: var(--font-head);
+    --font-body-text: var(--font-body);
+}
+
+@theme {
+    --text-hero: clamp(1.625rem, 0.625rem + 2.5vw, 2.5rem);
+    --text-hero--line-height: 1.35;
+    --text-page: clamp(1.5rem, 0.929rem + 1.429vw, 2rem);
+    --text-page--line-height: 1.4;
+    --text-section: clamp(1.3125rem, 0.8125rem + 1.25vw, 1.75rem);
+    --text-section--line-height: 1.45;
+    --text-card: clamp(1rem, 0.929rem + 0.179vw, 1.0625rem);
+    --text-card--line-height: 1.5;
+    --text-lead: clamp(0.9375rem, 0.866rem + 0.179vw, 1rem);
+    --text-lead--line-height: 1.85;
+    --text-body: clamp(0.9375rem, 0.902rem + 0.089vw, 0.96875rem);
+    --text-body--line-height: 1.85;
+    --text-meta: clamp(0.8125rem, 0.777rem + 0.089vw, 0.84375rem);
+    --text-nav: 1rem;
+    --text-button: clamp(0.875rem, 0.839rem + 0.089vw, 0.90625rem);
+    --radius-button: 9999px;
+    --radius-input: 12px;
+    --radius-image: 14px;
+    --radius-glass: 20px;
+    --container-site: 1200px;
+    --spacing-gutter: 16px;
+    --spacing-section: 56px;
+    --spacing-button-height: 44px;
+}
+
+@layer base {
+    body {
+        font-family: var(--font-body);
+        color: var(--c-ink);
+        font-size: var(--text-body);
+        line-height: 1.8;
+    }
+
+    html[dir='ltr'] body {
+        line-height: 1.65;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--c-navy);
+        outline-offset: 3px;
+    }
+
+    @media (width >= 1024px) {
+        :root {
+            --spacing-gutter: 32px;
+            --spacing-section: 88px;
+            --spacing-button-height: 46px;
+            --text-nav: 0.90625rem;
+            --text-hero--line-height: 1.3;
+            --text-page--line-height: 1.35;
+            --text-section--line-height: 1.4;
+        }
+
+        body {
+            line-height: 1.85;
+        }
+    }
+}
