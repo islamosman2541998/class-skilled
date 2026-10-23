@@ -7,6 +7,7 @@ use App\Http\Controllers\Site\Concerns\ResolvesPublicModels;
 use App\Models\Asset;
 use App\Models\Project;
 use App\Models\ProjectCategory;
+use App\Services\SchemaBuilder;
 use App\Services\SeoManager;
 use App\Support\Blocks\Blocks;
 use Illuminate\Contracts\View\View;
@@ -43,11 +44,14 @@ class ProjectController extends Controller
             ->with(['category', 'assets.media'])
             ->latest('published_at')->limit(8)->get();
 
+        $gallery = collect([$project->firstAsset('cover')])->concat($project->assetsIn('gallery'))->filter()->unique('id')->values();
+        app(SeoManager::class)->schema(app(SchemaBuilder::class)->project($project, $gallery));
+
         return view('site.pages.projects.show', [
             'project' => $project,
             'preview' => $this->preview,
             'blocks' => Blocks::prepare($project->blocks),
-            'gallery' => collect([$project->firstAsset('cover')])->concat($project->assetsIn('gallery'))->filter()->unique('id')->values(),
+            'gallery' => $gallery,
             'pairs' => $this->beforeAfterPairs($project),
             'videos' => $project->assetsIn('videos'),
             'related' => $related,

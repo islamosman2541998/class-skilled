@@ -8,9 +8,14 @@
 @if ($seo->noindex())
     <meta name="robots" content="noindex, nofollow">
 @endif
+<link rel="canonical" href="{{ $seo->canonical() }}">
 @foreach ($seo->availableLocales() as $alt)
     <link rel="alternate" hreflang="{{ $alt }}" href="{{ $seo->alternateUrl($alt) }}">
 @endforeach
+@if (in_array('ar', $seo->availableLocales(), true))
+    <link rel="alternate" hreflang="x-default" href="{{ $seo->alternateUrl('ar') }}">
+@endif
+@include('site.partials.seo')
 @include('site.partials.favicons')
 <script>document.documentElement.classList.replace('no-js', 'js');</script>
 @if ($fontUrl = $appearance->preloadFontUrl())
@@ -20,4 +25,5 @@
 @vite([...$appearance->fontEntries(), 'resources/css/site.css', 'resources/js/site/app.js'])
 {!! $appearance->styleTag() !!}
 @livewireStyles
+@include('site.partials.tracking-head')
 @stack('head')

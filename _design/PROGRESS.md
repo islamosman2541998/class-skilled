@@ -13,7 +13,7 @@ Update this file at the end of every phase. Keep entries short and factual.
 | 06 Site layout & home | done | 2026-10-23 | phase-06 |
 | 07 Inner pages | done | 2026-10-24 | phase-07 |
 | 08 Forms & requests | done | 2026-10-24 | phase-08 |
-| 09 SEO, analytics, dashboard home | not started | | |
+| 09 SEO, analytics, dashboard home | done | 2026-10-24 | phase-09 |
 | 10 Hardening & deploy | not started | | |
 
 ## Installed versions
@@ -136,7 +136,24 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
   field (`Support\RequestPresenter`) and a dashboard link; auto-reply in the visitor's locale from Settings →
   Notifications templates (`{name}`, `{number}`).
 
+- SEO head: `SeoManager` now also gives the canonical (SEO override or this page in the current locale without
+  query), Open Graph/Twitter (image = SEO image → cover → default share image → logo, `og:type` article for posts),
+  breadcrumbs (filled by the page header partial) and page JSON-LD nodes; hreflang lists only existing locales plus
+  `x-default` (Arabic). `SchemaBuilder` outputs one `@graph`: GeneralContractor (+ Settings → SEO extra JSON) and
+  WebSite/SearchAction on every page, BreadcrumbList, and Service + FAQPage / Article / JobPosting / FAQPage /
+  CreativeWork with ImageObjects per page type.
+- Sitemaps are served by `SitemapController` (`/sitemap.xml`, `/sitemaps/{type}.xml`), regenerated on content change
+  (existing observer) or from Dashboard → SEO; URLs are percent-encoded (Arabic slugs) as the protocol requires.
+- Analytics: `track.js` beacons `/t` (CSRF-exempt, 60/min/IP, bots ignored) for one page view per load and
+  WhatsApp/call/e-mail clicks; page views are upserted into `page_views_daily` (path + locale + day), clicks into
+  `site_events`; events are mirrored to `gtag`/`fbq` when present. GA4/GTM/Meta and custom scripts are printed only in
+  production and only for IDs that are set.
+- Dashboard home: `Admin\Dashboard` (period 7/30/90 in the URL) + lazy `Admin\DashboardWidget` (stats, chart, services,
+  latest, attention, pages) with skeleton placeholders; numbers from `Services\DashboardStats`, cached 5 minutes per
+  widget/period/locale. Request widgets need `view quote_requests`.
+
 ## Changes to earlier phases
+- Phase 00: the placeholder controller/view and the `setup.*` UI strings were removed (every route has its page now).
 - Phase 01: `QuoteRequest`, `ContactMessage`, `JobApplication` now extend `VisitorRequest` (same trait, moved to the base).
 - Phase 07: careers page gained the general application form section; the job page `#apply` slot renders the form.
 - Phase 01: `EssentialSeeder` clears the translation-loader cache per group after seeding UI strings (seeders run
@@ -281,3 +298,14 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
   without delete, editor forbidden + signed attachment access, statuses default). 92 tests green, larastan clean.
 - Checked visually: quote step 1 (1440, AR) and contact (390, EN).
 - Next: Phase 09
+
+### Phase 09 — SEO, analytics, dashboard home (2026-10-24)
+- Built: SeoManager completion + `SchemaBuilder`, SEO/OG/Twitter/verification partial, tracking partials, sitemap
+  routes + regenerate button, `TrackController` + `track.js`, `DashboardStats`, dashboard home with six lazy widgets
+  (stat cards with deltas, requests/visits per day chart with current week highlighted, requests by service, latest
+  quotes, needs attention incl. licence/classification expiry dates, top pages).
+- Tests: `SeoAnalyticsDashboardTest` (7: canonical/hreflang/x-default/OG/noindex, JSON-LD per page type, sitemap
+  alternates + drafts/noindex excluded, robots, beacon counting/bots/throttle, dashboard numbers per period, editor
+  view). 99 tests green, larastan clean, log clean after `migrate:fresh --seed`.
+- Not checked visually: the dashboard home (no authenticated browser session in headless Chrome); covered by tests.
+- Next: Phase 10

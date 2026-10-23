@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @method string seoTitle(?string $locale = null)
  * @method string seoDescription(?string $locale = null)
  * @method bool seoNoindex()
+ * @method Asset|null seoImage()
  * @method MorphOne<SeoMeta, $this> seo()
  * @method static void saveOrder(array<int, int|string> $ids)
  */

@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models;
 use App\Services\Menus\LinkIndex;
 use App\Services\Menus\MenuResolver;
+use App\Services\SchemaBuilder;
 use App\Services\SeoManager;
 use App\Services\SiteCache;
 use App\Services\SiteContext;
@@ -74,6 +75,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(LinkIndex::class);
         $this->app->scoped(SiteContext::class);
         $this->app->scoped(SeoManager::class);
+        $this->app->scoped(SchemaBuilder::class);
     }
 
     /**

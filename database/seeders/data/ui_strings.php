@@ -8,13 +8,6 @@
  */
 
 return [
-    // Temporary labels of the phase-00 placeholder view (removed once every route has its real page).
-    'setup' => [
-        'title' => ['ar' => 'إعداد المشروع', 'en' => 'Project setup'],
-        'route' => ['ar' => 'اسم المسار', 'en' => 'Route name'],
-        'locale' => ['ar' => 'اللغة الحالية', 'en' => 'Current locale'],
-        'direction' => ['ar' => 'اتجاه الصفحة', 'en' => 'Page direction'],
-    ],
 
     'site' => [
         'skip_to_content' => ['ar' => 'انتقل إلى المحتوى', 'en' => 'Skip to content'],

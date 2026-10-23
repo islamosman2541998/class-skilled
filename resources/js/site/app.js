@@ -7,6 +7,7 @@ import { initHeader, registerDropdown } from './header';
 import { initMobileNav } from './mobile-nav';
 import { initReveal } from './reveal';
 import { registerLightbox } from './lightbox';
+import { initTracking } from './track';
 
 registerToasts(Livewire);
 registerConfirm(Alpine);
@@ -39,6 +40,7 @@ const boot = () => {
     initHeader();
     initMobileNav();
     initReveal();
+    initTracking();
 };
 
 if (document.readyState === 'loading') {

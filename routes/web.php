@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\PlaceholderController;
 use App\Http\Controllers\Site\CareerController;
 use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\PageController;
@@ -9,6 +8,8 @@ use App\Http\Controllers\Site\ProjectController;
 use App\Http\Controllers\Site\RobotsController;
 use App\Http\Controllers\Site\SearchController;
 use App\Http\Controllers\Site\ServiceController;
+use App\Http\Controllers\Site\SitemapController;
+use App\Http\Controllers\Site\TrackController;
 use App\Http\Middleware\CaptureFirstTouch;
 use App\Http\Middleware\MaintenanceMode;
 use App\Http\Middleware\SetAdminLocale;
@@ -16,8 +17,9 @@ use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 // Infrastructure endpoints stay outside the localized route group.
-Route::post('/t', PlaceholderController::class)->name('track');
-Route::get('/sitemap.xml', PlaceholderController::class)->name('sitemap');
+Route::post('/t', TrackController::class)->middleware('throttle:60,1')->name('track');
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
+Route::get('/sitemaps/{type}.xml', SitemapController::class)->where('type', '[a-z-]+')->name('sitemap.type');
 Route::get('/robots.txt', RobotsController::class)->name('robots');
 
 Route::prefix(config('admin.path'))

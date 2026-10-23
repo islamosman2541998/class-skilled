@@ -122,8 +122,10 @@ class Sitemap
      */
     private function addWithAlternates(SitemapDocument $sitemap, array $urls, mixed $updatedAt): void
     {
+        $urls = array_map(fn ($url) => static::encode((string) $url), $urls);
+
         foreach ($urls as $url) {
-            $tag = Url::create((string) $url);
+            $tag = Url::create($url);
 
             if ($updatedAt instanceof \DateTimeInterface) {
                 $tag->setLastModificationDate($updatedAt);
@@ -131,11 +133,27 @@ class Sitemap
 
             if (count($urls) > 1) {
                 foreach ($urls as $alternateLocale => $alternateUrl) {
-                    $tag->addAlternate((string) $alternateUrl, $alternateLocale);
+                    $tag->addAlternate($alternateUrl, $alternateLocale);
                 }
             }
 
             $sitemap->add($tag);
         }
+    }
+
+    /**
+     * Percent-encode the path (Arabic slugs) as the sitemap protocol requires.
+     */
+    public static function encode(string $url): string
+    {
+        $parts = parse_url($url);
+
+        if (! isset($parts['host'])) {
+            return $url;
+        }
+
+        $path = implode('/', array_map(fn (string $segment) => rawurlencode(rawurldecode($segment)), explode('/', $parts['path'] ?? '')));
+
+        return ($parts['scheme'] ?? 'https').'://'.$parts['host'].(isset($parts['port']) ? ':'.$parts['port'] : '').$path.(isset($parts['query']) ? '?'.$parts['query'] : '');
     }
 }

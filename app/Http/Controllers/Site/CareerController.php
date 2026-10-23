@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Site;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Site\Concerns\ResolvesPublicModels;
 use App\Models\JobPost;
+use App\Services\SchemaBuilder;
 use App\Services\SeoManager;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Response;
@@ -35,6 +36,7 @@ class CareerController extends Controller
 
         /** @var JobPost $job */
         $job = $this->findPublic(JobPost::query()->with('seo'), $slug);
+        $seo->schema(app(SchemaBuilder::class)->jobPosting($job));
 
         return view('site.pages.careers.show', ['job' => $job, 'preview' => $this->preview]);
     }

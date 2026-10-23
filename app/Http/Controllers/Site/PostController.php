@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Site\Concerns\ResolvesPublicModels;
 use App\Models\Post;
 use App\Models\PostCategory;
+use App\Services\SchemaBuilder;
 use App\Services\SeoManager;
 use Illuminate\Contracts\View\View;
 
@@ -28,10 +29,11 @@ class PostController extends Controller
         return view('site.pages.posts.index', ['category' => $category]);
     }
 
-    public function show(string $slug): View
+    public function show(SeoManager $seo, SchemaBuilder $schema, string $slug): View
     {
         /** @var Post $post */
         $post = $this->findPublic(Post::query()->with(['category', 'assets.media', 'seo']), $slug);
+        $seo->type('article')->schema($schema->article($post));
 
         return view('site.pages.posts.show', [
             'post' => $post,

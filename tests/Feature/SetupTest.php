@@ -29,8 +29,8 @@ test('default Arabic is canonical and ignores the browser language', function ()
 });
 
 test('infrastructure endpoints precede the page catch-all', function () {
-    $this->get('/sitemap.xml')->assertOk()->assertSee('sitemap');
-    $this->post('/t')->assertOk()->assertSee('<bdi dir="ltr">track</bdi>', false);
+    expect(file_get_contents($this->get('/sitemap.xml')->assertOk()->baseResponse->getFile()->getPathname()))->toContain('<sitemapindex');
+    $this->post('/t', ['type' => 'page_view', 'path' => '/'], ['User-Agent' => 'Mozilla/5.0'])->assertNoContent();
 });
 
 test('reference files are not served through the application', function () {

@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Seo;
 
 use App\Livewire\Admin\Settings\SettingsPage;
+use App\Services\Sitemap;
 use App\Settings\SeoSettings;
 use Illuminate\Contracts\View\View;
 
@@ -65,6 +66,13 @@ class Settings extends SettingsPage
         }
 
         return $data;
+    }
+
+    public function regenerateSitemap(): void
+    {
+        abort_unless(auth()->user()?->can('manage seo'), 403);
+        app(Sitemap::class)->regenerate();
+        $this->dispatch('toast', type: 'success', message: __('admin.seo.sitemap_regenerated'));
     }
 
     public function render(): View

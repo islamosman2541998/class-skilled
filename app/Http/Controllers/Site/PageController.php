@@ -8,6 +8,7 @@ use App\Http\Controllers\Site\Concerns\ResolvesPublicModels;
 use App\Models\Asset;
 use App\Models\Faq;
 use App\Models\Page;
+use App\Services\SchemaBuilder;
 use App\Services\SeoManager;
 use App\Support\Blocks\Blocks;
 use App\Support\Translate;
@@ -53,6 +54,13 @@ class PageController extends Controller
         $faqs = Faq::query()->active()->general()->ordered()->get()
             ->filter(fn (Faq $faq) => filled($faq->getTranslation('question', app()->getLocale(), false)))
             ->values();
+
+        $locale = app()->getLocale();
+        $faqSchema = app(SchemaBuilder::class)->faq($faqs->map(fn (Faq $faq) => ['q' => (string) $faq->getTranslation('question', $locale), 'a' => (string) $faq->getTranslation('answer', $locale)])->all());
+
+        if ($faqSchema !== null) {
+            $seo->schema($faqSchema);
+        }
 
         return view('site.pages.faq', ['faqs' => $faqs]);
     }

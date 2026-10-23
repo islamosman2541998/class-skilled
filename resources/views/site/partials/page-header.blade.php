@@ -1,4 +1,5 @@
 {{-- Inner page header: breadcrumbs, title, lead on paper. $crumbs = [label => url|null] (home is prepended). --}}
+@php($seo->breadcrumbs($crumbs ?? []))
 @if ($preview ?? false)
     <div class="bg-[#b54708] py-2 text-center text-[13.5px] font-bold text-white" role="status">{{ __('site.preview_ribbon') }}</div>
 @endif

@@ -3,6 +3,8 @@
         :breadcrumbs="[__('admin.nav.seo') => null, __('admin.nav.seo_settings') => null]">
         <x-slot:actions>
             <a href="{{ url('/robots.txt') }}" target="_blank" rel="noopener" class="a-btn a-btn-secondary">robots.txt</a>
+            <a href="{{ url('/sitemap.xml') }}" target="_blank" rel="noopener" class="a-btn a-btn-secondary">sitemap.xml</a>
+            <button type="button" wire:click="regenerateSitemap" wire:loading.attr="disabled" wire:target="regenerateSitemap" class="a-btn a-btn-secondary">{{ __('admin.seo.regenerate_sitemap') }}</button>
             <button type="submit" form="settings-form" class="a-btn a-btn-primary">{{ __('admin.settings.save') }}</button>
         </x-slot:actions>
     </x-admin.page-header>

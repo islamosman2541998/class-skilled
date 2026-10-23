@@ -16,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // The tracking beacon is sent by navigator.sendBeacon from cached pages.
+        $middleware->validateCsrfTokens(except: ['t']);
+
         $middleware->alias([
             'localize' => LaravelLocalizationRoutes::class,
             'localizationRedirect' => LaravelLocalizationRedirectFilter::class,
