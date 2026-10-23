@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\SetAdminLocale;
 use Laravel\Fortify\Features;
 
 return [
@@ -101,7 +102,7 @@ return [
     |
     */
 
-    'middleware' => ['web'],
+    'middleware' => ['web', SetAdminLocale::class],
 
     /*
     |--------------------------------------------------------------------------
@@ -162,18 +163,11 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        // Registration is disabled: users are created from the dashboard.
         Features::resetPasswords(),
-        // Features::emailVerification(),
-        Features::updateProfileInformation(),
-        Features::updatePasswords(),
         Features::twoFactorAuthentication([
             'confirm' => true,
-            'confirmPassword' => true,
-            // 'window' => 0,
-        ]),
-        Features::passkeys([
-            'confirmPassword' => true,
+            'confirmPassword' => false,
         ]),
     ],
 

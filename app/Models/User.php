@@ -46,6 +46,19 @@ class User extends Authenticatable
     ];
 
     /**
+     * @var array<string, mixed>
+     */
+    protected $attributes = [
+        'locale' => 'ar',
+        'is_active' => true,
+        'force_two_factor' => false,
+        'last_login_at' => null,
+        'two_factor_secret' => null,
+        'two_factor_recovery_codes' => null,
+        'two_factor_confirmed_at' => null,
+    ];
+
+    /**
      * @var list<string>
      */
     protected $hidden = [

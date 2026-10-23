@@ -31,15 +31,25 @@ trait Sortable
     }
 
     /**
-     * Persist a new order; the array position becomes the sort value.
+     * Persist a new order for the given ids (a full list or one page of it):
+     * the ids take the sort values they already occupied, in the new order.
      *
      * @param  array<int, int|string>  $ids
      */
     public static function reorder(array $ids): void
     {
+        $ids = array_values(array_map('intval', $ids));
+
         DB::transaction(function () use ($ids): void {
-            foreach (array_values($ids) as $index => $id) {
-                static::query()->whereKey($id)->update(['sort' => $index + 1]);
+            $current = static::query()->whereKey($ids)->pluck('sort')->map(fn ($sort) => (int) $sort)->sort()->values()->all();
+
+            if (count($current) !== count($ids) || count(array_unique($current)) !== count($current)) {
+                $start = $current === [] ? 1 : max(1, min($current));
+                $current = range($start, $start + count($ids) - 1);
+            }
+
+            foreach ($ids as $index => $id) {
+                static::query()->whereKey($id)->update(['sort' => $current[$index]]);
             }
         });
 

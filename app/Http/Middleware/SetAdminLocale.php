@@ -6,12 +6,21 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Dashboard UI language: the signed-in user's preference, else the session
+ * (login screen toggle), else Arabic.
+ */
 class SetAdminLocale
 {
+    public const LOCALES = ['ar', 'en'];
+
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = $request->session()->get('admin_locale', 'ar');
-        app()->setLocale(in_array($locale, ['ar', 'en'], true) ? $locale : 'ar');
+        $locale = $request->user()?->getAttribute('locale')
+            ?? ($request->hasSession() ? $request->session()->get('admin_locale') : null)
+            ?? 'ar';
+
+        app()->setLocale(in_array($locale, self::LOCALES, true) ? $locale : 'ar');
 
         return $next($request);
     }

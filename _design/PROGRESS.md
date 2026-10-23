@@ -6,7 +6,7 @@ Update this file at the end of every phase. Keep entries short and factual.
 |---|---|---|---|
 | 00 Setup & tooling | done | 2026-10-23 | phase-00 |
 | 01 Data model & infrastructure | done | 2026-10-23 | phase-01 |
-| 02 Dashboard shell & component kit | not started | | |
+| 02 Dashboard shell & component kit | done | 2026-10-23 | phase-02 |
 | 03 Media, settings, appearance, SEO | not started | | |
 | 04 Content modules | not started | | |
 | 05 Menu builder | not started | | |
@@ -50,6 +50,15 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
 - Users got `force_two_factor`; quote requests got `preferred_contact`; menus got `use_header_menu`;
   menu items got `show_descriptions`; pages got `template`; assets got `external_id`.
 - Seeding runs in one DB transaction (MySQL commits are very slow on this machine).
+- Dashboard: Fortify routes live under ADMIN_PATH (login, reset, 2FA challenge); registration disabled; 2FA
+  enable/confirm/disable done in "My account" with Fortify actions + current-password check.
+- Livewire/Alpine are bundled from `vendor/livewire/livewire/dist/livewire.esm` (`@livewireScriptConfig`) so our
+  Alpine components register before start. Custom inputs use `x-modelable` + `wire:model`.
+- Sidebar items appear only when their route exists and the user passes `can` (config/admin.php navigation),
+  so modules of later phases never show dead links.
+- Gate::before grants admins everything except User abilities (self-delete / last-admin rules still apply).
+- Idle dashboard sessions expire after SystemSettings::admin_session_minutes (EnsureUserIsActive).
+- Livewire temporary upload limit raised to 100 MB; per-type limits enforced by AssetUploader.
 - Local admin: `.env` ADMIN_EMAIL=admin@class-skilled.test / ADMIN_PASSWORD=ChangeMe-2026! (change it).
 
 ## Changes to earlier phases
@@ -87,3 +96,18 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
   4 jobs, About page, hero/feature images, header menu links).
 - Acceptance checklist: all ticked (migrate:fresh --seed OK with 80 WebP files; larastan clean; 48 tests green).
 - Next: Phase 02
+
+### Phase 02 — Dashboard shell & component kit (2026-10-23)
+- Built: custom Fortify views (login split screen, forgot/reset, 2FA challenge, confirm), admin layout (navy
+  sidebar with collapsible persisted groups + badges, topbar with Ctrl/Cmd+K command palette, view site, language
+  toggle, notifications, user menu, off-canvas below 1024px), component kit (`components/admin/*`: page-header,
+  panel, badge, stat-card, empty-state, skeleton-rows, modal, field, input, textarea, select/Tom Select, toggle,
+  segmented, radio-cards, date/flatpickr, color, slug, rich-text/TipTap, link-picker, repeater, locale-tabs,
+  asset-thumb, table/* parts), Livewire concerns (WithDataTable incl. XLSX export, WithToasts, WithRepeaters,
+  WithTranslatableForm, WithSortable), global AssetPicker (library + uploader with progress and video poster
+  capture) and AssetField, policies for every model, Users (list/form), Roles matrix, Activity log (diff modal),
+  My account (profile, password, 2FA), Arabic validation/auth/passwords translations.
+- Acceptance checklist: ticked except the visual screenshot comparison (no browser automation available here;
+  all screens verified via HTTP 200 + Livewire tests).
+- Known gap: admin JS bundle ~291 KB gzip (TipTap etc. eager) — code-split in phase 10.
+- Next: Phase 03

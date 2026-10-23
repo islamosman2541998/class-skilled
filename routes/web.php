@@ -12,9 +12,7 @@ Route::get('/sitemap.xml', PlaceholderController::class)->name('sitemap');
 Route::prefix(config('admin.path'))
     ->middleware(SetAdminLocale::class)
     ->name('admin.')
-    ->group(function (): void {
-        Route::get('/', PlaceholderController::class)->name('dashboard');
-    });
+    ->group(base_path('routes/admin.php'));
 
 Route::prefix(LaravelLocalization::setLocale())
     ->middleware(['localize', 'localizationRedirect'])

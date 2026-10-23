@@ -15,18 +15,11 @@ test('public placeholders resolve with their translated route name and direction
         ->assertSee($locale === 'ar' ? 'إعداد المشروع' : 'Project setup');
 })->with('public routes');
 
-test('dashboard uses its configured prefix and session locale', function (string $locale) {
-    $this->withSession(['admin_locale' => $locale])
-        ->get('/'.config('admin.path'))
-        ->assertOk()
-        ->assertSee('lang="'.$locale.'" dir="'.($locale === 'ar' ? 'rtl' : 'ltr').'"', false)
-        ->assertSee('admin.dashboard');
-})->with(['ar', 'en']);
-
-test('dashboard defaults to Arabic and rejects unsupported session locales', function () {
-    $this->get('/'.config('admin.path'))->assertOk()->assertSee('lang="ar" dir="rtl"', false);
-    $this->withSession(['admin_locale' => 'unknown'])
-        ->get('/'.config('admin.path'))->assertOk()->assertSee('lang="ar" dir="rtl"', false);
+test('dashboard uses its configured prefix and redirects guests to the login', function () {
+    $this->get('/'.config('admin.path'))->assertRedirect(route('login'));
+    $this->get(route('login'))->assertOk()->assertSee('lang="ar" dir="rtl"', false);
+    $this->withSession(['admin_locale' => 'en'])->get(route('login'))->assertOk()->assertSee('lang="en" dir="ltr"', false);
+    $this->withSession(['admin_locale' => 'unknown'])->get(route('login'))->assertOk()->assertSee('lang="ar" dir="rtl"', false);
 });
 
 test('default Arabic is canonical and ignores the browser language', function () {
