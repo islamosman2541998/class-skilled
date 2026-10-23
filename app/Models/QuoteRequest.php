@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\IsVisitorRequest;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -35,9 +33,9 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property Carbon|null $deleted_at
  * @property-read Service|null $service
  */
-class QuoteRequest extends Model implements HasMedia
+class QuoteRequest extends VisitorRequest implements HasMedia
 {
-    use InteractsWithMedia, IsVisitorRequest, SoftDeletes;
+    use InteractsWithMedia, SoftDeletes;
 
     protected $fillable = [
         'name', 'phone', 'email', 'service_id', 'facility_type', 'project_state', 'emirate', 'area_text',

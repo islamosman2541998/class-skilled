@@ -1,6 +1,6 @@
 <?php
 
-test('public placeholders resolve with their translated route name and direction', function (
+test('translated public routes resolve with their name and direction', function (
     string $locale,
     string $path,
     string $routeName,
@@ -10,9 +10,9 @@ test('public placeholders resolve with their translated route name and direction
 
     $this->get($path)
         ->assertOk()
-        ->assertSee('lang="'.$locale.'" dir="'.$direction.'"', false)
-        ->assertSee('<bdi dir="ltr">'.$routeName.'</bdi>', false)
-        ->assertSee($locale === 'ar' ? 'إعداد المشروع' : 'Project setup');
+        ->assertSee('lang="'.$locale.'" dir="'.$direction.'"', false);
+
+    expect(app('router')->getRoutes()->match(request()->create($path))->getName())->toBe($routeName);
 })->with('public routes');
 
 test('dashboard uses its configured prefix and redirects guests to the login', function () {

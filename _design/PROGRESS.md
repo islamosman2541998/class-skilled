@@ -12,7 +12,7 @@ Update this file at the end of every phase. Keep entries short and factual.
 | 05 Menu builder | done | 2026-10-23 | phase-05 |
 | 06 Site layout & home | done | 2026-10-23 | phase-06 |
 | 07 Inner pages | done | 2026-10-24 | phase-07 |
-| 08 Forms & requests | not started | | |
+| 08 Forms & requests | done | 2026-10-24 | phase-08 |
 | 09 SEO, analytics, dashboard home | not started | | |
 | 10 Hardening & deploy | not started | | |
 
@@ -118,7 +118,27 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
 - Closed jobs (published but past `closes_at`) answer 410 with a link to open jobs. Quote/contact stay placeholders
   until phase 08; the job page has an `#apply` slot that phase 08 fills (`site.partials.job-application`).
 
+- Public forms (Livewire `QuoteForm` 4 steps, `ContactForm`, `JobApplicationForm`) share `Services\RequestIntake`:
+  honeypot field + minimum fill time (locked server timestamp, 3 s) + optional Turnstile (`Support\Turnstile`, only
+  when both keys are set) + 5 submissions/hour per IP and form; then default status, `system` activity, `site_events`
+  row, badge cache reset and e-mails via `dispatch(fn)->afterResponse()` (no queue worker on shared hosting).
+  The spatie honeypot package has no Livewire support in the installed version, so the check lives in the forms.
+- Choice fields (facility type, project state, emirate, start, contact subject) are posted as indexes of the
+  Settings → Forms lists and stored as their Arabic label so dashboard filters stay stable.
+- Visitor uploads go to the `private` disk (media collections `attachments` / `cv`); the dashboard serves them through
+  the signed, permission-checked `admin.requests.file` route (`?inline=1` for the preview modal).
+- First-touch attribution: `CaptureFirstTouch` middleware stores landing page, external referrer and UTM in the
+  `cs_ft` cookie (30 days); requests store `{page, landing, referrer, utm, device}` in `source`.
+- Dashboard requests: `Admin\Requests\RequestIndex` / `RequestShow` are shared by the three types (thin subclasses per
+  type); statuses per type in `Admin\Requests\Statuses` (one default per type, unused non-default statuses deletable).
+  Request models extend `App\Models\VisitorRequest` (base with the `IsVisitorRequest` trait).
+- Mails: markdown, theme `class-skilled` (navy header, mark, RTL for Arabic); team notification in Arabic with every
+  field (`Support\RequestPresenter`) and a dashboard link; auto-reply in the visitor's locale from Settings →
+  Notifications templates (`{name}`, `{number}`).
+
 ## Changes to earlier phases
+- Phase 01: `QuoteRequest`, `ContactMessage`, `JobApplication` now extend `VisitorRequest` (same trait, moved to the base).
+- Phase 07: careers page gained the general application form section; the job page `#apply` slot renders the form.
 - Phase 01: `EssentialSeeder` clears the translation-loader cache per group after seeding UI strings (seeders run
   without model events, so stale `language_lines` caches showed raw keys after `migrate:fresh --seed`).
 - Phase 00: `SetupTest` placeholder dataset reduced to quote/contact (other routes are real pages now).
@@ -246,3 +266,18 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
   seeded legal pages). 82 tests green, larastan clean, 26 public URLs 200 in AR/EN, log clean.
 - Checked visually with headless Chrome at 1440 (project detail, projects index) and 390 (service detail, articles).
 - Next: Phase 08
+
+### Phase 08 — Forms & requests (2026-10-24)
+- Built: quote page (stepper with done/current states, per-step validation, service chips with `?service=` preselect,
+  drag & drop multi-upload with progress, file list with remove, toast after uploads, summary box from step 2, direct
+  contact box, sticky step buttons above the mobile bar, success screen with request number + WhatsApp); contact page
+  (channels, form with inline validation, click-to-load map, working hours); job application form (job page + general);
+  dashboard quotes / messages / applications lists (status tabs with counts, search incl. number, filters per type +
+  assignee/device/unread/date range, sorting, column toggle, bulk status/assign/read/export/delete, Excel export) and
+  details (fields, attachments with preview/download, WhatsApp/call/email quick actions, timeline with notes, status,
+  assignee, follow-up date, source, mark unread, delete for admins); statuses screen; branded mails.
+- Tests: `FormsRequestsTest` (10: step validation, preselect, full quote flow with files/status/activity/event/mails,
+  auto-reply locale, honeypot/fill time/rate limit, contact, applications + closed job, sales list/filter/export/follow-up
+  without delete, editor forbidden + signed attachment access, statuses default). 92 tests green, larastan clean.
+- Checked visually: quote step 1 (1440, AR) and contact (390, EN).
+- Next: Phase 09

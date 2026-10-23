@@ -9,6 +9,7 @@ use App\Http\Controllers\Site\ProjectController;
 use App\Http\Controllers\Site\RobotsController;
 use App\Http\Controllers\Site\SearchController;
 use App\Http\Controllers\Site\ServiceController;
+use App\Http\Middleware\CaptureFirstTouch;
 use App\Http\Middleware\MaintenanceMode;
 use App\Http\Middleware\SetAdminLocale;
 use Illuminate\Support\Facades\Route;
@@ -25,7 +26,7 @@ Route::prefix(config('admin.path'))
     ->group(base_path('routes/admin.php'));
 
 Route::prefix(LaravelLocalization::setLocale())
-    ->middleware(['localize', 'localizationRedirect', MaintenanceMode::class])
+    ->middleware(['localize', 'localizationRedirect', MaintenanceMode::class, CaptureFirstTouch::class])
     ->group(function (): void {
         Route::get('/', HomeController::class)->name('home');
 
@@ -40,8 +41,8 @@ Route::prefix(LaravelLocalization::setLocale())
             'posts.show' => [PostController::class, 'show'],
             'careers.index' => [CareerController::class, 'index'],
             'careers.show' => [CareerController::class, 'show'],
-            'quote' => PlaceholderController::class,
-            'contact' => PlaceholderController::class,
+            'quote' => [PageController::class, 'quote'],
+            'contact' => [PageController::class, 'contact'],
             'faq' => [PageController::class, 'faq'],
             'search' => SearchController::class,
         ];

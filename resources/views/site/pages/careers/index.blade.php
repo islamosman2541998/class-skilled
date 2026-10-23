@@ -34,8 +34,16 @@
             <aside id="general-application" class="on-dark self-start rounded-[20px] bg-deep p-6 text-[#C9D3E3] lg:sticky lg:top-24">
                 <h2 class="t-card text-white">{{ __('careers.general_title') }}</h2>
                 <p class="mt-2 text-[14.5px]">{{ __('careers.general_text') }}</p>
-                <a href="{{ \App\Support\LocalizedRoute::url('careers.index') }}#general-application" class="btn btn-primary mt-5 w-full">{{ __('careers.general_button') }}</a>
+                <a href="#general-form" class="btn btn-primary mt-5 w-full">{{ __('careers.general_button') }}</a>
             </aside>
         </div>
     </div>
+
+    <section id="general-form" class="section section--paper" aria-labelledby="general-form-title">
+        <div class="container-site max-w-3xl">
+            <h2 id="general-form-title" class="t-section">{{ __('careers.general_title') }}</h2>
+            <p class="t-lead mt-2">{{ __('careers.general_text') }}</p>
+            @include('site.partials.job-application', ['job' => null])
+        </div>
+    </section>
 @endsection

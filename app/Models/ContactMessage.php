@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\IsVisitorRequest;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
@@ -20,9 +18,9 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  */
-class ContactMessage extends Model
+class ContactMessage extends VisitorRequest
 {
-    use IsVisitorRequest, SoftDeletes;
+    use SoftDeletes;
 
     protected $fillable = [
         'name', 'phone', 'email', 'subject', 'message', 'locale', 'status_id', 'assigned_to', 'source', 'ip_hash',

@@ -32,6 +32,20 @@ class PageController extends Controller
         ]);
     }
 
+    public function quote(SeoManager $seo): View
+    {
+        $seo->title(__('quote.title'))->description(__('quote.lead'));
+
+        return view('site.pages.quote');
+    }
+
+    public function contact(SeoManager $seo): View
+    {
+        $seo->title(__('contact.title'))->description(__('contact.lead'));
+
+        return view('site.pages.contact');
+    }
+
     public function faq(SeoManager $seo): View
     {
         $seo->title(__('faq.title'))->description(__('faq.lead'));

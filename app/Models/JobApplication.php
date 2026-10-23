@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\IsVisitorRequest;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
@@ -27,9 +25,9 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property Carbon|null $deleted_at
  * @property-read JobPost|null $jobPost
  */
-class JobApplication extends Model implements HasMedia
+class JobApplication extends VisitorRequest implements HasMedia
 {
-    use InteractsWithMedia, IsVisitorRequest, SoftDeletes;
+    use InteractsWithMedia, SoftDeletes;
 
     protected $fillable = [
         'job_post_id', 'name', 'phone', 'email', 'specialty', 'message', 'locale', 'status_id', 'assigned_to',

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\BackupDownloadController;
 use App\Http\Controllers\Admin\LocaleController;
 use App\Http\Controllers\Admin\PreviewController;
+use App\Http\Controllers\Admin\RequestFileController;
 use App\Livewire\Admin;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,16 @@ Route::get('/preview/{type}/{id}/{locale}', PreviewController::class)->middlewar
 Route::middleware(['auth', 'active'])->group(function (): void {
     Route::get('/', Admin\Dashboard::class)->name('dashboard');
     Route::get('/account', Admin\Account::class)->name('account');
+
+    // Requests
+    Route::get('/quotes', Admin\Requests\Quotes\Index::class)->name('quotes.index');
+    Route::get('/quotes/{id}', Admin\Requests\Quotes\Show::class)->whereNumber('id')->name('quotes.show');
+    Route::get('/messages', Admin\Requests\Messages\Index::class)->name('messages.index');
+    Route::get('/messages/{id}', Admin\Requests\Messages\Show::class)->whereNumber('id')->name('messages.show');
+    Route::get('/applications', Admin\Requests\Applications\Index::class)->name('applications.index');
+    Route::get('/applications/{id}', Admin\Requests\Applications\Show::class)->whereNumber('id')->name('applications.show');
+    Route::get('/request-statuses', Admin\Requests\Statuses::class)->name('request-statuses.index');
+    Route::get('/requests/files/{media}', RequestFileController::class)->middleware('signed')->name('requests.file');
 
     // Content
     Route::get('/pages', Admin\Content\Pages\Index::class)->name('pages.index');
