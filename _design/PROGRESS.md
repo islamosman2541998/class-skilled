@@ -9,7 +9,7 @@ Update this file at the end of every phase. Keep entries short and factual.
 | 02 Dashboard shell & component kit | done | 2026-10-23 | phase-02 |
 | 03 Media, settings, appearance, SEO | done | 2026-10-23 | phase-03 |
 | 04 Content modules | done | 2026-10-23 | phase-04 |
-| 05 Menu builder | not started | | |
+| 05 Menu builder | done | 2026-10-23 | phase-05 |
 | 06 Site layout & home | not started | | |
 | 07 Inner pages | not started | | |
 | 08 Forms & requests | not started | | |
@@ -85,6 +85,12 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
 - Service FAQs are `faqs` rows with faqable = service, managed inline in the service form.
 - `HomeSectionResolver` resolves visible sections per locale (cached in SiteCache); list sections support
   manual / all / featured / latest; empty sections are dropped.
+
+- Menus: `App\Services\Menus\MenuResolver` returns `MenuNode` trees (cached per location+locale; active flags
+  applied per request). Targets come from `LinkIndex` (one cached array per linkable type) so building a menu
+  costs 2–3 queries; items whose target is unpublished, inactive or not translated into the locale are skipped.
+  System-page labels are UI strings (`nav.*`); footer column titles are the menu names. The site layout gets
+  `$menus` (all locations) through a view composer.
 
 ## Changes to earlier phases
 -
@@ -164,3 +170,13 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
 - Acceptance checklist: all ticked — 83 tests green (incl. every seeded demo record opening and saving without
   validation errors), larastan clean, all screens HTTP 200.
 - Next: Phase 05
+
+### Phase 05 — Menu builder (2026-10-23)
+- Built: menu builder screen (7 location tabs, nested drag & drop tree with depth-2 guard, add panel: pages /
+  system pages / specific item search / dynamic group / external / heading, item side panel: inherited labels,
+  target, new tab, visibility, active; dynamic groups: source, mode manual/all/featured/latest, limit, ordered
+  manual picks, own link, "view all", descriptions; mobile "use header menu"; editable menu names = footer
+  column titles), MenuResolver + LinkIndex + MenuNode, site view composer, `nav.*` UI strings, menu names in
+  EssentialSeeder.
+- Acceptance checklist: all ticked (resolver correct in AR/EN, ≤3 queries per menu asserted, 91 tests green).
+- Next: Phase 06

@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models;
+use App\Services\Menus\LinkIndex;
+use App\Services\Menus\MenuResolver;
 use App\Services\SiteCache;
 use App\Services\Sitemap;
 use Illuminate\Auth\Events\Login;
@@ -12,6 +14,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
@@ -66,6 +69,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(ImageManager::class, fn () => new ImageManager(new Driver));
         $this->app->singleton(SiteCache::class);
         $this->app->singleton(Sitemap::class);
+        $this->app->singleton(LinkIndex::class);
     }
 
     /**
@@ -95,6 +99,11 @@ class AppServiceProvider extends ServiceProvider
                 $event->user->forceFill(['last_login_at' => now()])->saveQuietly();
                 session()->put('admin_last_seen', time());
             }
+        });
+
+        // Site layout gets every menu (resolved + cached by MenuResolver).
+        View::composer('layouts.site', function ($view): void {
+            $view->with('menus', app(MenuResolver::class)->all());
         });
 
         $flush = fn () => app(SiteCache::class)->flush();

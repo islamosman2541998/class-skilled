@@ -181,10 +181,7 @@ class EssentialSeeder extends Seeder
 
             $menu = Menu::query()->create([
                 'location' => $location,
-                'name' => [
-                    'ar' => __('enums.menu_location.'.$location->value, [], 'ar'),
-                    'en' => __('enums.menu_location.'.$location->value, [], 'en'),
-                ],
+                'name' => DefaultMenus::name($location),
                 'use_header_menu' => $location === MenuLocation::Mobile,
                 'is_active' => true,
             ]);

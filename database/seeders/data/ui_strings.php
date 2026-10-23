@@ -69,6 +69,18 @@ return [
         'photos_more' => ['ar' => '+:count', 'en' => '+:count'],
     ],
 
+    'nav' => [
+        'home' => ['ar' => 'الرئيسية', 'en' => 'Home'],
+        'services' => ['ar' => 'الخدمات', 'en' => 'Services'],
+        'projects' => ['ar' => 'المشاريع', 'en' => 'Projects'],
+        'posts' => ['ar' => 'المقالات', 'en' => 'Articles'],
+        'careers' => ['ar' => 'الوظائف', 'en' => 'Careers'],
+        'quote' => ['ar' => 'طلب عرض سعر', 'en' => 'Request a quote'],
+        'contact' => ['ar' => 'تواصل معنا', 'en' => 'Contact us'],
+        'faq' => ['ar' => 'الأسئلة الشائعة', 'en' => 'FAQ'],
+        'search' => ['ar' => 'البحث', 'en' => 'Search'],
+    ],
+
     'slider' => [
         'previous' => ['ar' => 'الشريحة السابقة', 'en' => 'Previous slide'],
         'next' => ['ar' => 'الشريحة التالية', 'en' => 'Next slide'],

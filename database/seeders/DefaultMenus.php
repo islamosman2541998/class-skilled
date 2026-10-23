@@ -15,6 +15,24 @@ use App\Models\Page;
 class DefaultMenus
 {
     /**
+     * Menu name; for footer columns it is the visible column title.
+     *
+     * @return array{ar: string, en: string}
+     */
+    public static function name(MenuLocation $location): array
+    {
+        return match ($location) {
+            MenuLocation::Header => ['ar' => 'القائمة الرئيسية', 'en' => 'Main menu'],
+            MenuLocation::Topbar => ['ar' => 'روابط الشريط العلوي', 'en' => 'Top bar links'],
+            MenuLocation::Footer1 => ['ar' => 'الشركة', 'en' => 'Company'],
+            MenuLocation::Footer2 => ['ar' => 'الخدمات', 'en' => 'Services'],
+            MenuLocation::Footer3 => ['ar' => 'روابط مفيدة', 'en' => 'Useful links'],
+            MenuLocation::FooterLegal => ['ar' => 'روابط قانونية', 'en' => 'Legal'],
+            MenuLocation::Mobile => ['ar' => 'قائمة الجوال', 'en' => 'Mobile menu'],
+        };
+    }
+
+    /**
      * @return list<array<string, mixed>>
      */
     public static function items(MenuLocation $location): array

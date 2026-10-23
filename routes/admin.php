@@ -47,6 +47,7 @@ Route::middleware(['auth', 'active'])->group(function (): void {
     Route::get('/media', Admin\Media\Library::class)->name('media.index');
 
     // Navigation & appearance
+    Route::get('/menus', Admin\Navigation\Menus::class)->name('menus.index');
     Route::get('/appearance', Admin\Settings\Appearance::class)->name('appearance');
 
     // SEO
