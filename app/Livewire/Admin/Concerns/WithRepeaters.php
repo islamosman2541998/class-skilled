@@ -39,7 +39,7 @@ trait WithRepeaters
 
         $item = array_splice($items, $from, 1);
         array_splice($items, $to, 0, $item);
-        data_set($this, $path, array_values($items));
+        data_set($this, $path, $items);
     }
 
     /**
@@ -63,7 +63,7 @@ trait WithRepeaters
             }
         }
 
-        data_set($this, $path, array_values([...$sorted, ...array_values($byKey)]));
+        data_set($this, $path, [...$sorted, ...array_values($byKey)]);
     }
 
     /**

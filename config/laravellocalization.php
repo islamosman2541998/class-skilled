@@ -10,6 +10,6 @@ return [
     'localesOrder' => ['ar', 'en'],
     'localesMapping' => [],
     'utf8suffix' => env('LARAVELLOCALIZATION_UTF8SUFFIX', PHP_OS_FAMILY === 'Windows' ? '' : '.UTF-8'),
-    'urlsIgnored' => ['/'.env('ADMIN_PATH', 'cs-panel'), '/'.env('ADMIN_PATH', 'cs-panel').'/*', '/t', '/sitemap.xml'],
+    'urlsIgnored' => ['/'.env('ADMIN_PATH', 'cs-panel'), '/'.env('ADMIN_PATH', 'cs-panel').'/*', '/t', '/sitemap.xml', '/robots.txt', '/sitemaps/*'],
     'httpMethodsIgnored' => ['POST', 'PUT', 'PATCH', 'DELETE'],
 ];

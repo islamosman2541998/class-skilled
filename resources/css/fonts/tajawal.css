@@ -1,0 +1,9 @@
+/* Tajawal (body / headings), self-hosted: Arabic + Latin, weights 400–800. */
+@import '@fontsource/tajawal/arabic-400.css';
+@import '@fontsource/tajawal/latin-400.css';
+@import '@fontsource/tajawal/arabic-500.css';
+@import '@fontsource/tajawal/latin-500.css';
+@import '@fontsource/tajawal/arabic-700.css';
+@import '@fontsource/tajawal/latin-700.css';
+@import '@fontsource/tajawal/arabic-800.css';
+@import '@fontsource/tajawal/latin-800.css';

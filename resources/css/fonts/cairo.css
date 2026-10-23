@@ -1,0 +1,9 @@
+/* Cairo (headings / body), self-hosted: Arabic + Latin, weights 600–800 + 400 for body use. */
+@import '@fontsource/cairo/arabic-400.css';
+@import '@fontsource/cairo/latin-400.css';
+@import '@fontsource/cairo/arabic-600.css';
+@import '@fontsource/cairo/latin-600.css';
+@import '@fontsource/cairo/arabic-700.css';
+@import '@fontsource/cairo/latin-700.css';
+@import '@fontsource/cairo/arabic-800.css';
+@import '@fontsource/cairo/latin-800.css';

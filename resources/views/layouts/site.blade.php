@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', __('setup.title'))</title>
-    @vite(['resources/css/site.css', 'resources/js/site/app.js'])
+    @if ($fontUrl = app(\App\Services\Appearance::class)->preloadFontUrl())
+        <link rel="preload" href="{{ $fontUrl }}" as="font" type="font/woff2" crossorigin>
+    @endif
+    @vite([...app(\App\Services\Appearance::class)->fontEntries(), 'resources/css/site.css', 'resources/js/site/app.js'])
+    {!! app(\App\Services\Appearance::class)->styleTag() !!}
     @livewireStyles
     @stack('head')
 </head>

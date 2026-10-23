@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\PlaceholderController;
+use App\Http\Controllers\Site\RobotsController;
+use App\Http\Middleware\MaintenanceMode;
 use App\Http\Middleware\SetAdminLocale;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
@@ -8,6 +10,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 // Infrastructure endpoints stay outside the localized route group.
 Route::post('/t', PlaceholderController::class)->name('track');
 Route::get('/sitemap.xml', PlaceholderController::class)->name('sitemap');
+Route::get('/robots.txt', RobotsController::class)->name('robots');
 
 Route::prefix(config('admin.path'))
     ->middleware(SetAdminLocale::class)
@@ -15,7 +18,7 @@ Route::prefix(config('admin.path'))
     ->group(base_path('routes/admin.php'));
 
 Route::prefix(LaravelLocalization::setLocale())
-    ->middleware(['localize', 'localizationRedirect'])
+    ->middleware(['localize', 'localizationRedirect', MaintenanceMode::class])
     ->group(function (): void {
         Route::get('/', PlaceholderController::class)->name('home');
 

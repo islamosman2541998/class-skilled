@@ -3,20 +3,17 @@
 namespace App\Livewire\Admin;
 
 use App\Enums\AssetKind;
+use App\Livewire\Admin\Concerns\WithAssetUploads;
 use App\Livewire\Admin\Concerns\WithToasts;
 use App\Models\Asset;
 use App\Models\MediaFolder;
-use App\Services\AssetUploader;
 use App\Settings\MediaSettings;
 use App\Support\Search;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Livewire\WithFileUploads;
 
 /**
  * Global media picker modal (one instance in the admin layout).
@@ -27,7 +24,7 @@ use Livewire\WithFileUploads;
  */
 class AssetPicker extends Component
 {
-    use WithFileUploads;
+    use WithAssetUploads;
     use WithToasts;
 
     public bool $open = false;
@@ -50,12 +47,6 @@ class AssetPicker extends Component
     public bool $missingAlt = false;
 
     public int $limit = 24;
-
-    /** @var UploadedFile|null */
-    public $upload = null;
-
-    /** @var UploadedFile|null */
-    public $posterUpload = null;
 
     /**
      * @param  list<int>|int|null  $selected
@@ -108,45 +99,18 @@ class AssetPicker extends Component
         $this->open = false;
     }
 
-    /**
-     * Called by the uploader after $wire.upload(): turns the temporary file into an Asset.
-     *
-     * @param  array<string, mixed>  $meta  kind, duration, poster_asset_id
-     */
-    public function storeUpload(string $property, array $meta = []): ?int
+    protected function uploadFolderId(): ?int
     {
-        $this->authorize('create', Asset::class);
+        return $this->folder;
+    }
 
-        $file = $property === 'posterUpload' ? $this->posterUpload : $this->upload;
-
-        if (! $file instanceof UploadedFile) {
-            return null;
-        }
-
-        try {
-            $attributes = ['folder_id' => $this->folder];
-
-            if (($meta['kind'] ?? null) === 'video') {
-                $attributes['duration'] = isset($meta['duration']) ? (int) $meta['duration'] : null;
-                $attributes['poster_asset_id'] = isset($meta['poster_asset_id']) ? (int) $meta['poster_asset_id'] : null;
-            }
-
-            $asset = app(AssetUploader::class)->upload($file, $attributes);
-        } catch (ValidationException $e) {
-            $this->toast('error', $file->getClientOriginalName().': '.collect($e->errors())->flatten()->first());
-
-            return null;
-        } finally {
-            $this->reset($property === 'posterUpload' ? 'posterUpload' : 'upload');
-        }
-
-        if ($property === 'upload' && ($this->kind === null || $this->kind === $asset->kind->value)) {
+    protected function afterUpload(Asset $asset): void
+    {
+        if ($this->kind === null || $this->kind === $asset->kind->value) {
             $this->selected = $this->multiple ? [...$this->selected, $asset->id] : [$asset->id];
         }
 
         unset($this->assets);
-
-        return $asset->id;
     }
 
     public function uploadsFinished(): void

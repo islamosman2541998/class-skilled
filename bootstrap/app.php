@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ApplyRedirects;
 use App\Http\Middleware\EnsureUserIsActive;
 use App\Http\Middleware\SetAdminLocale;
 use Illuminate\Foundation\Application;
@@ -21,6 +22,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin.locale' => SetAdminLocale::class,
             'active' => EnsureUserIsActive::class,
         ]);
+
+        // Dashboard-managed redirects run before routing (global), so old URLs that
+        // no longer match any route still redirect.
+        $middleware->prepend(ApplyRedirects::class);
 
         $middleware->redirectGuestsTo(fn () => route('login'));
         $middleware->redirectUsersTo(fn () => route('admin.dashboard'));

@@ -7,7 +7,7 @@ Update this file at the end of every phase. Keep entries short and factual.
 | 00 Setup & tooling | done | 2026-10-23 | phase-00 |
 | 01 Data model & infrastructure | done | 2026-10-23 | phase-01 |
 | 02 Dashboard shell & component kit | done | 2026-10-23 | phase-02 |
-| 03 Media, settings, appearance, SEO | not started | | |
+| 03 Media, settings, appearance, SEO | done | 2026-10-23 | phase-03 |
 | 04 Content modules | not started | | |
 | 05 Menu builder | not started | | |
 | 06 Site layout & home | not started | | |
@@ -61,6 +61,17 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
 - Livewire temporary upload limit raised to 100 MB; per-type limits enforced by AssetUploader.
 - Local admin: `.env` ADMIN_EMAIL=admin@class-skilled.test / ADMIN_PASSWORD=ChangeMe-2026! (change it).
 
+- Settings screens: one Livewire page per group (`App\Livewire\Admin\Settings\*` on a shared `SettingsPage` base);
+  Tracking is admin-only. Favicons (32/180/192/512) are generated with GD into the public disk on General save.
+- Fonts: each family is its own Vite CSS entry (`resources/css/fonts/{cairo,tajawal}.css`); the site layout loads
+  only the chosen ones, preloads the heading 800 woff2 and prints theme CSS variables (`Appearance::styleTag()`,
+  cached in SiteCache).
+- Redirects run as a global middleware (before routing) so old URLs that match no route still redirect;
+  Location headers are percent-encoded per segment.
+- robots.txt is served by a route (static public/robots.txt removed); non-production always disallows all.
+- Maintenance mode = MaintenanceMode middleware on the localized public group (users + allowed IPs bypass).
+- Backups: pure-PHP chunked SQL dump + optional media, zipped in storage/app/backups, signed 10-minute downloads.
+
 ## Changes to earlier phases
 -
 
@@ -111,3 +122,16 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
   all screens verified via HTTP 200 + Livewire tests).
 - Known gap: admin JS bundle ~291 KB gzip (TipTap etc. eager) — code-split in phase 10.
 - Next: Phase 03
+
+### Phase 03 — Media, settings, appearance, SEO (2026-10-23)
+- Built: media library (folder tree with counts, grid/list, search/kind/missing-alt/sort filters, drag-anywhere
+  upload with progress + video poster capture, embeds, bulk move/delete guarded by usage, details panel with sizes,
+  "used in" links, AR/EN alt/title/caption, focal point with conversion regeneration, replace file, copy URL,
+  download, delete/force-delete), settings pages (general + favicons, company, contact with WhatsApp/map previews,
+  social, notifications + test email, forms lists, media + chunked "regenerate all", tracking, maintenance,
+  system), appearance (fonts radio cards, size/line-height, colours with contrast warnings, live preview), UI
+  strings (search, filters, inline edit, reset to default, JSON import/export), SEO settings, dynamic robots.txt,
+  redirects (CRUD, loop prevention, CSV import, export, middleware), SEO health list, backups.
+- Shared: `WithAssetUploads` concern, `x-admin.uploader`, `x-admin.settings-frame`, `AdminLinks`.
+- Acceptance checklist: all ticked (72 tests green; all screens HTTP 200 for the real admin; larastan clean).
+- Next: Phase 04

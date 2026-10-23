@@ -6,7 +6,9 @@ use App\Enums\AssetKind;
 use App\Enums\EmbedProvider;
 use App\Models\Concerns\ClearsSiteCache;
 use App\Models\Concerns\LogsModelActivity;
+use App\Settings\GeneralSettings;
 use App\Settings\MediaSettings;
+use App\Settings\SeoSettings;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -249,7 +251,21 @@ class Asset extends Model implements HasMedia
             ->pluck('id')
             ->map(fn ($id) => (object) ['assetable_type' => (new Asset)->getMorphClass(), 'assetable_id' => $id, 'collection' => 'poster']);
 
-        return $rows->concat($seo)->concat($posters)->values();
+        $settings = collect();
+        $references = [
+            'logo' => app(GeneralSettings::class)->logo_asset_id,
+            'logo_white' => app(GeneralSettings::class)->logo_white_asset_id,
+            'favicon' => app(GeneralSettings::class)->favicon_asset_id,
+            'default_og' => app(SeoSettings::class)->default_og_asset_id,
+        ];
+
+        foreach ($references as $key => $id) {
+            if ((int) $id === (int) $this->getKey()) {
+                $settings->push((object) ['assetable_type' => 'settings', 'assetable_id' => 0, 'collection' => $key]);
+            }
+        }
+
+        return $rows->concat($seo)->concat($posters)->concat($settings)->values();
     }
 
     public function isUsed(): bool

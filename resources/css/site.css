@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import './fonts.css';
+/* Font families are separate Vite entries (resources/css/fonts/*), loaded per AppearanceSettings. */
 @import './theme.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
