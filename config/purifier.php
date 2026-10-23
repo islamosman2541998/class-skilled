@@ -31,6 +31,17 @@ return [
             'AutoFormat.AutoParagraph' => true,
             'AutoFormat.RemoveEmpty' => true,
         ],
+        // Rich text from the dashboard editor (TipTap): headings, lists, links, quotes.
+        'rich' => [
+            'HTML.Doctype' => 'XHTML 1.0 Transitional',
+            'HTML.Allowed' => 'h2,h3,p,br,strong,b,em,i,u,s,ul,ol,li,blockquote,a[href|title|target|rel]',
+            'HTML.TargetBlank' => false,
+            'Attr.AllowedFrameTargets' => ['_blank'],
+            'Attr.AllowedRel' => ['noopener', 'noreferrer', 'nofollow'],
+            'AutoFormat.AutoParagraph' => false,
+            'AutoFormat.RemoveEmpty' => true,
+            'URI.AllowedSchemes' => ['http' => true, 'https' => true, 'mailto' => true, 'tel' => true],
+        ],
         'test' => [
             'Attr.EnableID' => 'true',
         ],

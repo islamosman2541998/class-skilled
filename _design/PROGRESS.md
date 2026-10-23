@@ -5,7 +5,7 @@ Update this file at the end of every phase. Keep entries short and factual.
 | Phase | Status | Date | Commit |
 |---|---|---|---|
 | 00 Setup & tooling | done | 2026-10-23 | phase-00 |
-| 01 Data model & infrastructure | not started | | |
+| 01 Data model & infrastructure | done | 2026-10-23 | phase-01 |
 | 02 Dashboard shell & component kit | not started | | |
 | 03 Media, settings, appearance, SEO | not started | | |
 | 04 Content modules | not started | | |
@@ -28,12 +28,35 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
 ## Decisions
 - Fortify routes ignored in phase 00 (custom auth screens come in phase 02).
 - Composer platform pinned to PHP 8.3.16 (Laragon version).
+- Slugs are JSON per locale (spatie translatable slug, `usingLanguage('')` keeps Arabic letters, `preventOverwrite`:
+  a slug only changes when edited explicitly). No DB index on JSON slugs (tables are tiny; portable to SQLite tests).
+- `slug` changes create auto 301s (`Redirect::createAuto`) that re-point chains and delete loops.
+- Polymorphic columns use an enforced morph map (`AppServiceProvider::MORPH_MAP`, e.g. `page`, `service`).
+- Blocks / home-section `data` hold asset ids; referenced assets are mirrored into the `blocks` / `data` asset
+  collections only for "used in" tracking and delete guards.
+- `SiteCache` is versioned (flush = bump version + `ResponseCache::clear()`); response cache uses its own cache
+  store `responsecache` so clearing it never wipes rate limiters. `SiteCache::withoutFlushing()` for bulk writes.
+- Sitemaps are XML files in `storage/app/sitemaps` (index + per type, hreflang alternates), regenerated once at the
+  end of any request that changed a page-type model.
+- Link object types extended with `whatsapp` and `phone` (used by CTA defaults).
+- Section `data` schemas: hero `{autoplay, show_arrows, show_progress, slides[{id, image_asset_id,
+  mobile_image_asset_id, video_asset_id, title, text, primary{label,link}, secondary{label,link}, caption, overlay}]}`;
+  facts `{items[{label,value}]}`; about `{text, image_asset_ids[2], meta[{label,value}]}` + cta_label/cta_link;
+  list sections `{item_ids[], display: slider|grid, autoplay, bg_asset_id, show_filters?}` + source/items_limit;
+  feature_band `{bullets[], image_asset_ids[3]}`; why_us `{items[{title,text}]}`; process `{steps[{title,text}]}`;
+  stats `{items[{value,suffix,label}], count_up}`; cta `{primary, secondary}`; rich_text `{html}`.
+- Extra settings group `SystemSettings` (backup_keep, admin_session_minutes); `CompanySettings` also stores
+  licence authority and classification licence no.; `FormSettings` also has `contact_subjects`.
+- Users got `force_two_factor`; quote requests got `preferred_contact`; menus got `use_header_menu`;
+  menu items got `show_descriptions`; pages got `template`; assets got `external_id`.
+- Seeding runs in one DB transaction (MySQL commits are very slow on this machine).
+- Local admin: `.env` ADMIN_EMAIL=admin@class-skilled.test / ADMIN_PASSWORD=ChangeMe-2026! (change it).
 
 ## Changes to earlier phases
 -
 
 ## Known gaps / follow-ups
--
+- `lang/ar/validation.php` (Arabic validation messages) to be added with the dashboard forms (phase 02).
 
 ---
 ## Phase entries
@@ -52,3 +75,15 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
   base layouts, Pest smoke tests, brand assets in `public/images/brand`.
 - Acceptance checklist: all ticked (route:trans:cache OK, build OK, pint/larastan/pest green, migrate:fresh OK).
 - Next: Phase 01
+
+### Phase 01 — Data model & infrastructure (2026-10-23)
+- Built: full schema (assets/media folders/assetables, seo_meta, redirects, all content tables, menus, requests,
+  analytics), 18 enums with DB-translated labels, concerns (HasTranslatedSlug, HasSeo, HasAssets, HasBlocks,
+  Publishable, Sortable, ClearsSiteCache, LogsModelActivity, IsVisitorRequest), 12 settings groups with defaults,
+  AssetUploader (GD downscale + WebP conversions thumb/sm/md/lg/xl), `<x-site.picture>`, block registry
+  (`App\Support\Blocks`), LinkResolver, LocalizedRoute, SiteCache, Sitemap, Permissions catalogue,
+  EssentialSeeder (roles, admin, statuses, 358 UI strings, legal pages, menus, 12 home sections) and
+  DemoContentSeeder (16 images, 3 PDFs, 8 services, 4 categories, 9 projects, 6 posts, FAQs, 2 certificates,
+  4 jobs, About page, hero/feature images, header menu links).
+- Acceptance checklist: all ticked (migrate:fresh --seed OK with 80 WebP files; larastan clean; 48 tests green).
+- Next: Phase 02

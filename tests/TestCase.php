@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Support\LinkResolver;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Mcamara\LaravelLocalization\LaravelLocalization;
 
@@ -16,6 +17,12 @@ abstract class TestCase extends BaseTestCase
         $prefix = $locale === 'ar' && ! $prefixed ? '' : $locale;
         putenv(LaravelLocalization::ENV_ROUTE_KEY.'='.$prefix);
         $this->setUp();
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        LinkResolver::forgetMemo();
     }
 
     protected function tearDown(): void

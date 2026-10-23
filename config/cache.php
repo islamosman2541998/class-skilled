@@ -34,6 +34,14 @@ return [
 
     'stores' => [
 
+        // Dedicated store for spatie/laravel-responsecache: clearing it must not
+        // wipe the default store (rate limiters, settings, site cache).
+        'responsecache' => [
+            'driver' => env('RESPONSE_CACHE_STORE_DRIVER', 'file'),
+            'path' => storage_path('framework/cache/responses'),
+            'lock_path' => storage_path('framework/cache/responses'),
+        ],
+
         'array' => [
             'driver' => 'array',
             'serialize' => false,

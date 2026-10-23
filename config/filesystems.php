@@ -38,6 +38,15 @@ return [
             'report' => false,
         ],
 
+        // Visitor uploads (quote drawings, CVs): never web-accessible.
+        'private' => [
+            'driver' => 'local',
+            'root' => storage_path('app/private'),
+            'serve' => false,
+            'throw' => false,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

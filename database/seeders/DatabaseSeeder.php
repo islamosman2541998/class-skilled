@@ -2,23 +2,21 @@
 
 namespace Database\Seeders;
 
+use App\Services\SiteCache;
 use Illuminate\Database\Seeder;
-use Spatie\TranslationLoader\LanguageLine;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        foreach ([
-            'title' => ['ar' => 'إعداد المشروع', 'en' => 'Project setup'],
-            'route' => ['ar' => 'اسم المسار', 'en' => 'Route name'],
-            'locale' => ['ar' => 'اللغة الحالية', 'en' => 'Current locale'],
-            'direction' => ['ar' => 'اتجاه الصفحة', 'en' => 'Page direction'],
-        ] as $key => $text) {
-            LanguageLine::updateOrCreate(
-                ['group' => 'setup', 'key' => $key],
-                ['text' => $text],
-            );
-        }
+        // One transaction and one cache flush: much faster on slow disks.
+        app(SiteCache::class)->withoutFlushing(fn () => DB::transaction(function (): void {
+            $this->call(EssentialSeeder::class);
+
+            if (app()->environment('local')) {
+                $this->call(DemoContentSeeder::class);
+            }
+        }));
     }
 }
