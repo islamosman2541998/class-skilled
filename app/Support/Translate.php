@@ -48,6 +48,22 @@ class Translate
     }
 
     /**
+     * Fill a Swiper-style template (`{{index}}`, `{{slidesLength}}`) used by the slider UI strings.
+     *
+     * @param  array<string, string|int>  $values
+     */
+    public static function swiper(string $template, array $values): string
+    {
+        $pairs = [];
+
+        foreach ($values as $key => $value) {
+            $pairs['{'.'{'.$key.'}'.'}'] = (string) $value;
+        }
+
+        return strtr($template, $pairs);
+    }
+
+    /**
      * Normalise `{ar, en}` input: trimmed strings, missing locales as ''.
      *
      * @return array{ar: string, en: string}

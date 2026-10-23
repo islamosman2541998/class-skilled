@@ -67,6 +67,18 @@ return [
         'quick_actions' => ['ar' => 'إجراءات سريعة', 'en' => 'Quick actions'],
         'minutes_read' => ['ar' => ':count دقائق قراءة', 'en' => ':count min read'],
         'photos_more' => ['ar' => '+:count', 'en' => '+:count'],
+        'quote_short' => ['ar' => 'عرض سعر', 'en' => 'Get a quote'],
+        'cta_title' => ['ar' => 'عندك مشروع؟ ابدأ بطلب عرض سعر', 'en' => 'Have a project? Start with a quote request'],
+        'cta_text' => ['ar' => 'أرسل تفاصيل مشروعك ويتواصل معك فريقنا لتحديد موعد المعاينة.', 'en' => 'Send your project details and our team will contact you to book a site visit.'],
+        'confirm' => ['ar' => 'تأكيد', 'en' => 'Confirm'],
+        'cancel' => ['ar' => 'إلغاء', 'en' => 'Cancel'],
+        'social_instagram' => ['ar' => 'إنستغرام', 'en' => 'Instagram'],
+        'social_facebook' => ['ar' => 'فيسبوك', 'en' => 'Facebook'],
+        'social_linkedin' => ['ar' => 'لينكدإن', 'en' => 'LinkedIn'],
+        'social_x' => ['ar' => 'إكس', 'en' => 'X'],
+        'social_tiktok' => ['ar' => 'تيك توك', 'en' => 'TikTok'],
+        'social_youtube' => ['ar' => 'يوتيوب', 'en' => 'YouTube'],
+        'social_snapchat' => ['ar' => 'سناب شات', 'en' => 'Snapchat'],
     ],
 
     'nav' => [

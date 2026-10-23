@@ -10,7 +10,7 @@ Update this file at the end of every phase. Keep entries short and factual.
 | 03 Media, settings, appearance, SEO | done | 2026-10-23 | phase-03 |
 | 04 Content modules | done | 2026-10-23 | phase-04 |
 | 05 Menu builder | done | 2026-10-23 | phase-05 |
-| 06 Site layout & home | not started | | |
+| 06 Site layout & home | done | 2026-10-23 | phase-06 |
 | 07 Inner pages | not started | | |
 | 08 Forms & requests | not started | | |
 | 09 SEO, analytics, dashboard home | not started | | |
@@ -92,10 +92,30 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
   System-page labels are UI strings (`nav.*`); footer column titles are the menu names. The site layout gets
   `$menus` (all locations) through a view composer.
 
+- Public layout: `SiteContext` (scoped) wraps settings for views (names, phones, WhatsApp, registration line,
+  CTA band); `SeoManager` (scoped) holds title/description/alternate URLs (controllers call `alternates()` for
+  translated slugs; otherwise mcamara `getLocalizedURL`). Both are shared with `layouts.site`, `site.*`, `errors.*`.
+- Header shows the bundled CS mark + site name/tagline from settings (the uploaded logo in Settings → General is
+  the stacked logo, used in the footer). Header is transparent over a first-section hero (`@section('header_overlay')`).
+- The CTA band before the footer reuses the home `cta` section (fallback: `site.cta_*` UI strings); pages hide it
+  with `@section('hide_cta', '1')`.
+- Site JS bundles Livewire ESM (Alpine) like the dashboard; `heroSlider` / `cardSlider` Alpine components import
+  `sliders.js` (Swiper) lazily; SweetAlert2 is imported on the first `$confirm()`. Reveal states live in CSS under
+  `.js` so no-JS visitors see everything.
+- `errors/500.blade.php` is self-contained (no DB/cache) and carries last-resort fallback texts in case the
+  translation store is unreachable.
+
 ## Changes to earlier phases
--
+- Phase 00: `SetupTest` placeholder dataset no longer lists `home` (now a real page, covered by `SiteLayoutHomeTest`);
+  `placeholder.blade.php` wraps its content in the site container.
+- Phase 03: `AppServiceProvider` registers `SiteContext`/`SeoManager` and an extra view composer.
 
 ## Known gaps / follow-ups
+- Home JS budget: Livewire+Alpine runtime alone is ~85 KB gzip, so home ships ~108 KB (shared chunk incl. Notyf)
+  + 28 KB Swiper chunk (lazy) — above the 90 KB target; the only way under it is dropping Livewire from pages
+  without components (revisit in phase 10).
+- Lighthouse CLI is not available offline here; layout checked with headless Chrome screenshots at 390 px
+  (iframe harness) and 1440 px in AR/EN instead. Run Lighthouse in phase 10 on the deployed build.
 - `lang/ar/validation.php` (Arabic validation messages) to be added with the dashboard forms (phase 02).
 
 ---
@@ -180,3 +200,19 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
   EssentialSeeder.
 - Acceptance checklist: all ticked (resolver correct in AR/EN, ≤3 queries per menu asserted, 91 tests green).
 - Next: Phase 06
+
+### Phase 06 — Site layout & home (2026-10-23)
+- Built: site design system in `resources/css/site.css` (type scale `.t-*`, buttons, glass utilities + fallbacks,
+  section variants incl. dark-photo, glass cards, chips, prose, header/bottom-bar/hero styles, reveal states,
+  reduced motion); layout + partials (head with hreflang/favicons/preloads, top bar, sticky header with keyboard
+  dropdowns, off-canvas mobile menu with focus trap + accordion, mobile bottom bar, floating WhatsApp, CTA band,
+  footer with menus/contact/social/registration/legal); breadcrumbs component; styled 403/404/410/419/429 + 500;
+  `HomeController` + `site/pages/home` looping `HomeSectionResolver` into one Blade per section type (15 types);
+  JS: `app.js`, `sliders.js` (hero fade + Ken Burns + progress bars + pause, card sliders + category filter),
+  `reveal.js` (fade-up/fade/image/stagger/draw-line/count-up), `header.js`, `mobile-nav.js`, `toast.js`, `confirm.js`.
+- New UI strings: `site.quote_short`, `site.cta_title`, `site.cta_text`, `site.confirm`, `site.cancel`, `site.social_*`.
+- Tests: `SiteLayoutHomeTest` (AR/EN render, hidden sections, immediate updates, Swiper only when needed, dropdown
+  children from resolver, language switch URLs, 404 page, a view per section type). 99 tests green.
+- Acceptance: layout + home per §6 ✔; dropdown + off-canvas driven by menu builder ✔; cache flush updates the site ✔;
+  Lighthouse not run (see known gaps); gates pass ✔.
+- Next: Phase 07

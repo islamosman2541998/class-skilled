@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PlaceholderController;
+use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\RobotsController;
 use App\Http\Middleware\MaintenanceMode;
 use App\Http\Middleware\SetAdminLocale;
@@ -20,7 +21,7 @@ Route::prefix(config('admin.path'))
 Route::prefix(LaravelLocalization::setLocale())
     ->middleware(['localize', 'localizationRedirect', MaintenanceMode::class])
     ->group(function (): void {
-        Route::get('/', PlaceholderController::class)->name('home');
+        Route::get('/', HomeController::class)->name('home');
 
         foreach ([
             'services.index', 'services.show',

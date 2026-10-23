@@ -1,6 +1,7 @@
 @extends('layouts.'.$layout)
 
 @section('content')
+    <div @class(['container-site py-16' => $layout === 'site'])>
     <h1 class="font-heading text-page font-extrabold">{{ __('setup.title') }}</h1>
     <dl class="mt-6 space-y-3">
         <div>
@@ -16,4 +17,5 @@
             <dd data-setup-direction>{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}</dd>
         </div>
     </dl>
+    </div>
 @endsection

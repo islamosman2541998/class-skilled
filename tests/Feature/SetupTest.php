@@ -39,7 +39,6 @@ test('reference files are not served through the application', function () {
 });
 
 dataset('public routes', [
-    ['ar', '/', 'home'],
     ['ar', '/الخدمات', 'services.index'],
     ['ar', '/الخدمات/test', 'services.show'],
     ['ar', '/المشاريع', 'projects.index'],
@@ -55,7 +54,6 @@ dataset('public routes', [
     ['ar', '/الأسئلة-الشائعة', 'faq'],
     ['ar', '/بحث', 'search'],
     ['ar', '/test', 'pages.show'],
-    ['en', '/en', 'home'],
     ['en', '/en/services', 'services.index'],
     ['en', '/en/services/test', 'services.show'],
     ['en', '/en/projects', 'projects.index'],

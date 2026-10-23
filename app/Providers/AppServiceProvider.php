@@ -5,7 +5,9 @@ namespace App\Providers;
 use App\Models;
 use App\Services\Menus\LinkIndex;
 use App\Services\Menus\MenuResolver;
+use App\Services\SeoManager;
 use App\Services\SiteCache;
+use App\Services\SiteContext;
 use App\Services\Sitemap;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Database\Eloquent\Model;
@@ -70,6 +72,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(SiteCache::class);
         $this->app->singleton(Sitemap::class);
         $this->app->singleton(LinkIndex::class);
+        $this->app->scoped(SiteContext::class);
+        $this->app->scoped(SeoManager::class);
     }
 
     /**
@@ -103,7 +107,12 @@ class AppServiceProvider extends ServiceProvider
 
         // Site layout gets every menu (resolved + cached by MenuResolver).
         View::composer('layouts.site', function ($view): void {
-            $view->with('menus', app(MenuResolver::class)->all());
+            $view->with([
+                'menus' => app(MenuResolver::class)->all(),
+            ]);
+        });
+        View::composer(['layouts.site', 'site.*', 'errors.*'], function ($view): void {
+            $view->with(['site' => app(SiteContext::class), 'seo' => app(SeoManager::class)]);
         });
 
         $flush = fn () => app(SiteCache::class)->flush();
