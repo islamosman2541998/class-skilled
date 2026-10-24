@@ -20,12 +20,13 @@
         </div>
         @if ($section['images'] !== [])
             @php($images = array_slice($section['images'], 0, 3))
-            <div @class(['grid gap-4', 'grid-cols-2 grid-rows-2' => count($images) === 3, 'grid-cols-2' => count($images) === 2])>
+            {{-- Three images: a fixed-shape grid (one tall image + two stacked) so nothing overflows its cell. --}}
+            <div @class(['grid gap-3 sm:gap-4', 'aspect-[5/4] grid-cols-2 grid-rows-2' => count($images) === 3, 'grid-cols-2' => count($images) === 2])>
                 @foreach ($images as $image)
                     <div @class([
-                        'overflow-hidden rounded-[14px]',
-                        'row-span-2 aspect-[3/4] h-full' => count($images) === 3 && $loop->first,
-                        'aspect-[4/3]' => ! (count($images) === 3 && $loop->first),
+                        'min-h-0 min-w-0 overflow-hidden rounded-[14px]',
+                        'row-span-2' => count($images) === 3 && $loop->first,
+                        'aspect-[4/3]' => count($images) !== 3,
                     ]) data-reveal="image">
                         <x-site.picture :asset="$image" sizes="(min-width: 1024px) 25vw, 50vw" class="size-full object-cover" />
                     </div>
