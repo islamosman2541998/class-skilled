@@ -10,6 +10,7 @@ use App\Models\Menu;
 use App\Models\Service;
 use App\Services\AssetUploader;
 use App\Services\SeoManager;
+use App\Settings\ContactSettings;
 use App\Support\LocalizedRoute;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -138,7 +139,7 @@ test('the about section has a title, text and one image, and there is no facts s
 });
 
 test('the footer shows a mobile and a whatsapp number, without working hours or licence details', function () {
-    $contact = app(\App\Settings\ContactSettings::class);
+    $contact = app(ContactSettings::class);
     $contact->phones = ['+971 58 982 0017', '+971 52 764 9086'];
     $contact->whatsapp_number = '+971 58 982 0017';
     $contact->save();
