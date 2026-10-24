@@ -1244,7 +1244,7 @@ return [
         'status' => ['ok' => 'سليم', 'warn' => 'تنبيه', 'fail' => 'فشل'],
     ],
     'developer' => [
-        'credit' => 'تصميم وتطوير',
+        'credit' => 'تطوير',
         'contact' => 'تواصل مع Islam Web Studio على واتساب',
     ],
 ];

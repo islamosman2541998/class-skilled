@@ -1244,7 +1244,7 @@ return [
         'status' => ['ok' => 'OK', 'warn' => 'Warning', 'fail' => 'Failed'],
     ],
     'developer' => [
-        'credit' => 'Designed & developed by',
+        'credit' => 'Developed by',
         'contact' => 'Contact Islam Web Studio on WhatsApp',
     ],
 ];
