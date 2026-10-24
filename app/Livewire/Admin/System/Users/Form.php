@@ -29,8 +29,6 @@ class Form extends Component
 
     public bool $is_active = true;
 
-    public bool $force_two_factor = false;
-
     public string $password = '';
 
     public function mount(?User $user = null): void
@@ -38,7 +36,7 @@ class Form extends Component
         if ($user?->exists) {
             $this->authorize('update', $user);
             $this->user = $user;
-            $this->fill($user->only(['name', 'email', 'locale', 'is_active', 'force_two_factor']));
+            $this->fill($user->only(['name', 'email', 'locale', 'is_active']));
             $this->role = $user->getRoleNames()->first() ?? 'editor';
         } else {
             $this->authorize('create', User::class);
@@ -56,7 +54,6 @@ class Form extends Component
             'role' => ['required', Rule::in(['admin', 'editor', 'sales'])],
             'locale' => ['required', Rule::in(['ar', 'en'])],
             'is_active' => ['boolean'],
-            'force_two_factor' => ['boolean'],
             'password' => [$this->user ? 'nullable' : 'required', 'string', PasswordRule::min(10)->letters()->numbers()],
         ];
     }
@@ -91,7 +88,7 @@ class Form extends Component
             return;
         }
 
-        $attributes = collect($data)->only(['name', 'email', 'locale', 'is_active', 'force_two_factor'])->all();
+        $attributes = collect($data)->only(['name', 'email', 'locale', 'is_active'])->all();
 
         if (filled($data['password'])) {
             $attributes['password'] = $data['password'];

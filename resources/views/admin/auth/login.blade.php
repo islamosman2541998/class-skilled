@@ -28,6 +28,5 @@
             <a href="{{ route('password.request') }}" class="text-[14px] font-bold text-[var(--c-deep)] hover:underline">{{ __('admin.auth.forgot') }}</a>
         </div>
         <button type="submit" class="a-btn a-btn-primary h-12 w-full text-[15px]" :disabled="busy">{{ __('admin.auth.login') }}</button>
-        <p class="text-[13px] text-[var(--a-muted)]">{{ __('admin.auth.two_factor_note') }}</p>
     </form>
 </x-layouts::auth>

@@ -117,7 +117,6 @@ return [
 
     'limiters' => [
         'login' => 'login',
-        'two-factor' => 'two-factor',
         'passkeys' => 'passkeys',
     ],
 
@@ -165,10 +164,6 @@ return [
     'features' => [
         // Registration is disabled: users are created from the dashboard.
         Features::resetPasswords(),
-        Features::twoFactorAuthentication([
-            'confirm' => true,
-            'confirmPassword' => false,
-        ]),
     ],
 
 ];

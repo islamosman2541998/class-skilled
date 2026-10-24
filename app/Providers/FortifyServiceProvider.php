@@ -23,7 +23,6 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::loginView(fn () => view('admin.auth.login'));
         Fortify::requestPasswordResetLinkView(fn () => view('admin.auth.forgot-password'));
         Fortify::resetPasswordView(fn (Request $request) => view('admin.auth.reset-password', ['request' => $request]));
-        Fortify::twoFactorChallengeView(fn () => view('admin.auth.two-factor-challenge'));
         Fortify::confirmPasswordView(fn () => view('admin.auth.confirm-password'));
 
         Fortify::authenticateUsing(function (Request $request): ?User {
@@ -44,10 +43,6 @@ class FortifyServiceProvider extends ServiceProvider
             $key = Str::transliterate(Str::lower((string) $request->input(Fortify::username())).'|'.$request->ip());
 
             return Limit::perMinute(5)->by($key);
-        });
-
-        RateLimiter::for('two-factor', function (Request $request) {
-            return Limit::perMinute(5)->by((string) $request->session()->get('login.id'));
         });
     }
 }

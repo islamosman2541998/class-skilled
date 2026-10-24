@@ -1,6 +1,5 @@
 <?php
 
-use App\Livewire\Admin\Account;
 use App\Livewire\Admin\AssetField;
 use App\Livewire\Admin\AssetPicker;
 use App\Livewire\Admin\CommandPalette;
@@ -10,8 +9,8 @@ use App\Livewire\Admin\System\Users\Form as UserForm;
 use App\Livewire\Admin\System\Users\Index as UsersIndex;
 use App\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
-use PragmaRX\Google2FA\Google2FA;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Permission\Models\Role;
 
@@ -51,24 +50,16 @@ test('login is throttled after five failed attempts', function () {
     $this->assertGuest();
 });
 
-test('users with two-factor enabled must pass the challenge', function () {
-    $user = userWithRole('admin', ['email' => 'tfa@example.test']);
-    $secret = app(Google2FA::class)->generateSecretKey();
-    $user->forceFill([
-        'two_factor_secret' => encrypt($secret),
-        'two_factor_recovery_codes' => encrypt(json_encode(['recovery-1'])),
-        'two_factor_confirmed_at' => now(),
-    ])->save();
+test('two-factor authentication is not offered anywhere', function () {
+    userWithRole('admin', ['email' => 'owner@example.test']);
 
-    $this->post(route('login.store'), ['email' => 'tfa@example.test', 'password' => 'password'])
-        ->assertRedirect(route('two-factor.login'));
-    $this->assertGuest();
-
-    $this->get(route('two-factor.login'))->assertOk()->assertSee(__('admin.auth.challenge_title'));
-
-    $this->post(route('two-factor.login.store'), ['code' => app(Google2FA::class)->getCurrentOtp($secret)])
+    $this->post(route('login.store'), ['email' => 'owner@example.test', 'password' => 'password'])
         ->assertRedirect(route('admin.dashboard'));
-    $this->assertAuthenticatedAs($user);
+
+    expect(Route::has('two-factor.login'))->toBeFalse();
+
+    $this->get(route('admin.dashboard'))->assertOk()->assertDontSee('two-factor')->assertDontSee('التحقق بخطوتين');
+    $this->get(route('admin.account'))->assertOk()->assertDontSee('two-factor');
 });
 
 test('permissions are enforced per role on dashboard routes', function () {
@@ -175,29 +166,6 @@ test('the activity log lists changes with a diff', function () {
         ->assertSee('Renamed Admin')
         ->call('show', Activity::latest('id')->value('id'))
         ->assertSee('Renamed Admin');
-});
-
-test('two-factor can be enabled from my account', function () {
-    $user = userWithRole('editor');
-    $this->actingAs($user);
-
-    Livewire::test(Account::class)
-        ->set('twoFactorPassword', 'wrong')
-        ->call('enableTwoFactor')
-        ->assertHasErrors('twoFactorPassword')
-        ->set('twoFactorPassword', 'password')
-        ->call('enableTwoFactor')
-        ->assertHasNoErrors();
-
-    $user->refresh();
-    expect($user->two_factor_secret)->not->toBeNull();
-
-    Livewire::test(Account::class)
-        ->set('code', app(Google2FA::class)->getCurrentOtp(decrypt($user->two_factor_secret)))
-        ->call('confirmTwoFactor')
-        ->assertHasNoErrors();
-
-    expect($user->fresh()->hasTwoFactorEnabled())->toBeTrue();
 });
 
 test('the asset picker returns the chosen ids to the field', function () {

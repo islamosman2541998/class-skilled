@@ -20,7 +20,7 @@
                 <button type="button" wire:click="clearFilters" class="text-[13.5px] font-bold text-[var(--c-deep)] hover:underline">{{ __('admin.common.clear_filters') }}</button>
             @endif
             <div class="ms-auto">
-                <x-admin.table.columns :columns="['email' => __('admin.users.email'), 'role' => __('admin.users.role'), 'twofa' => __('admin.users.two_factor'), 'login' => __('admin.users.last_login')]" />
+                <x-admin.table.columns :columns="['email' => __('admin.users.email'), 'role' => __('admin.users.role'), 'login' => __('admin.users.last_login')]" />
             </div>
         </div>
 
@@ -47,7 +47,6 @@
                         <x-admin.table.th field="email" :sort="$sort" column="email">{{ __('admin.users.email') }}</x-admin.table.th>
                         <x-admin.table.th column="role">{{ __('admin.users.role') }}</x-admin.table.th>
                         <x-admin.table.th>{{ __('admin.users.status') }}</x-admin.table.th>
-                        <x-admin.table.th column="twofa">{{ __('admin.users.two_factor') }}</x-admin.table.th>
                         <x-admin.table.th field="login" :sort="$sort" column="login">{{ __('admin.users.last_login') }}</x-admin.table.th>
                         <th><span class="sr-only">{{ __('admin.common.actions') }}</span></th>
                     </tr>
@@ -75,9 +74,6 @@
                             <td>
                                 <button type="button" role="switch" class="a-toggle" aria-checked="{{ $user->is_active ? 'true' : 'false' }}" wire:click="toggleActive({{ $user->id }})" aria-label="{{ __('admin.users.status') }}"></button>
                             </td>
-                            <td x-show="visible('twofa')">
-                                <x-admin.badge :color="$user->hasTwoFactorEnabled() ? 'green' : 'gray'">{{ $user->hasTwoFactorEnabled() ? __('admin.users.enabled') : __('admin.users.disabled') }}</x-admin.badge>
-                            </td>
                             <td x-show="visible('login')" class="text-[13px] text-[var(--a-muted)]">{{ $user->last_login_at?->diffForHumans() ?? __('admin.common.never') }}</td>
                             <td class="whitespace-nowrap text-end">
                                 <a href="{{ route('admin.users.edit', $user) }}" wire:navigate class="a-link me-3">{{ __('admin.common.edit') }}</a>
@@ -91,7 +87,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8">
+                            <td colspan="7">
                                 <x-admin.empty-state :title="__('admin.users.empty')">
                                     <a href="{{ route('admin.users.create') }}" wire:navigate class="a-btn a-btn-primary">{{ __('admin.users.add') }}</a>
                                 </x-admin.empty-state>

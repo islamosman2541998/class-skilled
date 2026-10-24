@@ -5,20 +5,13 @@ namespace App\Livewire\Admin;
 use App\Livewire\Admin\Concerns\WithToasts;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Validation\ValidationException;
-use Laravel\Fortify\Actions\ConfirmTwoFactorAuthentication;
-use Laravel\Fortify\Actions\DisableTwoFactorAuthentication;
-use Laravel\Fortify\Actions\EnableTwoFactorAuthentication;
-use Laravel\Fortify\Actions\GenerateNewRecoveryCodes;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 /**
- * My account: profile, password, dashboard language and two-factor (TOTP)
- * setup through Fortify's actions. Sensitive actions ask for the current password.
+ * My account: profile, dashboard language and password (the current password is required to change it).
  */
 #[Layout('layouts.admin')]
 class Account extends Component
@@ -36,12 +29,6 @@ class Account extends Component
     public string $password = '';
 
     public string $password_confirmation = '';
-
-    public string $twoFactorPassword = '';
-
-    public string $code = '';
-
-    public bool $showingRecoveryCodes = false;
 
     public function mount(): void
     {
@@ -95,87 +82,8 @@ class Account extends Component
         $this->toast('success', __('admin.account.password_updated'));
     }
 
-    public function enableTwoFactor(EnableTwoFactorAuthentication $enable): void
-    {
-        if (! $this->passwordConfirmed()) {
-            return;
-        }
-
-        $enable($this->user());
-        $this->reset('code');
-    }
-
-    public function confirmTwoFactor(ConfirmTwoFactorAuthentication $confirm): void
-    {
-        $this->validate(['code' => ['required', 'string']], [], ['code' => __('admin.account.confirm_code')]);
-
-        try {
-            $confirm($this->user(), $this->code);
-        } catch (ValidationException) {
-            $this->addError('code', __('admin.account.invalid_code'));
-
-            return;
-        }
-
-        $this->reset('code', 'twoFactorPassword');
-        $this->showingRecoveryCodes = true;
-        $this->toast('success', __('admin.account.enabled_toast'));
-    }
-
-    public function disableTwoFactor(DisableTwoFactorAuthentication $disable): void
-    {
-        if (! $this->passwordConfirmed()) {
-            return;
-        }
-
-        $disable($this->user());
-        $this->reset('twoFactorPassword', 'showingRecoveryCodes');
-        $this->toast('success', __('admin.account.disabled_toast'));
-    }
-
-    public function regenerateRecoveryCodes(GenerateNewRecoveryCodes $generate): void
-    {
-        if (! $this->passwordConfirmed()) {
-            return;
-        }
-
-        $generate($this->user());
-        $this->showingRecoveryCodes = true;
-    }
-
-    public function showRecoveryCodes(): void
-    {
-        if (! $this->passwordConfirmed()) {
-            return;
-        }
-
-        $this->showingRecoveryCodes = true;
-    }
-
-    private function passwordConfirmed(): bool
-    {
-        $this->resetErrorBag('twoFactorPassword');
-
-        if (! Hash::check($this->twoFactorPassword, $this->user()->password)) {
-            $this->addError('twoFactorPassword', __('validation.current_password'));
-
-            return false;
-        }
-
-        return true;
-    }
-
     public function render(): View
     {
-        $user = $this->user()->fresh();
-
-        return view('livewire.admin.account', [
-            'user' => $user,
-            'pending' => $user?->two_factor_secret !== null && $user->two_factor_confirmed_at === null,
-            'enabled' => (bool) $user?->hasTwoFactorEnabled(),
-            'qr' => $user?->two_factor_secret ? $user->twoFactorQrCodeSvg() : null,
-            'secret' => $user?->two_factor_secret ? decrypt($user->two_factor_secret) : null,
-            'recoveryCodes' => $this->showingRecoveryCodes && $user?->two_factor_recovery_codes ? $user->recoveryCodes() : [],
-        ])->title(__('admin.account.title'));
+        return view('livewire.admin.account')->title(__('admin.account.title'));
     }
 }

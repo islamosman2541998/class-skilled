@@ -50,8 +50,10 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
 - Users got `force_two_factor`; quote requests got `preferred_contact`; menus got `use_header_menu`;
   menu items got `show_descriptions`; pages got `template`; assets got `external_id`.
 - Seeding runs in one DB transaction (MySQL commits are very slow on this machine).
-- Dashboard: Fortify routes live under ADMIN_PATH (login, reset, 2FA challenge); registration disabled; 2FA
-  enable/confirm/disable done in "My account" with Fortify actions + current-password check.
+- Dashboard: Fortify routes live under ADMIN_PATH (login, password reset); registration disabled.
+  **Two-factor authentication was removed on the owner's request (2026-10-24)**: no Fortify 2FA feature, challenge
+  screen, account section, "force 2FA" user option, banner or menu link; the columns are dropped by
+  `2026_10_24_120000_drop_two_factor_columns_from_users_table`. This overrides "2FA available for admins" in CLAUDE.md §5.7.
 - Livewire/Alpine are bundled from `vendor/livewire/livewire/dist/livewire.esm` (`@livewireScriptConfig`) so our
   Alpine components register before start. Custom inputs use `x-modelable` + `wire:model`.
 - Sidebar items appear only when their route exists and the user passes `can` (config/admin.php navigation),
@@ -347,3 +349,12 @@ uploads), custom Livewire dashboard (content, media, menus, settings, SEO, reque
 SEO (meta, hreflang, JSON-LD, sitemaps, robots), first-party analytics, full-page caching and a shared-hosting
 deployment guide. Before launch: follow DEPLOY.md, then complete the "☐ manual" items in QA.md and run Lighthouse on
 the live host.
+
+### Post-launch changes (2026-10-24)
+- Dashboard top bar redesigned: frosted white bar (72 px, aligned with the sidebar header), pill search with
+  `Ctrl` `K` key hints, "view site" button, segmented ع / EN language switch, bell icon with a counter badge and a
+  notifications popover with header and empty state, user chip (gradient avatar, name, role, chevron) with a menu
+  showing name + e-mail and icon items. Checked at 1440 and 390 px with an authenticated headless Chrome session.
+- Two-factor authentication removed everywhere (see Decisions). Tests updated: `DashboardShellTest` now asserts that
+  login goes straight to the dashboard and that no 2FA route or UI exists.
+

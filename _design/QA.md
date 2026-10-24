@@ -51,7 +51,7 @@ Last run: 2026-10-24, local Laragon (PHP 8.3, MySQL), 105 tests green.
 
 ## 6. Security
 - Security headers (CSP, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy; HSTS on HTTPS production) — ✔ auto.
-- Rate limits: login + 2FA (Fortify), forms, beacon, search — ✔ auto (forms, beacon), configured (login, search).
+- Rate limits: login (Fortify), forms, beacon, search — ✔ auto (forms, beacon), configured (login, search).
 - Visitor uploads on the private disk, random names, MIME sniffing, signed short links — ✔ auto.
 - Public storage: `.htaccess` blocks scripts; fallback route refuses scripts and `..` — ✔ auto.
 - Rich text purified on save; no `{!! !!}` on unsanitised data (reviewed) — ✔ seen.

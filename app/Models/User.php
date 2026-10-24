@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
-use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -19,11 +18,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $password
  * @property string $locale
  * @property bool $is_active
- * @property bool $force_two_factor
  * @property Carbon|null $last_login_at
- * @property string|null $two_factor_secret
- * @property string|null $two_factor_recovery_codes
- * @property Carbon|null $two_factor_confirmed_at
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -31,7 +26,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasRoles, LogsModelActivity, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, HasRoles, LogsModelActivity, Notifiable;
 
     /**
      * @var list<string>
@@ -42,7 +37,6 @@ class User extends Authenticatable
         'password',
         'locale',
         'is_active',
-        'force_two_factor',
     ];
 
     /**
@@ -51,11 +45,7 @@ class User extends Authenticatable
     protected $attributes = [
         'locale' => 'ar',
         'is_active' => true,
-        'force_two_factor' => false,
         'last_login_at' => null,
-        'two_factor_secret' => null,
-        'two_factor_recovery_codes' => null,
-        'two_factor_confirmed_at' => null,
     ];
 
     /**
@@ -64,8 +54,6 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'two_factor_secret',
-        'two_factor_recovery_codes',
     ];
 
     /**
@@ -77,15 +65,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
-            'force_two_factor' => 'boolean',
             'last_login_at' => 'datetime',
-            'two_factor_confirmed_at' => 'datetime',
         ];
-    }
-
-    public function hasTwoFactorEnabled(): bool
-    {
-        return $this->two_factor_secret !== null && $this->two_factor_confirmed_at !== null;
     }
 
     public function initials(): string

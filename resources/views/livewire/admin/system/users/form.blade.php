@@ -22,14 +22,12 @@
                 <div class="space-y-5">
                     <x-admin.select model="role" :label="__('admin.users.role')" :options="$roles" :placeholder="false" required />
                     <x-admin.toggle model="is_active" :label="__('admin.users.active')" />
-                    <x-admin.toggle model="force_two_factor" :label="__('admin.users.force_two_factor')" />
                 </div>
             </x-admin.panel>
 
             @if ($user)
                 <x-admin.panel>
                     <p class="text-[13px] text-[var(--a-muted)]">{{ __('admin.users.last_login') }}: {{ $user->last_login_at?->format('Y-m-d H:i') ?? __('admin.common.never') }}</p>
-                    <p class="mt-1 text-[13px] text-[var(--a-muted)]">{{ __('admin.users.two_factor') }}: {{ $user->hasTwoFactorEnabled() ? __('admin.users.enabled') : __('admin.users.disabled') }}</p>
                     <button type="button" wire:click="sendResetLink" class="a-btn a-btn-secondary a-btn-sm mt-4">{{ __('admin.users.send_reset') }}</button>
                 </x-admin.panel>
             @endif

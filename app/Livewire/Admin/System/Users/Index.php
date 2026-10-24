@@ -68,7 +68,6 @@ class Index extends Component
             __('admin.users.email') => fn (Model $u) => $u->getAttribute('email'),
             __('admin.users.role') => fn (Model $u) => $u instanceof User ? $u->getRoleNames()->map(fn ($r) => __('admin.roles.'.$r))->implode(', ') : '',
             __('admin.users.status') => fn (Model $u) => $u->getAttribute('is_active') ? __('admin.users.active') : __('admin.users.inactive'),
-            __('admin.users.two_factor') => fn (Model $u) => $u instanceof User && $u->hasTwoFactorEnabled() ? __('admin.users.enabled') : __('admin.users.disabled'),
             __('admin.users.last_login') => fn (Model $u) => $u->getAttribute('last_login_at')?->format('Y-m-d H:i'),
         ];
     }

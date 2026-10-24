@@ -30,7 +30,7 @@
             :class="drawer ? 'translate-x-0!' : ''"
             aria-label="{{ __('admin.panel_name') }}"
         >
-            <div class="flex h-[84px] items-center justify-between gap-3 border-b border-white/10 px-5">
+            <div class="flex h-[72px] items-center justify-between gap-3 border-b border-white/10 px-5">
                 <a href="{{ route('admin.dashboard') }}" wire:navigate class="flex items-center gap-3">
                     <img src="{{ asset('images/brand/mark-white-sm.png') }}" alt="" class="h-11 w-11 object-contain">
                     <span class="leading-tight">
@@ -84,64 +84,79 @@
 
         <div class="flex min-w-0 flex-1 flex-col">
             {{-- Top bar --}}
-            <header class="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-a-border bg-white px-4 lg:px-8">
-                <button type="button" class="rounded-lg p-2 hover:bg-a-bg lg:hidden" @click="drawer = true" aria-label="{{ __('admin.topbar.open_menu') }}">
-                    <x-heroicon-o-bars-3 class="h-6 w-6" />
+            <header class="a-topbar">
+                <button type="button" class="a-icon-btn lg:hidden" @click="drawer = true" aria-label="{{ __('admin.topbar.open_menu') }}">
+                    <x-heroicon-o-bars-3 class="h-5 w-5" />
                 </button>
 
-                <button type="button" @click="$dispatch('open-command-palette')" class="flex h-10 min-w-0 flex-1 items-center justify-between gap-3 rounded-xl border border-a-border bg-a-bg px-4 text-start text-[13.5px] text-[#8a95a8] lg:max-w-md">
-                    <span class="flex min-w-0 items-center gap-2">
-                        <x-heroicon-o-magnifying-glass class="h-4 w-4 shrink-0" />
-                        <span class="truncate">{{ __('admin.topbar.search') }}</span>
+                <button type="button" @click="$dispatch('open-command-palette')" class="a-search-pill" aria-keyshortcuts="Control+K">
+                    <x-heroicon-o-magnifying-glass class="h-[18px] w-[18px] shrink-0 text-[var(--c-navy)]" />
+                    <span class="min-w-0 flex-1 truncate">{{ __('admin.topbar.search') }}</span>
+                    <span class="hidden items-center gap-1 sm:flex" dir="ltr" aria-hidden="true">
+                        <kbd class="a-kbd">Ctrl</kbd><kbd class="a-kbd">K</kbd>
                     </span>
-                    <kbd class="hidden rounded-md border border-a-border bg-white px-1.5 text-[11px] sm:inline" dir="ltr">Ctrl K</kbd>
                 </button>
 
-                <div class="ms-auto flex items-center gap-1 sm:gap-4">
-                    <a href="{{ url('/') }}" target="_blank" rel="noopener" class="hidden text-[13.5px] font-semibold underline underline-offset-4 md:inline">{{ __('admin.topbar.view_site') }}</a>
+                <div class="ms-auto flex items-center gap-2 sm:gap-3">
+                    <a href="{{ url('/') }}" target="_blank" rel="noopener" class="a-topbar-link hidden md:inline-flex">
+                        <x-heroicon-o-globe-alt class="h-[18px] w-[18px]" />
+                        <span>{{ __('admin.topbar.view_site') }}</span>
+                        <x-heroicon-m-arrow-up-right class="h-3.5 w-3.5 opacity-60 rtl:-scale-x-100" />
+                    </a>
 
                     <form method="POST" action="{{ route('admin.locale', $locale === 'ar' ? 'en' : 'ar') }}" class="hidden sm:block">
                         @csrf
-                        <button type="submit" class="text-[13.5px] font-semibold underline underline-offset-4" lang="{{ $locale === 'ar' ? 'en' : 'ar' }}">{{ __('admin.topbar.switch_language') }}</button>
+                        <button type="submit" class="a-lang-switch" aria-label="{{ __('admin.topbar.switch_language') }}" title="{{ __('admin.topbar.switch_language') }}">
+                            <span @class(['is-active' => $locale === 'ar'])>ع</span>
+                            <span @class(['is-active' => $locale === 'en'])>EN</span>
+                        </button>
                     </form>
 
                     <livewire:admin.notifications-menu />
 
-                    <div x-data="{ open: false }" class="relative border-s border-a-border ps-3 sm:ps-4" @click.outside="open = false">
-                        <button type="button" @click="open = !open" :aria-expanded="open" class="flex items-center gap-3">
-                            <span class="hidden text-end leading-tight sm:block">
-                                <span class="block text-[14px] font-bold text-[var(--c-deep)]">{{ $user->name }}</span>
+                    <span class="hidden h-8 w-px bg-a-border sm:block" aria-hidden="true"></span>
+
+                    <div x-data="{ open: false }" class="relative" @click.outside="open = false" @keydown.escape="open = false">
+                        <button type="button" @click="open = !open" :aria-expanded="open" aria-haspopup="menu" class="a-user-chip">
+                            <span class="a-avatar">{{ $user->initials() }}</span>
+                            <span class="hidden text-start leading-tight sm:block">
+                                <span class="block max-w-[160px] truncate text-[14px] font-bold text-[var(--c-deep)]">{{ $user->name }}</span>
                                 <span class="block text-[12px] text-[var(--a-muted)]">{{ __('admin.roles.'.($user->getRoleNames()->first() ?? 'editor')) }}</span>
                             </span>
-                            <span class="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--c-navy)] text-[14px] font-bold text-white">{{ $user->initials() }}</span>
+                            <x-heroicon-m-chevron-down class="hidden h-4 w-4 text-[var(--a-muted)] transition-transform sm:block" x-bind:class="open && 'rotate-180'" />
                         </button>
-                        <div x-cloak x-show="open" x-transition class="a-popover end-0 top-12">
-                            <a href="{{ route('admin.account') }}" wire:navigate class="a-menu-item">{{ __('admin.topbar.my_account') }}</a>
-                            <a href="{{ route('admin.account') }}#two-factor" wire:navigate class="a-menu-item">{{ __('admin.topbar.two_factor') }}</a>
-                            <form method="POST" action="{{ route('admin.locale', $locale === 'ar' ? 'en' : 'ar') }}" class="sm:hidden">
-                                @csrf
-                                <button type="submit" class="a-menu-item">{{ __('admin.topbar.switch_language') }}</button>
-                            </form>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="a-menu-item text-[var(--a-danger)]">{{ __('admin.topbar.logout') }}</button>
-                            </form>
+                        <div x-cloak x-show="open" x-transition.origin.top class="a-popover end-0 top-[52px] w-64" role="menu">
+                            <div class="flex items-center gap-3 border-b border-a-border px-3 pt-2 pb-3">
+                                <span class="a-avatar">{{ $user->initials() }}</span>
+                                <span class="min-w-0 leading-tight">
+                                    <span class="block truncate text-[14px] font-bold text-[var(--c-deep)]">{{ $user->name }}</span>
+                                    <span class="block truncate text-[12.5px] text-[var(--a-muted)]" dir="ltr">{{ $user->email }}</span>
+                                </span>
+                            </div>
+                            <div class="pt-1.5">
+                                <a href="{{ route('admin.account') }}" wire:navigate class="a-menu-item" role="menuitem">
+                                    <x-heroicon-o-user-circle class="h-[18px] w-[18px] text-[var(--a-muted)]" />{{ __('admin.topbar.my_account') }}
+                                </a>
+                                <a href="{{ url('/') }}" target="_blank" rel="noopener" class="a-menu-item md:hidden" role="menuitem">
+                                    <x-heroicon-o-globe-alt class="h-[18px] w-[18px] text-[var(--a-muted)]" />{{ __('admin.topbar.view_site') }}
+                                </a>
+                                <form method="POST" action="{{ route('admin.locale', $locale === 'ar' ? 'en' : 'ar') }}" class="sm:hidden">
+                                    @csrf
+                                    <button type="submit" class="a-menu-item" role="menuitem">
+                                        <x-heroicon-o-language class="h-[18px] w-[18px] text-[var(--a-muted)]" />{{ __('admin.topbar.switch_language') }}
+                                    </button>
+                                </form>
+                                <form method="POST" action="{{ route('logout') }}" class="mt-1 border-t border-a-border pt-1">
+                                    @csrf
+                                    <button type="submit" class="a-menu-item text-[var(--a-danger)]" role="menuitem">
+                                        <x-heroicon-o-arrow-right-start-on-rectangle class="h-[18px] w-[18px] rtl:-scale-x-100" />{{ __('admin.topbar.logout') }}
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </header>
-
-            @if ($user->force_two_factor && ! $user->hasTwoFactorEnabled() && ! request()->routeIs('admin.account'))
-                <div class="border-b border-amber-200 bg-amber-50 px-4 py-2.5 text-[13.5px] text-amber-900 lg:px-8">
-                    {{ __('admin.account.forced_banner') }}
-                    <a href="{{ route('admin.account') }}#two-factor" wire:navigate class="ms-2 font-bold underline">{{ __('admin.account.setup_now') }}</a>
-                </div>
-            @elseif ($user->hasRole('admin') && ! $user->hasTwoFactorEnabled() && request()->routeIs('admin.dashboard'))
-                <div class="border-b border-sky-200 bg-sky-50 px-4 py-2.5 text-[13.5px] text-[var(--c-deep)] lg:px-8">
-                    {{ __('admin.account.admin_banner') }}
-                    <a href="{{ route('admin.account') }}#two-factor" wire:navigate class="ms-2 font-bold underline">{{ __('admin.account.setup_now') }}</a>
-                </div>
-            @endif
 
             <main id="main" class="flex-1 px-4 py-6 lg:px-8 lg:py-8">
                 {{ $slot }}
