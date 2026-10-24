@@ -393,3 +393,7 @@ the live host.
   1280; clients 2 / 3 / 5 / 6); equal-height cards and visible card shadows (Swiper's unlayered `height` / `overflow`
   rules were overriding ours); a service without a cover shows the brand mark in the image box. The services section
   no longer has a background photo (solid dark navy; migration `2026_10_24_150000_remove_services_section_background_photo`).
+- Project page gallery (owner request): Swiper gallery (`gallerySlider` → `initGallery` in `sliders.js`) with glass
+  arrows, swipe/drag, keyboard, 5 s autoplay (pauses on hover and while the lightbox is open), image counter and
+  synced thumbnails (Swiper Thumbs module); a click opens the existing lightbox. Images = cover + gallery from
+  Dashboard → Projects. Demo projects now have 4–5 photos each.

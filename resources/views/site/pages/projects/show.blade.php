@@ -29,25 +29,39 @@
         <div class="container-site grid gap-10 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-14">
             <div class="min-w-0 space-y-12">
                 @if ($images->isNotEmpty())
-                    <div x-data="lightbox" class="space-y-3">
-                        <div class="relative overflow-hidden rounded-[14px] bg-paper" @touchstart.passive="touchX = $event.changedTouches[0].clientX" @touchend.passive="if (touchX !== null && Math.abs($event.changedTouches[0].clientX - touchX) > 50) { main = (main + (($event.changedTouches[0].clientX < touchX) !== (document.documentElement.dir === 'rtl') ? 1 : -1) + {{ $images->count() }}) % {{ $images->count() }} } touchX = null">
-                            @foreach ($images as $i => $image)
-                                <button type="button" class="block w-full" x-show="main === {{ $i }}" @if ($i > 0) x-cloak @endif @click="open({{ $i }})" aria-haspopup="dialog" aria-label="{{ __('lightbox.label') }}: {{ $image->altText() }}">
-                                    <x-site.picture :asset="$image" sizes="(min-width: 1024px) 800px, 100vw" :eager="$i === 0" class="aspect-[16/10] w-full object-cover" />
-                                </button>
-                            @endforeach
+                    <div x-data="lightbox">
+                        {{-- Gallery slider: arrows, swipe/drag, keyboard, autoplay; a click opens the lightbox. --}}
+                        <div x-data="gallerySlider({ delay: 5000 })" class="space-y-3" role="region" aria-roledescription="carousel" aria-label="{{ __('projects.gallery') }}">
+                            <div class="on-dark relative overflow-hidden rounded-[14px] bg-deep">
+                                <div class="swiper gallery-main" x-ref="swiper">
+                                    <div class="swiper-wrapper">
+                                        @foreach ($images as $i => $image)
+                                            <div class="swiper-slide">
+                                                <button type="button" class="block w-full cursor-zoom-in" @click="open({{ $i }})" aria-haspopup="dialog" aria-label="{{ __('lightbox.label') }}: {{ $image->altText() }}">
+                                                    <x-site.picture :asset="$image" sizes="(min-width: 1024px) 800px, 100vw" :eager="$i === 0" class="aspect-[16/10] w-full object-cover" />
+                                                </button>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                @if ($images->count() > 1)
+                                    <button type="button" class="glass-btn absolute start-3 top-1/2 z-10 -translate-y-1/2 sm:start-4" x-ref="prev" aria-label="{{ __('slider.previous') }}"><x-heroicon-m-arrow-left class="flip size-5" aria-hidden="true" /></button>
+                                    <button type="button" class="glass-btn absolute end-3 top-1/2 z-10 -translate-y-1/2 sm:end-4" x-ref="next" aria-label="{{ __('slider.next') }}"><x-heroicon-m-arrow-right class="flip size-5" aria-hidden="true" /></button>
+                                    <p class="pointer-events-none absolute bottom-3 end-3 z-10 rounded-full bg-deep/70 px-3 py-1 text-[13px] font-semibold text-white sm:bottom-4 sm:end-4" aria-hidden="true"><bdi dir="ltr"><span x-text="active + 1">1</span> / {{ $images->count() }}</bdi></p>
+                                @endif
+                            </div>
+                            @if ($images->count() > 1)
+                                <div class="swiper gallery-thumbs" x-ref="thumbs">
+                                    <div class="swiper-wrapper">
+                                        @foreach ($images as $i => $image)
+                                            <div class="swiper-slide">
+                                                <x-site.picture :asset="$image" sizes="120px" fallback="sm" class="h-16 w-24 object-cover lg:h-20 lg:w-28" />
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
                         </div>
-                        @if ($images->count() > 1)
-                            <ul class="flex gap-2 overflow-x-auto pb-1" aria-label="{{ __('projects.gallery') }}">
-                                @foreach ($images as $i => $image)
-                                    <li class="shrink-0">
-                                        <button type="button" @click="main = {{ $i }}" class="block overflow-hidden rounded-[10px] ring-2 ring-transparent transition" :class="main === {{ $i }} ? '!ring-sky' : 'opacity-75 hover:opacity-100'" :aria-current="(main === {{ $i }}).toString()" aria-label="{{ \App\Support\Translate::swiper(__('slider.go_to'), ['index' => $i + 1]) }}">
-                                            <x-site.picture :asset="$image" sizes="120px" fallback="sm" class="h-16 w-24 object-cover lg:h-20 lg:w-28" />
-                                        </button>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
                         @include('site.partials.lightbox', ['items' => \App\Support\Lightbox::items($images)])
                     </div>
                 @endif

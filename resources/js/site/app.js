@@ -29,12 +29,14 @@ const slider = (kind) => (options = {}) => ({
         sliders[kind](this, options);
     },
     destroy() {
+        this.thumbsSwiper?.destroy(true, true);
         this.swiper?.destroy(true, true);
         this.swiper = null;
     },
 });
 Alpine.data('heroSlider', slider('initHero'));
 Alpine.data('cardSlider', slider('initCards'));
+Alpine.data('gallerySlider', slider('initGallery'));
 
 const boot = () => {
     initHeader();

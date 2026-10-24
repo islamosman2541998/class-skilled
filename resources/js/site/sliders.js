@@ -1,7 +1,7 @@
 // Swiper sliders (§6.5), initialised from Alpine components (see app.js) so they
 // survive Livewire updates. Swiper reads the direction from <html dir>; labels come from window.csLang.
 import Swiper from 'swiper';
-import { A11y, Autoplay, EffectFade, Keyboard, Navigation } from 'swiper/modules';
+import { A11y, Autoplay, EffectFade, Keyboard, Navigation, Thumbs } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 
@@ -134,4 +134,56 @@ export function initCards(component, { autoplay = false, per = [1, 2, 3, 4] } = 
         swiper.slideTo(0, 0);
         update(swiper);
     };
+}
+
+// Project gallery: main image slider (arrows, swipe/drag, keyboard, autoplay) + synced thumbnails.
+// Lives inside the `lightbox` component: a click on the main image opens it full screen (and pauses autoplay).
+export function initGallery(component, { delay = 5000 } = {}) {
+    const motion = !reduced();
+    const count = component.$refs.swiper.querySelectorAll('.swiper-slide').length;
+
+    const thumbs = component.$refs.thumbs
+        ? new Swiper(component.$refs.thumbs, {
+            modules: [A11y],
+            slidesPerView: 'auto',
+            spaceBetween: 8,
+            watchSlidesProgress: true,
+            slideToClickedSlide: true,
+            a11y: a11y(),
+        })
+        : null;
+
+    const swiper = new Swiper(component.$refs.swiper, {
+        modules: [Navigation, Autoplay, Keyboard, A11y, Thumbs],
+        speed: motion ? 600 : 0,
+        rewind: true,
+        grabCursor: count > 1,
+        allowTouchMove: count > 1,
+        keyboard: { enabled: true, onlyInViewport: true },
+        a11y: a11y(),
+        navigation: component.$refs.prev ? { prevEl: component.$refs.prev, nextEl: component.$refs.next } : false,
+        thumbs: thumbs ? { swiper: thumbs } : undefined,
+        autoplay: motion && count > 1 ? { delay, pauseOnMouseEnter: true, disableOnInteraction: false } : false,
+        on: {
+            slideChange(s) {
+                component.active = s.realIndex;
+            },
+        },
+    });
+
+    component.swiper = swiper;
+    component.thumbsSwiper = thumbs;
+    component.go = (index) => swiper.slideTo(index);
+
+    // Pause while the lightbox is open; continue from the image that was last shown there.
+    if (typeof component.shown === 'boolean' && swiper.autoplay) {
+        component.$watch('shown', (open) => {
+            if (open) {
+                swiper.autoplay.stop();
+            } else {
+                swiper.slideTo(component.index ?? swiper.activeIndex);
+                swiper.autoplay.start();
+            }
+        });
+    }
 }

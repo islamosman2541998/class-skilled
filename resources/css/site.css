@@ -937,6 +937,45 @@
         margin-block: -8px -56px;
     }
 
+    /* Project gallery (Swiper): before init show only the first image / a row of thumbnails, no layout shift. */
+    .gallery-main .swiper-wrapper,
+    .gallery-thumbs .swiper-wrapper {
+        display: flex;
+    }
+
+    .gallery-main .swiper-slide {
+        flex: 0 0 100%;
+    }
+
+    .gallery-main:not(.swiper-initialized) .swiper-slide:not(:first-child) {
+        display: none;
+    }
+
+    .gallery-thumbs .swiper-slide {
+        width: auto !important;
+        flex: none;
+        overflow: hidden;
+        border-radius: 10px;
+        cursor: pointer;
+        opacity: 0.6;
+        outline: 2px solid transparent;
+        outline-offset: -2px;
+        transition: opacity 0.2s, outline-color 0.2s;
+    }
+
+    .gallery-thumbs:not(.swiper-initialized) .swiper-slide {
+        margin-inline-end: 8px;
+    }
+
+    .gallery-thumbs .swiper-slide:hover,
+    .gallery-thumbs .swiper-slide-thumb-active {
+        opacity: 1;
+    }
+
+    .gallery-thumbs .swiper-slide-thumb-active {
+        outline-color: var(--c-sky);
+    }
+
     /* Process line */
     .process-line {
         transform-origin: var(--origin, left) center;

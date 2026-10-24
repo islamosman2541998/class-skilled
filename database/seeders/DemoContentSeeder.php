@@ -228,15 +228,15 @@ class DemoContentSeeder extends Seeder
         }
 
         $projects = [
-            ['تجهيز استوديو تصوير سينمائي', 'Film studio fit-out', 'studio', [7, 6], ['studio-1', 'studio-2'], 'مصفح، أبوظبي', 'Mussafah, Abu Dhabi', 2026, 850, '7 أسابيع', '7 weeks', true],
-            ['تشطيب مكاتب إدارية', 'Administrative office finishing', 'finishing', [3], ['office', 'office-2', 'stairs', 'corridor'], 'أبوظبي', 'Abu Dhabi', 2025, 620, '10 أسابيع', '10 weeks', true],
-            ['تركيب هياكل الإضاءة لاستوديو', 'Lighting rig installation for a studio', 'studio', [7], ['studio-2'], 'مصفح، أبوظبي', 'Mussafah, Abu Dhabi', 2026, null, '3 أسابيع', '3 weeks', false],
-            ['درج بإضاءة مخفية وواجهة زجاجية', 'Staircase with concealed lighting and a glass facade', 'finishing', [3], ['stairs'], 'أبوظبي', 'Abu Dhabi', 2025, null, '4 أسابيع', '4 weeks', false],
-            ['صب سقف خرساني لمبنى تجاري', 'Concrete slab for a commercial building', 'construction', [2, 8], ['slab-1'], 'مصفح، أبوظبي', 'Mussafah, Abu Dhabi', 2025, 1200, '5 أسابيع', '5 weeks', true],
-            ['أعمال حديد التسليح', 'Reinforcement steel works', 'construction', [1, 8], ['rebar', 'slab-2'], 'أبوظبي', 'Abu Dhabi', 2025, 900, '6 أسابيع', '6 weeks', false],
-            ['تبليط ساحة خارجية', 'Outdoor courtyard paving', 'infrastructure', [8], ['paving'], 'مصفح، أبوظبي', 'Mussafah, Abu Dhabi', 2026, 1500, '4 أسابيع', '4 weeks', false],
-            ['ممر داخلي بتجاليد خشبية', 'Interior corridor with wood cladding', 'finishing', [3], ['corridor'], 'أبوظبي', 'Abu Dhabi', 2026, 140, '3 أسابيع', '3 weeks', false],
-            ['بناء ديكورات موقع تصوير', 'Film set construction', 'studio', [7, 6], ['studio-3'], 'مصفح، أبوظبي', 'Mussafah, Abu Dhabi', 2026, 400, '5 أسابيع', '5 weeks', true],
+            ['تجهيز استوديو تصوير سينمائي', 'Film studio fit-out', 'studio', [7, 6], ['studio-1', 'studio-2', 'studio-3', 'helmet'], 'مصفح، أبوظبي', 'Mussafah, Abu Dhabi', 2026, 850, '7 أسابيع', '7 weeks', true],
+            ['تشطيب مكاتب إدارية', 'Administrative office finishing', 'finishing', [3], ['office', 'office-2', 'stairs', 'corridor', 'helmet'], 'أبوظبي', 'Abu Dhabi', 2025, 620, '10 أسابيع', '10 weeks', true],
+            ['تركيب هياكل الإضاءة لاستوديو', 'Lighting rig installation for a studio', 'studio', [7], ['studio-2', 'studio-1', 'studio-3', 'helmet'], 'مصفح، أبوظبي', 'Mussafah, Abu Dhabi', 2026, null, '3 أسابيع', '3 weeks', false],
+            ['درج بإضاءة مخفية وواجهة زجاجية', 'Staircase with concealed lighting and a glass facade', 'finishing', [3], ['stairs', 'corridor', 'office', 'office-2'], 'أبوظبي', 'Abu Dhabi', 2025, null, '4 أسابيع', '4 weeks', false],
+            ['صب سقف خرساني لمبنى تجاري', 'Concrete slab for a commercial building', 'construction', [2, 8], ['slab-1', 'concrete', 'slab-2', 'rebar'], 'مصفح، أبوظبي', 'Mussafah, Abu Dhabi', 2025, 1200, '5 أسابيع', '5 weeks', true],
+            ['أعمال حديد التسليح', 'Reinforcement steel works', 'construction', [1, 8], ['rebar', 'slab-2', 'slab-1', 'concrete'], 'أبوظبي', 'Abu Dhabi', 2025, 900, '6 أسابيع', '6 weeks', false],
+            ['تبليط ساحة خارجية', 'Outdoor courtyard paving', 'infrastructure', [8], ['paving', 'concrete', 'slab-1', 'helmet'], 'مصفح، أبوظبي', 'Mussafah, Abu Dhabi', 2026, 1500, '4 أسابيع', '4 weeks', false],
+            ['ممر داخلي بتجاليد خشبية', 'Interior corridor with wood cladding', 'finishing', [3], ['corridor', 'office', 'stairs', 'office-2'], 'أبوظبي', 'Abu Dhabi', 2026, 140, '3 أسابيع', '3 weeks', false],
+            ['بناء ديكورات موقع تصوير', 'Film set construction', 'studio', [7, 6], ['studio-3', 'studio-1', 'studio-2', 'helmet'], 'مصفح، أبوظبي', 'Mussafah, Abu Dhabi', 2026, 400, '5 أسابيع', '5 weeks', true],
         ];
 
         foreach ($projects as $index => [$ar, $en, $category, $serviceIndexes, $photos, $locAr, $locEn, $year, $area, $durAr, $durEn, $featured]) {

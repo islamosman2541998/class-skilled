@@ -92,6 +92,9 @@ test('project detail shows facts, gallery lightbox and related projects', functi
 
     $this->get($project->localizedUrl('ar'))->assertOk()
         ->assertSee('x-data="lightbox"', false)
+        ->assertSee('x-data="gallerySlider', false)
+        ->assertSee('gallery-thumbs', false)
+        ->assertSee('x-ref="next"', false)
         ->assertSee('role="dialog"', false)
         ->assertSee('850 م²')
         ->assertSee('مشروع مشابه')
