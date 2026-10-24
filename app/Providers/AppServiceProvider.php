@@ -84,6 +84,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         RouteServiceProvider::loadCachedRoutesUsing(fn () => $this->loadCachedRoutes());
+        // `php artisan optimize` alone caches only the Arabic routes (every /en page would 404),
+        // so its "routes" step is replaced by the per-locale cache (same key = same step); `optimize:clear` removes them.
+        $this->optimizes(optimize: 'route:trans:cache', clear: 'route:trans:clear', key: 'routes');
         Model::shouldBeStrict(! $this->app->isProduction());
         Model::preventLazyLoading(! $this->app->isProduction());
         Relation::enforceMorphMap(self::MORPH_MAP);

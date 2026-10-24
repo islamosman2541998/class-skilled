@@ -11,6 +11,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Vite;
+use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -90,4 +91,9 @@ test('the public storage fallback serves media but never scripts or traversal', 
     expect($controller('demo/photo.jpg')->headers->get('Content-Type'))->toBe('image/jpeg');
     expect(fn () => $controller('demo/shell.php'))->toThrow(NotFoundHttpException::class);
     expect(fn () => $controller('../.env'))->toThrow(NotFoundHttpException::class);
+});
+
+test('php artisan optimize caches the routes of every locale (a plain route cache would 404 the English pages)', function () {
+    expect(ServiceProvider::$optimizeCommands['routes'] ?? null)->toBe('route:trans:cache')
+        ->and(ServiceProvider::$optimizeClearCommands['routes'] ?? null)->toBe('route:trans:clear');
 });

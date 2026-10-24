@@ -424,3 +424,8 @@ the live host.
 - Note (local only): Laragon's threaded Apache on Windows can intermittently miss `.env` under concurrent requests
   (500, "production"/sqlite in the log). Not reproducible one request at a time; production uses a cached config
   (`php artisan optimize`, DEPLOY.md), which avoids it.
+- Live English 404 (class-skilled.com/en*): a plain route cache holds only the default (Arabic) routes. `php artisan
+  optimize` now replaces its "routes" step with `route:trans:cache` (and `optimize:clear` with `route:trans:clear`) via
+  `AppServiceProvider::optimizes(key: 'routes')`; System → Health / `site:check` fails "translated route cache" when a
+  plain route cache has no per-locale files; DEPLOY.md warns against `route:cache` alone; test added.
+- Card sliders: prev/next arrows now visible on mobile too (section header row: "view all" at the start, arrows at the end).

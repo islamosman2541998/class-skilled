@@ -24,8 +24,7 @@ class Health extends Component
     public function optimize(): void
     {
         abort_unless(auth()->user()?->can('manage settings'), 403);
-        Artisan::call('optimize');
-        Artisan::call('route:trans:cache');
+        Artisan::call('optimize'); // includes route:trans:cache (AppServiceProvider::optimizes)
         $this->dispatch('toast', type: 'success', message: __('admin.health.optimized'));
     }
 

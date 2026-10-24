@@ -76,6 +76,12 @@ class SiteCheck
         $add('app', 'config cache', app()->configurationIsCached() ? 'ok' : 'warn', app()->configurationIsCached() ? '' : 'run php artisan optimize');
         $add('app', 'route cache', app()->routesAreCached() ? 'ok' : 'warn', app()->routesAreCached() ? '' : 'run php artisan route:trans:cache');
 
+        // A plain `route:cache` holds only the default-locale routes: English pages would return 404.
+        $plainCache = is_file(base_path('bootstrap/cache/routes-v7.php'));
+        $localeCaches = collect(array_keys((array) config('laravellocalization.supportedLocales')))
+            ->every(fn (string $locale) => is_file(base_path('bootstrap/cache/routes-v7_'.$locale.'.php')));
+        $add('app', 'translated route cache', ! $plainCache || $localeCaches ? 'ok' : 'fail', ! $plainCache || $localeCaches ? '' : 'English pages return 404: run php artisan route:trans:cache');
+
         return $checks;
     }
 
