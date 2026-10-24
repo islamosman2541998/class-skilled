@@ -2,6 +2,7 @@
 
 use App\Livewire\Admin\Dashboard;
 use App\Livewire\Admin\DashboardWidget;
+use App\Livewire\Admin\Seo\Settings;
 use App\Models\Faq;
 use App\Models\JobPost;
 use App\Models\Post;
@@ -15,6 +16,7 @@ use App\Support\LocalizedRoute;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 /**
@@ -147,4 +149,28 @@ test('editors see the dashboard without request widgets', function () {
     Livewire::test(Dashboard::class)->assertOk()->assertDontSee('name="latest"', false);
     $stats = Livewire::withoutLazyLoading()->test(DashboardWidget::class, ['name' => 'stats', 'period' => 30]);
     $stats->assertDontSee(__('admin.dashboard.stat_quotes'))->assertSee(__('admin.dashboard.stat_visits'));
+});
+
+test('google appearance settings drive the home title, description, site name and icon', function () {
+    Storage::fake('public');
+    $this->actingAs(userWithRole('admin'));
+
+    Livewire::test(Settings::class)
+        ->set('data.search_site_name', ['ar' => 'اسم في جوجل', 'en' => 'Google name'])
+        ->set('data.search_alternate_name', ['ar' => 'اسم بديل', 'en' => ''])
+        ->set('data.home_title', ['ar' => 'عنوان الرئيسية المخصص', 'en' => ''])
+        ->set('data.home_description', ['ar' => 'وصف الرئيسية المخصص لنتائج البحث', 'en' => ''])
+        ->call('save')
+        ->assertHasNoErrors();
+
+    auth()->logout();
+    $html = $this->get('/')->assertOk()->getContent();
+
+    expect($html)->toContain('<title>عنوان الرئيسية المخصص</title>')
+        ->toContain('<meta name="description" content="وصف الرئيسية المخصص لنتائج البحث">')
+        ->toContain('<meta property="og:site_name" content="اسم في جوجل">');
+    $website = jsonLd($html)['WebSite'];
+    expect($website['name'])->toBe('اسم في جوجل')->and($website['alternateName'])->toContain('اسم بديل');
+
+    $this->get('/favicon.ico')->assertOk()->assertHeader('Content-Type', 'image/x-icon');
 });

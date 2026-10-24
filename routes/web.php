@@ -14,6 +14,7 @@ use App\Http\Controllers\Site\TrackController;
 use App\Http\Middleware\CaptureFirstTouch;
 use App\Http\Middleware\MaintenanceMode;
 use App\Http\Middleware\SetAdminLocale;
+use App\Services\FaviconGenerator;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Spatie\ResponseCache\Middlewares\CacheResponse;
@@ -23,6 +24,13 @@ Route::post('/t', TrackController::class)->middleware('throttle:60,1')->name('tr
 Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 Route::get('/sitemaps/{type}.xml', SitemapController::class)->where('type', '[a-z-]+')->name('sitemap.type');
 Route::get('/robots.txt', RobotsController::class)->name('robots');
+Route::get('/favicon.ico', function (FaviconGenerator $favicons) {
+    $path = $favicons->icoPath();
+
+    return $path
+        ? response()->file($path, ['Content-Type' => 'image/x-icon', 'Cache-Control' => 'public, max-age=86400'])
+        : response()->file(public_path('images/brand/mark-sm.png'), ['Content-Type' => 'image/png']);
+})->name('favicon');
 
 // Hosts without symlink support: serve the public disk at /storage (see DEPLOY.md).
 if (! file_exists(public_path('storage'))) {

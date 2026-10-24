@@ -10,6 +10,8 @@
     </x-admin.page-header>
 
     <form id="settings-form" wire:submit="save" class="grid gap-6 xl:grid-cols-2">
+        @include('livewire.admin.seo.partials.search-appearance')
+
         <x-admin.panel :title="__('admin.seo.defaults')">
             <x-admin.locale-tabs :missing="$this->missingEnglish([$data['title_suffix'], $data['default_description']])">
                 <x-slot:ar>

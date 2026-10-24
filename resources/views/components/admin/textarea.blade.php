@@ -8,7 +8,7 @@
     $hasError = $errors->has($model);
 @endphp
 <x-admin.field :label="$label" :for="$id" :error="$model" :required="$required" :hint="$hint" {{ $attributes->only('class') }}>
-    <div x-data="{ count: 0 }" x-init="count = $refs.area.value.length">
+    <div x-data="{ count: 0 }" x-init="$nextTick(() => count = $refs.area.value.length)" x-on:livewire:navigated.window="count = $refs.area.value.length">
         <textarea
             id="{{ $id }}"
             x-ref="area"

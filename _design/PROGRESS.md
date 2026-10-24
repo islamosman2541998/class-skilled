@@ -365,3 +365,12 @@ the live host.
   password as the admin).
 - Fixed: contact-message and job-application detail screens returned 500 (media eager load / quote-only follow-up
   date); regression test added.
+- Google appearance (Dashboard → SEO → "Appearance in Google results", with a live AR/EN result preview): site name +
+  alternate name (WebSite structured data, `og:site_name`), home page title (used as is) and description, icon next
+  to the result (favicon source; falls back to Settings → General favicon) and the organisation logo for structured
+  data (falls back to the site logo). Settings migration `2026_10_24_130000_add_search_appearance_settings`.
+- Favicons: sizes 32/48/96/180/192/512 + a real `/favicon.ico` (PNG in an ICO container, served by a route; the empty
+  Laravel default file was removed), generated on first use and regenerated when General or SEO settings are saved.
+- Sidebar badges = unread requests per type (`read_at` empty), cached 60 s and reset when a request is opened or
+  marked; the bell = their sum. The blue dot in request lists = unread (not a status).
+- Fixed: textarea character counter showed 0 until typing; requests list number/phone line no longer wraps.

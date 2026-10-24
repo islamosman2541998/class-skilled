@@ -20,6 +20,22 @@ class SeoSettings extends Settings
 
     public array $schema_extra;
 
+    /** Site name shown by Google above the result (WebSite name, og:site_name). */
+    public array $search_site_name;
+
+    public array $search_alternate_name;
+
+    /** Home page <title> and meta description. */
+    public array $home_title;
+
+    public array $home_description;
+
+    /** Icon next to the result (favicon); falls back to Settings → General favicon. */
+    public ?int $search_icon_asset_id;
+
+    /** Organisation logo in structured data; falls back to the site logo. */
+    public ?int $search_logo_asset_id;
+
     public static function group(): string
     {
         return 'seo';

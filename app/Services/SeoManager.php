@@ -18,6 +18,9 @@ class SeoManager
 {
     private ?string $title = null;
 
+    /** Complete <title> used as is (no suffix), e.g. the home page title from Settings → SEO. */
+    private ?string $fullTitle = null;
+
     private ?string $description = null;
 
     /** @var array<string, string|null> */
@@ -214,8 +217,27 @@ class SeoManager
         return $this->schema;
     }
 
+    public function fullTitle(string $title): static
+    {
+        $this->fullTitle = $title;
+
+        return $this;
+    }
+
+    /**
+     * Site name shown by Google above results (Settings → SEO → search appearance).
+     */
+    public function siteName(): string
+    {
+        return Translate::pick(app(SeoSettings::class)->search_site_name) ?: app(SiteContext::class)->name();
+    }
+
     private function documentTitle(): string
     {
+        if (filled($this->fullTitle)) {
+            return (string) $this->fullTitle;
+        }
+
         $site = app(SiteContext::class)->name();
         $suffix = Translate::pick(app(SeoSettings::class)->title_suffix);
 

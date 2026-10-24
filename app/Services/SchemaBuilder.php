@@ -11,6 +11,7 @@ use App\Settings\CompanySettings;
 use App\Settings\ContactSettings;
 use App\Settings\SeoSettings;
 use App\Support\LocalizedRoute;
+use App\Support\Translate;
 use Illuminate\Support\Str;
 
 /**
@@ -43,6 +44,17 @@ class SchemaBuilder
         return (string) json_encode($this->graph(), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG);
     }
 
+    /**
+     * Organisation logo for Google: Settings → SEO logo, else the site logo.
+     */
+    public function logoUrl(): string
+    {
+        $id = app(SeoSettings::class)->search_logo_asset_id;
+        $asset = $id ? Asset::query()->with('media')->find($id) : null;
+
+        return $asset?->url('md') ?: $this->site->logoUrl();
+    }
+
     public function organizationId(): string
     {
         return url('/').'#organization';
@@ -65,8 +77,8 @@ class SchemaBuilder
             'name' => $this->site->name(),
             'legalName' => $this->site->legalName() ?: null,
             'url' => $this->site->homeUrl(),
-            'logo' => $this->site->logoUrl(),
-            'image' => $this->site->logoUrl(),
+            'logo' => $this->logoUrl(),
+            'image' => $this->logoUrl(),
             'description' => $this->site->footerAbout() ?: null,
             'telephone' => $contact->phones[0] ?? null,
             'email' => $contact->emails[0] ?? null,
@@ -90,11 +102,15 @@ class SchemaBuilder
      */
     public function website(): array
     {
-        return [
+        return array_filter([
             '@type' => 'WebSite',
             '@id' => url('/').'#website',
             'url' => $this->site->homeUrl(),
-            'name' => $this->site->name(),
+            'name' => $this->seo->siteName(),
+            'alternateName' => array_values(array_unique(array_filter([
+                Translate::pick(app(SeoSettings::class)->search_alternate_name),
+                $this->site->name(),
+            ], fn (string $name) => $name !== '' && $name !== $this->seo->siteName()))) ?: null,
             'inLanguage' => app()->getLocale(),
             'publisher' => ['@id' => $this->organizationId()],
             'potentialAction' => [
@@ -102,7 +118,7 @@ class SchemaBuilder
                 'target' => ['@type' => 'EntryPoint', 'urlTemplate' => LocalizedRoute::url('search').'?q={search_term_string}'],
                 'query-input' => 'required name=search_term_string',
             ],
-        ];
+        ], fn ($value) => $value !== null);
     }
 
     /**

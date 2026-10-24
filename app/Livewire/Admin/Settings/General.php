@@ -47,7 +47,6 @@ class General extends SettingsPage
 
     protected function afterSave(Settings $settings): void
     {
-        /** @var GeneralSettings $settings */
-        app(FaviconGenerator::class)->generate($settings->favicon_asset_id);
+        app(FaviconGenerator::class)->refresh();
     }
 }

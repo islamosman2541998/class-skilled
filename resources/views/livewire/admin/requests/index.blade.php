@@ -115,7 +115,7 @@
                                             <x-heroicon-m-paper-clip class="size-4 text-[var(--a-muted)]" :title="__('admin.requests.attachments')" />
                                         @endif
                                     </span>
-                                    <span class="mt-0.5 block text-[12.5px] font-normal text-[var(--a-muted)]"><bdi dir="ltr">{{ \App\Support\RequestPresenter::number($row) }}</bdi> · <bdi dir="ltr">{{ $row->phone }}</bdi></span>
+                                    <span class="mt-0.5 block whitespace-nowrap text-[12.5px] font-normal text-[var(--a-muted)]"><bdi dir="ltr">{{ \App\Support\RequestPresenter::number($row) }}</bdi> · <bdi dir="ltr">{{ $row->phone }}</bdi></span>
                                 </a>
                             </td>
                             @foreach ($extraColumns as $columnKey => [, $value])

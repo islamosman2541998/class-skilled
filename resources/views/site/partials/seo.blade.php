@@ -5,7 +5,7 @@
     $ogLocale = app()->getLocale() === 'ar' ? 'ar_AE' : 'en_US';
 @endphp
 <meta property="og:type" content="{{ $seo->type() }}">
-<meta property="og:site_name" content="{{ $site->name() }}">
+<meta property="og:site_name" content="{{ $seo->siteName() }}">
 <meta property="og:title" content="{{ $seo->title() }}">
 <meta property="og:description" content="{{ $seo->description() }}">
 <meta property="og:url" content="{{ $seo->canonical() }}">

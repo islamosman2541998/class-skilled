@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Seo;
 
 use App\Livewire\Admin\Settings\SettingsPage;
+use App\Services\FaviconGenerator;
 use App\Services\Sitemap;
 use App\Settings\SeoSettings;
 use Illuminate\Contracts\View\View;
@@ -41,6 +42,12 @@ class Settings extends SettingsPage
     {
         return [
             ...$this->pair('title_suffix', false, 80),
+            ...$this->pair('search_site_name', true, 70),
+            ...$this->pair('search_alternate_name', false, 70),
+            ...$this->pair('home_title', true, 70),
+            ...$this->pair('home_description', true, 170),
+            'data.search_icon_asset_id' => ['nullable', 'integer', 'exists:assets,id'],
+            'data.search_logo_asset_id' => ['nullable', 'integer', 'exists:assets,id'],
             ...$this->pair('default_description', false, 300),
             'data.default_og_asset_id' => ['nullable', 'integer', 'exists:assets,id'],
             'data.google_verification' => ['nullable', 'string', 'max:120'],
@@ -57,7 +64,9 @@ class Settings extends SettingsPage
 
     protected function prepare(array $data): array
     {
-        $data['default_og_asset_id'] = $data['default_og_asset_id'] ? (int) $data['default_og_asset_id'] : null;
+        foreach (['default_og_asset_id', 'search_icon_asset_id', 'search_logo_asset_id'] as $key) {
+            $data[$key] = ($data[$key] ?? null) ? (int) $data[$key] : null;
+        }
         $data['schema_extra'] = filled($this->schemaJson) ? (array) json_decode($this->schemaJson, true) : [];
         $data['robots_txt'] = str_replace("\r\n", "\n", (string) ($data['robots_txt'] ?? ''));
 
@@ -66,6 +75,12 @@ class Settings extends SettingsPage
         }
 
         return $data;
+    }
+
+    protected function afterSave(\Spatie\LaravelSettings\Settings $settings): void
+    {
+        // The icon next to Google results is the favicon.
+        app(FaviconGenerator::class)->refresh();
     }
 
     public function regenerateSitemap(): void
