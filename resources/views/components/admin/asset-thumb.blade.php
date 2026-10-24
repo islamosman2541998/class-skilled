@@ -1,19 +1,21 @@
 {{--
-    Small preview of a library asset (image thumb, video/embed poster, PDF tile).
+    Small preview of a library asset (image, video/embed poster, PDF tile).
+    The whole image is shown (no cropping) on a light checkerboard, so logos and
+    transparent PNGs stay readable.
     <x-admin.asset-thumb :asset="$asset" class="aspect-[4/3]" />
 --}}
 @props(['asset'])
 @php
     $kind = $asset->kind->value;
     $thumb = match ($kind) {
-        'image' => $asset->url('thumb'),
-        'video', 'embed' => $asset->poster?->url('thumb'),
+        'image' => $asset->url('sm'),
+        'video', 'embed' => $asset->poster?->url('sm'),
         default => null,
     };
 @endphp
-<span {{ $attributes->merge(['class' => 'relative flex items-center justify-center overflow-hidden rounded-lg bg-[#eef1f5]']) }}>
+<span {{ $attributes->merge(['class' => 'a-thumb relative flex items-center justify-center overflow-hidden rounded-lg']) }}>
     @if ($thumb)
-        <img src="{{ $thumb }}" alt="{{ $asset->altText() }}" loading="lazy" class="h-full w-full object-cover">
+        <img src="{{ $thumb }}" alt="{{ $asset->altText() }}" loading="lazy" decoding="async" class="h-full w-full object-contain">
     @else
         <span class="flex flex-col items-center gap-1 text-[var(--a-muted)]">
             <x-heroicon-o-document-text class="h-8 w-8" />

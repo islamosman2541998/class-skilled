@@ -425,6 +425,16 @@
     }
 
     /* Dropdown / popover */
+    /* Media thumbnails: full image on a light checkerboard (transparent logos stay visible). */
+    .a-thumb {
+        background-color: #f3f5f8;
+        background-image:
+            linear-gradient(45deg, #e6eaf0 25%, transparent 25%, transparent 75%, #e6eaf0 75%),
+            linear-gradient(45deg, #e6eaf0 25%, transparent 25%, transparent 75%, #e6eaf0 75%);
+        background-position: 0 0, 8px 8px;
+        background-size: 16px 16px;
+    }
+
     /* Top bar */
     .a-topbar {
         position: sticky;
