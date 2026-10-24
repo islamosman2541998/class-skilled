@@ -401,3 +401,7 @@ the live host.
   project gallery field uses it (images, MP4/WebM uploads, YouTube/Vimeo embeds from the library). On the project page
   a video shows as its poster with a play button (slide + thumbnail) and plays in the lightbox when clicked. New UI
   string `lightbox.play_video`.
+- Footer & CTA (owner request): the request-a-quote band (and the home CTA section) is now a navy card on the light
+  paper band, so it no longer merges with the footer. Footer is shorter (smaller logo, tighter spacing, two link
+  columns per row on mobile); working hours and the licence/classification row are removed; contact shows one mobile
+  number (first phone that is not the WhatsApp number) and the WhatsApp number with its icon, from Settings → Contact.

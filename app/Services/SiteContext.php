@@ -66,6 +66,34 @@ class SiteContext
         return LinkResolver::phoneUrl();
     }
 
+    /**
+     * WhatsApp number as entered in Settings → Contact ('' when not set).
+     */
+    public function whatsappNumber(): string
+    {
+        return trim((string) app(ContactSettings::class)->whatsapp_number);
+    }
+
+    /**
+     * The mobile number shown next to WhatsApp: the first phone that is not the WhatsApp number (else the first phone).
+     *
+     * @return array{label: string, href: string}|null
+     */
+    public function mobilePhone(): ?array
+    {
+        $digits = fn (string $n) => preg_replace('/\D+/', '', $n);
+        $phones = $this->phones();
+        $whatsapp = $digits($this->whatsappNumber());
+
+        foreach ($phones as $phone) {
+            if ($digits($phone['label']) !== $whatsapp) {
+                return $phone;
+            }
+        }
+
+        return $phones[0] ?? null;
+    }
+
     public function whatsappUrl(?string $locale = null): ?string
     {
         return LinkResolver::whatsappUrl($locale);

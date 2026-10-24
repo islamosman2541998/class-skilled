@@ -1,4 +1,4 @@
-<div class="container-site flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center" data-reveal="fade-up">
+<div @class(['container-site' => ! ($bare ?? false), 'flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center']) data-reveal="fade-up">
     <div class="max-w-2xl">
         <h2 id="{{ $headingId }}" class="t-section">{{ $cta['title'] }}</h2>
         @if ($cta['subtitle'] !== '')

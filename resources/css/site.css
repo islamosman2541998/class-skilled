@@ -727,6 +727,37 @@
     }
 
     /* Footer */
+    /* CTA band above the footer: navy card on the paper background. */
+    .cta-band {
+        background: var(--c-paper);
+        padding-block: 56px;
+    }
+
+    .cta-card {
+        border-radius: 20px;
+        background: var(--c-navy);
+        color: #c9d3e3;
+        padding: 32px 24px;
+    }
+
+    .cta-card h2 {
+        color: #fff;
+    }
+
+    .cta-card .t-lead {
+        color: #c9d3e3;
+    }
+
+    @media (width >= 1024px) {
+        .cta-band {
+            padding-block: 72px;
+        }
+
+        .cta-card {
+            padding: 48px 56px;
+        }
+    }
+
     .site-footer {
         background: var(--c-deep);
         color: #c9d3e3;

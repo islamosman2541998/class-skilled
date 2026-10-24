@@ -136,3 +136,19 @@ test('the about section has a title, text and one image, and there is no facts s
         ->and(substr_count($html, 'data-reveal="image"'))->toBeGreaterThanOrEqual(1)
         ->and($html)->not->toContain('data-section="facts"');
 });
+
+test('the footer shows a mobile and a whatsapp number, without working hours or licence details', function () {
+    $contact = app(\App\Settings\ContactSettings::class);
+    $contact->phones = ['+971 58 982 0017', '+971 52 764 9086'];
+    $contact->whatsapp_number = '+971 58 982 0017';
+    $contact->save();
+
+    $html = $this->get('/')->assertOk()->getContent();
+    $footer = substr($html, strpos($html, '<footer'));
+
+    expect($footer)->toContain('+971 52 764 9086')
+        ->toContain('+971 58 982 0017')
+        ->toContain('https://wa.me/971589820017')
+        ->not->toContain('CN-5898460')
+        ->not->toContain('8:00');
+});
