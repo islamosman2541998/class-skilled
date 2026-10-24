@@ -286,6 +286,7 @@ return [
         'send' => ['ar' => 'إرسال', 'en' => 'Send'],
         'sending' => ['ar' => 'جارٍ الإرسال…', 'en' => 'Sending…'],
         'uploading' => ['ar' => 'جارٍ الرفع…', 'en' => 'Uploading…'],
+        'upload_failed' => ['ar' => 'تعذّر رفع الملف. تأكد من نوعه وأن حجمه لا يزيد عن :max ميجابايت، ثم حاول مرة أخرى.', 'en' => 'The file could not be uploaded. Check its type and that it is at most :max MB, then try again.'],
         'apply' => ['ar' => 'إرسال الطلب', 'en' => 'Submit application'],
         'application_sent_title' => ['ar' => 'تم استلام طلبك', 'en' => 'Application received'],
         'application_sent_text' => ['ar' => 'شكرًا لاهتمامك، سنراجع طلبك ونتواصل معك إذا كان مناسبًا.', 'en' => "Thank you for your interest; we'll review your application and contact you if it's a fit."],

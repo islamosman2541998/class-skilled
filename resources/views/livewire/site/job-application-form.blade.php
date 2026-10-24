@@ -22,11 +22,12 @@
             @include('site.partials.form-field', ['prefix' => 'a', 'model' => 'specialty', 'label' => __('forms.specialty')])
             @include('site.partials.form-field', ['prefix' => 'a', 'model' => 'message', 'label' => __('forms.message'), 'type' => 'textarea', 'rows' => 4, 'class' => 'sm:col-span-2'])
 
-            <div class="sm:col-span-2" x-data="{ progress: 0, uploading: false }" x-on:livewire-upload-start="uploading = true" x-on:livewire-upload-finish="uploading = false" x-on:livewire-upload-error="uploading = false" x-on:livewire-upload-progress="progress = $event.detail.progress">
+            <div class="sm:col-span-2" x-data="{ progress: 0, uploading: false, failed: false }" x-on:livewire-upload-start="uploading = true; failed = false" x-on:livewire-upload-finish="uploading = false" x-on:livewire-upload-error="uploading = false; failed = true" x-on:livewire-upload-progress="progress = $event.detail.progress">
                 <label for="a-cv" class="mb-1.5 block text-[14px] font-bold text-ink">{{ __('forms.cv') }} <span class="text-[#b42318]" aria-hidden="true">*</span></label>
                 <input id="a-cv" type="file" accept=".pdf,application/pdf" wire:model="cv" class="block w-full rounded-[12px] border border-dashed border-line bg-white p-3 text-[14px] file:me-3 file:rounded-full file:border-0 file:bg-navy file:px-4 file:py-2 file:font-bold file:text-white" aria-describedby="a-cv-hint" @error('cv') aria-invalid="true" @enderror>
                 <p id="a-cv-hint" class="t-small mt-1 text-muted">{{ __('forms.cv_hint', ['max' => $maxMb]) }}</p>
                 <div x-show="uploading" x-cloak class="mt-2 h-2 overflow-hidden rounded-full bg-line" role="progressbar" :aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100"><div class="h-full bg-sky" :style="`width: ${progress}%`"></div></div>
+                <p x-show="failed" x-cloak class="mt-1.5 text-[13.5px] text-[#b42318]" role="alert">{{ __('forms.upload_failed', ['max' => $maxMb]) }}</p>
                 @error('cv') <p class="mt-1.5 text-[13.5px] text-[#b42318]" role="alert">{{ $message }}</p> @enderror
             </div>
 

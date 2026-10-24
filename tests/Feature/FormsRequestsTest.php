@@ -16,6 +16,7 @@ use App\Models\QuoteRequest;
 use App\Models\RequestStatus;
 use App\Models\Service;
 use App\Models\SiteEvent;
+use App\Settings\FormSettings;
 use App\Support\LocalizedRoute;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
@@ -228,4 +229,17 @@ test('message and application details open for every request type', function () 
 
     $this->get(route('admin.messages.show', $message->id))->assertOk()->assertSee('رسالة تجريبية');
     $this->get(route('admin.applications.show', $application->id))->assertOk()->assertSee('cv');
+});
+
+test('each quote step is keyed so the upload progress (Alpine) starts on step 3', function () {
+    $service = Service::create(['title' => ['ar' => 'عزل الأسطح', 'en' => 'Roof insulation']]);
+
+    Livewire::test(QuoteForm::class)
+        ->assertSeeHtml('wire:key="quote-step-1"')
+        ->set('service_id', $service->id)->set('facility_type', '0')->set('project_state', '1')->call('next')
+        ->set('emirate', '0')->set('area_m2', '250')->set('start_when', '1')->call('next')
+        ->assertSet('step', 3)
+        ->assertSeeHtml('wire:key="quote-step-3"')
+        ->assertSeeHtml('x-on:livewire-upload-error="uploading = false; failed = true"')
+        ->assertSee(__('forms.upload_failed', ['max' => app(FormSettings::class)->max_upload_mb]));
 });

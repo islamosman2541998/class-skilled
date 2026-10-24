@@ -57,6 +57,8 @@
                         <p class="mb-5 rounded-[12px] bg-[#fdecea] px-4 py-3 text-[14px] font-semibold text-[#b42318]" role="alert">{{ $message }}</p>
                     @enderror
 
+                    {{-- Keyed per step: Livewire builds each step fresh, so Alpine starts its x-data (the upload progress on step 3). --}}
+                    <div wire:key="quote-step-{{ $step }}">
                     @if ($step === 1)
                         <fieldset>
                             <legend class="t-card text-navy">{{ __('quote.service') }} <span class="text-[#b42318]" aria-hidden="true">*</span></legend>
@@ -128,10 +130,10 @@
                         </div>
                     @elseif ($step === 3)
                         <div
-                            x-data="{ over: false, progress: 0, uploading: false }"
-                            x-on:livewire-upload-start="uploading = true; progress = 0"
+                            x-data="{ over: false, progress: 0, uploading: false, failed: false }"
+                            x-on:livewire-upload-start="uploading = true; failed = false; progress = 0"
                             x-on:livewire-upload-finish="uploading = false"
-                            x-on:livewire-upload-error="uploading = false"
+                            x-on:livewire-upload-error="uploading = false; failed = true"
                             x-on:livewire-upload-progress="progress = $event.detail.progress"
                             @dragover.prevent="over = true" @dragleave.prevent="over = false"
                             @drop.prevent="over = false; $refs.input.files = $event.dataTransfer.files; $refs.input.dispatchEvent(new Event('change', { bubbles: true }))"
@@ -146,6 +148,7 @@
                                 <p class="t-small mb-1 text-muted">{{ __('forms.uploading') }} <bdi x-text="progress + '%'"></bdi></p>
                                 <div class="h-2 overflow-hidden rounded-full bg-line"><div class="h-full rounded-full bg-sky transition-all" :style="`width: ${progress}%`"></div></div>
                             </div>
+                            <p x-show="failed" x-cloak class="mt-3 text-[13.5px] text-[#b42318]" role="alert">{{ __('forms.upload_failed', ['max' => $settings->max_upload_mb]) }}</p>
                             @error('newFiles.*') <p class="mt-3 text-[13.5px] text-[#b42318]" role="alert">{{ $message }}</p> @enderror
                             @error('files') <p class="mt-3 text-[13.5px] text-[#b42318]" role="alert">{{ $message }}</p> @enderror
 
@@ -201,6 +204,7 @@
                         @endif
                         <p class="t-small mt-5 text-muted">{{ __('quote.consent') }} {{ __('messages.privacy_note') }}</p>
                     @endif
+                    </div>
 
                     {{-- Step buttons (sticky above the mobile bottom bar) --}}
                     <div class="sticky bottom-[84px] z-10 -mx-5 mt-7 flex items-center justify-between gap-3 border-t border-line bg-white/95 px-5 pt-4 pb-1 backdrop-blur sm:static sm:mx-0 sm:bg-transparent sm:px-0 lg:bottom-0">
@@ -210,7 +214,8 @@
                             <span></span>
                         @endif
                         <button type="submit" class="btn btn-primary min-w-36" wire:loading.attr="disabled" wire:target="next, submit, newFiles">
-                            <span wire:loading.remove wire:target="next, submit">{{ $step < 4 ? __('quote.next') : __('quote.submit') }}</span>
+                            <span wire:loading.remove wire:target="next, submit, newFiles">{{ $step < 4 ? __('quote.next') : __('quote.submit') }}</span>
+                            <span wire:loading wire:target="newFiles">{{ __('forms.uploading') }}</span>
                             <span wire:loading wire:target="next, submit">{{ __('forms.sending') }}</span>
                         </button>
                     </div>

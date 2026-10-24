@@ -431,3 +431,8 @@ the live host.
 - Card sliders: prev/next arrows now visible on mobile too (section header row: "view all" at the start, arrows at the end).
 - Projects section filters: the category chips wrap onto several lines (all visible) instead of a sideways-scrolling
   row; chip padding 12px on mobile, 16px from 640px.
+- Quote form upload (owner report: "no sign of the upload, Next does nothing"): Livewire morphed step 3 into an element
+  of step 2, so Alpine never started the upload `x-data` (JS errors `uploading/progress is not defined`), the progress
+  bar never showed and Next stayed disabled while the file uploaded (5–8 s on the live server). Each step is now wrapped
+  in `wire:key="quote-step-N"`; the Next button reads "Uploading…" during an upload; a failed upload shows
+  `forms.upload_failed` (quote form + job application CV). Verified in a browser on a throttled network; test added.
