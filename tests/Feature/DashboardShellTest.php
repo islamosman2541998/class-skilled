@@ -8,6 +8,8 @@ use App\Livewire\Admin\System\Roles\Index as RolesIndex;
 use App\Livewire\Admin\System\Users\Form as UserForm;
 use App\Livewire\Admin\System\Users\Index as UsersIndex;
 use App\Models\User;
+use App\Support\LinkOptions;
+use App\Support\LinkResolver;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Livewire\Livewire;
@@ -202,4 +204,14 @@ test('the command palette is permission aware', function () {
     Livewire::test(CommandPalette::class)
         ->set('query', mb_substr(__('admin.nav.users'), 0, 4))
         ->assertSee(__('admin.nav.users'));
+});
+
+test('every system page has a dashboard label in both languages', function () {
+    foreach (['ar', 'en'] as $locale) {
+        app()->setLocale($locale);
+
+        foreach ([...LinkResolver::SYSTEM_ROUTES, 'home'] as $route) {
+            expect(LinkOptions::routeLabel($route))->not->toStartWith('admin.');
+        }
+    }
 });

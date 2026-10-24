@@ -71,6 +71,12 @@
         font-family: var(--font-head);
     }
 
+    /* Horizontal scroll areas (tables, tab rows) contain their absolutely positioned children
+       (e.g. .sr-only labels), otherwise those escape and widen the whole page on mobile. */
+    body.admin .overflow-x-auto {
+        position: relative;
+    }
+
     [x-cloak] {
         display: none !important;
     }

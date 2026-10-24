@@ -409,3 +409,18 @@ the live host.
   (`x-site.social-icon`, label in aria-label/title); dynamic menu groups in footer columns expand to their items (the
   "Services" column lists the services; default limit 12); desktop columns follow the number of footer menus with
   links; mobile room for the bottom bar is now footer padding (navy) instead of body padding.
+
+### Full review (2026-10-24)
+- Gates: `migrate:fresh --seed` (separate scratch database), 110 tests / 759 assertions green, Pint, Larastan level 5,
+  `npm run build`, clean log.
+- Browser crawl: 96 public URLs (AR/EN) × 390/1440 — no JS errors, broken images, horizontal scroll, raw keys, missing
+  alt/title/description/canonical; one H1 per page; 404 pages return 404. 142 dashboard screens (all records' edit /
+  detail pages, every home section panel, every hero slide) at 1440 AR, list screens at 390 AR and 1440 EN.
+- Fixed: system-page labels in the link picker / menus showed raw keys (`admin.link.routes.services.index` — dots in
+  the key were read as nesting); now `LinkOptions::routeLabel()` with underscore keys + test.
+- Fixed: 13 dashboard screens scrolled sideways on mobile (absolutely positioned `.sr-only` labels escaped table
+  scroll areas; single-column grids grew to their widest child; SEO health / system health tables not wrapped).
+- Contact form submitted end-to-end in a mobile browser (validation messages, then saved); test record deleted.
+- Note (local only): Laragon's threaded Apache on Windows can intermittently miss `.env` under concurrent requests
+  (500, "production"/sqlite in the log). Not reproducible one request at a time; production uses a cached config
+  (`php artisan optimize`, DEPLOY.md), which avoids it.

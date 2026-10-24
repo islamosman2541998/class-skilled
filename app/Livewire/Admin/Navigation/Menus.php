@@ -460,8 +460,8 @@ class Menus extends Component
         }
 
         return match ($item->type) {
-            MenuItemType::Home => __('admin.link.routes.home'),
-            MenuItemType::SystemPage => __('admin.link.routes.'.$item->system_route),
+            MenuItemType::Home => LinkOptions::routeLabel('home'),
+            MenuItemType::SystemPage => LinkOptions::routeLabel((string) $item->system_route),
             MenuItemType::Page, MenuItemType::Model => (string) ($this->options['models'][$item->linkable_type]['items'][$item->linkable_id] ?? __('admin.menus.missing_target')),
             default => '—',
         };

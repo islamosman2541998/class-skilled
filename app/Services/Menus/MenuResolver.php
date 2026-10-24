@@ -9,6 +9,7 @@ use App\Enums\MenuLocation;
 use App\Models\MenuItem;
 use App\Models\MenuItemEntry;
 use App\Services\SiteCache;
+use App\Support\LinkOptions;
 use App\Support\LinkResolver;
 use App\Support\LocalizedRoute;
 use App\Support\Translate;
@@ -284,7 +285,7 @@ class MenuResolver
             MenuItemType::DynamicGroup => ($item->dynamic_mode === DataSource::Manual
                 ? __('admin.menus.manual_count', ['count' => $item->entries->count()])
                 : __('admin.menus.auto').': '.($item->dynamic_mode?->label() ?? '')).' · '.($item->dynamic_source?->label() ?? DynamicSource::Services->label()),
-            MenuItemType::SystemPage, MenuItemType::Home => (string) __('admin.link.routes.'.($item->type === MenuItemType::Home ? 'home' : $item->system_route)),
+            MenuItemType::SystemPage, MenuItemType::Home => LinkOptions::routeLabel($item->type === MenuItemType::Home ? 'home' : (string) $item->system_route),
             MenuItemType::External => (string) $item->url,
             default => '',
         };

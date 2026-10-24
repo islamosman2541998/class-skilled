@@ -29,6 +29,15 @@ class LinkOptions
     ];
 
     /**
+     * Dashboard label of a system page. Route names contain dots, which the translator would read as nesting,
+     * so the keys in lang/<locale>/admin.php use underscores (services.index => services_index).
+     */
+    public static function routeLabel(string $route): string
+    {
+        return (string) __('admin.link.routes.'.str_replace('.', '_', $route));
+    }
+
+    /**
      * @return array{routes: array<string, string>, models: array<string, array{label: string, items: array<int, string>}>}
      */
     public static function all(): array
@@ -37,7 +46,7 @@ class LinkOptions
         $routes = [];
 
         foreach (LinkResolver::SYSTEM_ROUTES as $route) {
-            $routes[$route] = __('admin.link.routes.'.$route);
+            $routes[$route] = self::routeLabel($route);
         }
 
         $models = [];

@@ -6,7 +6,7 @@
     </x-admin.page-header>
 
     @php($sections = $this->sections)
-    <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_440px]">
+    <div class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_440px]">
         <x-admin.panel :title="__('admin.home.sections')" :subtitle="__('admin.home.count', ['count' => $sections->count(), 'visible' => $sections->where('is_visible', true)->count()])">
             <x-slot:actions>
                 @can('create', \App\Models\HomeSection::class)

@@ -19,6 +19,7 @@
             </select>
             <span class="ms-auto text-[13.5px] text-[var(--a-muted)]">{{ __('admin.seo_health.count', ['count' => count($rows)]) }}</span>
         </div>
+        <div class="overflow-x-auto">
         <table class="a-table">
             <thead><tr><th>{{ __('admin.common.title') }}</th><th>{{ __('admin.seo_health.type') }}</th><th>{{ __('admin.seo_health.issue') }}</th><th></th></tr></thead>
             <tbody>
@@ -40,5 +41,6 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
     </div>
 </div>

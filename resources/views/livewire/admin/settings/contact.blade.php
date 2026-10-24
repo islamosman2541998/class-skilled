@@ -1,5 +1,5 @@
 <x-admin.settings-frame :group="$this->group()" :tabs="$this->tabs()">
-    <div class="grid gap-6 xl:grid-cols-2">
+    <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <x-admin.panel :title="__('admin.settings.sections.phones')">
             <x-admin.repeater model="data.phones" :template="['value' => '']" :add-label="__('admin.settings.fields.add_phone')">
                 @foreach ($data['phones'] as $i => $item)

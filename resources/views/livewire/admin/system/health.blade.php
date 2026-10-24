@@ -11,20 +11,22 @@
         {{ $failed ? __('admin.health.has_failures') : __('admin.health.all_good') }}
     </div>
 
-    <div class="grid gap-6 xl:grid-cols-2">
+    <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
         @foreach ($groups as $group => $rows)
             <x-admin.panel :title="__('admin.health.groups.'.$group)" :padded="false">
+                <div class="overflow-x-auto">
                 <table class="a-table">
                     <tbody>
                         @foreach ($rows as $row)
                             <tr>
                                 <td class="font-semibold" dir="ltr">{{ $row['label'] }}</td>
                                 <td><x-admin.badge :color="['ok' => 'green', 'warn' => 'amber', 'fail' => 'red'][$row['status']]">{{ __('admin.health.status.'.$row['status']) }}</x-admin.badge></td>
-                                <td class="text-[13px] text-[var(--a-muted)]" dir="ltr">{{ $row['detail'] }}</td>
+                                <td class="text-[13px] break-words text-[var(--a-muted)] [overflow-wrap:anywhere]" dir="ltr">{{ $row['detail'] }}</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+                </div>
             </x-admin.panel>
         @endforeach
     </div>
