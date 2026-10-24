@@ -389,3 +389,7 @@ the live host.
   drag to reorder); slides carry a stable `id` (missing ids are added on open). The old in-panel slide editor was too
   cramped, so elements overlapped and covered the image remove/change buttons. `AssetField` now emits
   `asset-field-changed` after a pick/remove/reorder so a parent page can re-render (used by the slide preview).
+- Card sliders (owner request): whole cards only, no half-visible card (1 / 2 / 3 / 4 per view at <640 / 640 / 1024 /
+  1280; clients 2 / 3 / 5 / 6); equal-height cards and visible card shadows (Swiper's unlayered `height` / `overflow`
+  rules were overriding ours); a service without a cover shows the brand mark in the image box. The services section
+  no longer has a background photo (solid dark navy; migration `2026_10_24_150000_remove_services_section_background_photo`).

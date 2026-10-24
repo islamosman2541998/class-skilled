@@ -298,6 +298,13 @@
         background: rgb(255 255 255 / 0.06);
     }
 
+    /* No image yet: keep the card the same shape with the brand mark. */
+    .g-card__media--empty {
+        display: grid;
+        place-items: center;
+        background: var(--c-navy);
+    }
+
     .g-card__media img {
         width: 100%;
         height: 100%;
@@ -322,6 +329,13 @@
     .g-card:hover .g-card__media img,
     .g-card:focus-within .g-card__media img {
         transform: scale(1.04);
+    }
+
+    .g-card .g-card__media--empty img {
+        width: auto;
+        height: 56px;
+        object-fit: contain;
+        transform: none;
     }
 
     .glass-dark.g-card .g-card__title {
@@ -876,42 +890,51 @@
         transition: width 0.3s ease;
     }
 
-    /* Swiper before init: show the peek layout without JS. */
+    /* Swiper before init: same whole-card layout (1 / 2 / 3 / 4 per view) without JS. */
     .card-slider .swiper-wrapper {
         display: flex;
     }
 
     .card-slider:not(.swiper-initialized) .swiper-slide {
-        flex: 0 0 calc((100% - 16px) / 1.15);
+        flex: 0 0 100%;
         margin-inline-end: 16px;
     }
 
     @media (width >= 640px) {
         .card-slider:not(.swiper-initialized) .swiper-slide {
-            flex-basis: calc((100% - 40px) / 2.2);
+            flex-basis: calc((100% - 20px) / 2);
             margin-inline-end: 20px;
         }
     }
 
     @media (width >= 1024px) {
         .card-slider:not(.swiper-initialized) .swiper-slide {
-            flex-basis: calc((100% - 72px) / 3.2);
+            flex-basis: calc((100% - 48px) / 3);
             margin-inline-end: 24px;
         }
     }
 
+    @media (width >= 1280px) {
+        .card-slider:not(.swiper-initialized) .swiper-slide {
+            flex-basis: calc((100% - 72px) / 4);
+        }
+    }
+
+    /* Equal-height cards: Swiper's own (unlayered) `height: 100%` would beat this layered rule without !important. */
     .card-slider .swiper-slide {
-        height: auto;
+        height: auto !important;
     }
 
+    /* .slider-clip does the clipping (with room for shadows); !important beats Swiper's unlayered overflow: hidden. */
     .card-slider.swiper {
-        overflow: visible;
+        overflow: visible !important;
     }
 
+    /* Clips the side slides but leaves room for the hover lift and the card shadow. */
     .slider-clip {
         overflow: hidden;
-        padding-block: 8px 12px;
-        margin-block: -8px -12px;
+        padding-block: 8px 56px;
+        margin-block: -8px -56px;
     }
 
     /* Process line */

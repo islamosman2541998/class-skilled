@@ -75,7 +75,7 @@ class DefaultHomeSections
                 'cta_link' => ['type' => 'system_page', 'route' => 'services.index'],
                 'source' => DataSource::All,
                 'items_limit' => 8,
-                'background' => SectionBackground::DarkPhoto,
+                'background' => SectionBackground::Dark,
                 'data' => ['item_ids' => [], 'display' => 'slider', 'autoplay' => false, 'bg_asset_id' => null],
             ],
             [

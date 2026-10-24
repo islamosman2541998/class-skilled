@@ -497,9 +497,6 @@ class DemoContentSeeder extends Seeder
                     $data['image_asset_id'] = $photo('office-2');
                     $section->cta_link = ['type' => 'page', 'model_type' => 'page', 'model_id' => $aboutPage->id];
                     break;
-                case SectionType::Services:
-                    $data['bg_asset_id'] = $photo('rebar');
-                    break;
                 case SectionType::FeatureBand:
                     $data['image_asset_ids'] = array_values(array_filter([$photo('studio-3'), $photo('studio-2'), $photo('studio-1')]));
                     $section->cta_link = ['type' => 'model', 'model_type' => 'service', 'model_id' => $this->services[7]->id];

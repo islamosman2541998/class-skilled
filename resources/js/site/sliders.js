@@ -91,7 +91,7 @@ export function initHero(component, { delay = 6000 } = {}) {
     });
 }
 
-export function initCards(component, { autoplay = false, per = [1.15, 2.2, 3.2, 3.5] } = {}) {
+export function initCards(component, { autoplay = false, per = [1, 2, 3, 4] } = {}) {
     const update = (s) => {
         const total = Math.max(1, s.slides.filter((slide) => !slide.hidden).length);
         const view = typeof s.params.slidesPerView === 'number' ? s.params.slidesPerView : 1;

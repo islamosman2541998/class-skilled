@@ -1,7 +1,7 @@
 @php($light = in_array($section['background'], ['white', 'paper'], true))
 <x-site.section :section="$section">
     <div class="container-site">
-        <x-site.card-slider :section="$section" :per="[2.3, 3.3, 5, 6]">
+        <x-site.card-slider :section="$section" :per="[2, 3, 5, 6]">
             @foreach ($section['items'] as $client)
                 @php($logo = $client->firstAsset('logo'))
                 <div class="swiper-slide">

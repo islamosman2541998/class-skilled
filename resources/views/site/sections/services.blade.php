@@ -6,12 +6,14 @@
                 @php($url = $service->localizedUrl())
                 <div class="swiper-slide" style="--i: {{ $loop->index }}">
                     <article @class(['g-card', $section['background'] === 'white' || $section['background'] === 'paper' ? 'glass-light' : 'glass-dark'])>
-                        @if ($cover)
-                            <div class="g-card__media aspect-[4/3]">
-                                <x-site.picture :asset="$cover" sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 85vw" />
-                            </div>
-                        @endif
-                        <div @class(['g-card__body', 'justify-end min-h-48' => ! $cover])>
+                        <div @class(['g-card__media aspect-[4/3]', 'g-card__media--empty' => ! $cover])>
+                            @if ($cover)
+                                <x-site.picture :asset="$cover" sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 92vw" />
+                            @else
+                                @include('site.partials.brand-mark', ['light' => true, 'class' => 'opacity-40'])
+                            @endif
+                        </div>
+                        <div class="g-card__body">
                             <h3 class="t-card g-card__title">
                                 @if ($url)
                                     <a href="{{ $url }}" class="stretched">{{ $service->title }}</a>
@@ -19,7 +21,7 @@
                                     {{ $service->title }}
                                 @endif
                             </h3>
-                            @if ($cover && filled($service->excerpt))
+                            @if (filled($service->excerpt))
                                 <p class="g-card__text clamp-2 text-[14.5px]">{{ $service->excerpt }}</p>
                             @endif
                             @if ($url)
