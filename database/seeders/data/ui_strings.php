@@ -106,6 +106,7 @@ return [
         'before' => ['ar' => 'قبل', 'en' => 'Before'],
         'after' => ['ar' => 'بعد', 'en' => 'After'],
         'compare' => ['ar' => 'اسحب للمقارنة بين قبل وبعد', 'en' => 'Drag to compare before and after'],
+        'play_video' => ['ar' => 'تشغيل الفيديو', 'en' => 'Play video'],
     ],
 
     'services' => [

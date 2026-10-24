@@ -13,7 +13,8 @@
         __('projects.year') => $project->year,
         __('projects.client') => $project->show_client ? $project->client_name : null,
     ], 'filled');
-    $images = $gallery->filter(fn ($asset) => $asset->isImage())->values();
+    // Gallery = images, uploaded videos and YouTube/Vimeo embeds (the lightbox plays videos).
+    $images = $gallery->filter(fn ($asset) => in_array($asset->kind, [\App\Enums\AssetKind::Image, \App\Enums\AssetKind::Video, \App\Enums\AssetKind::Embed], true))->values();
     $firstService = $project->services->first();
     $crumbs = [__('projects.title') => \App\Support\LocalizedRoute::url('projects.index')];
     if ($project->category && $project->category->localizedUrl()) {
@@ -37,9 +38,19 @@
                                     <div class="swiper-wrapper">
                                         @foreach ($images as $i => $image)
                                             <div class="swiper-slide">
-                                                <button type="button" class="block w-full cursor-zoom-in" @click="open({{ $i }})" aria-haspopup="dialog" aria-label="{{ __('lightbox.label') }}: {{ $image->altText() }}">
-                                                    <x-site.picture :asset="$image" sizes="(min-width: 1024px) 800px, 100vw" :eager="$i === 0" class="aspect-[16/10] w-full object-cover" />
-                                                </button>
+                                                @if ($image->isImage())
+                                                    <button type="button" class="block w-full cursor-zoom-in" @click="open({{ $i }})" aria-haspopup="dialog" aria-label="{{ __('lightbox.label') }}: {{ $image->altText() }}">
+                                                        <x-site.picture :asset="$image" sizes="(min-width: 1024px) 800px, 100vw" :eager="$i === 0" class="aspect-[16/10] w-full object-cover" />
+                                                    </button>
+                                                @else
+                                                    @php($poster = \App\Support\Lightbox::poster($image))
+                                                    <button type="button" class="group relative block aspect-[16/10] w-full bg-deep" @click="open({{ $i }})" aria-haspopup="dialog" aria-label="{{ __('lightbox.play_video') }}: {{ $image->titleText() }}">
+                                                        @if ($poster)
+                                                            <img src="{{ $poster }}" alt="" class="size-full object-cover" @if ($i > 0) loading="lazy" @endif decoding="async">
+                                                        @endif
+                                                        <span class="absolute inset-0 m-auto grid size-16 place-items-center rounded-full bg-sky text-deep shadow-lg transition group-hover:scale-105" aria-hidden="true"><x-heroicon-s-play class="ms-1 size-7" /></span>
+                                                    </button>
+                                                @endif
                                             </div>
                                         @endforeach
                                     </div>
@@ -54,8 +65,18 @@
                                 <div class="swiper gallery-thumbs" x-ref="thumbs">
                                     <div class="swiper-wrapper">
                                         @foreach ($images as $i => $image)
-                                            <div class="swiper-slide">
-                                                <x-site.picture :asset="$image" sizes="120px" fallback="sm" class="h-16 w-24 object-cover lg:h-20 lg:w-28" />
+                                            <div class="swiper-slide relative">
+                                                @if ($image->isImage())
+                                                    <x-site.picture :asset="$image" sizes="120px" fallback="sm" class="h-16 w-24 object-cover lg:h-20 lg:w-28" />
+                                                @else
+                                                    @php($poster = \App\Support\Lightbox::poster($image))
+                                                    <span class="block h-16 w-24 bg-deep lg:h-20 lg:w-28">
+                                                        @if ($poster)
+                                                            <img src="{{ $poster }}" alt="" class="size-full object-cover" loading="lazy" decoding="async">
+                                                        @endif
+                                                    </span>
+                                                    <span class="absolute inset-0 m-auto grid size-8 place-items-center rounded-full bg-deep/70 text-white" aria-hidden="true"><x-heroicon-s-play class="size-4" /></span>
+                                                @endif
                                             </div>
                                         @endforeach
                                     </div>

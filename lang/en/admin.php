@@ -837,6 +837,7 @@ return [
         'images' => 'Images & media',
         'cover' => 'Cover image',
         'gallery' => 'Gallery',
+        'project_gallery_hint' => 'Project photos and videos (MP4/WebM or a YouTube/Vimeo link from the library). Shown after the cover in this order; a video plays when clicked.',
         'slug_hint' => 'Generated from the title; changing it creates a 301 redirect from the old URL.',
         'slug_hint_short' => 'Leave empty to generate it from the name.',
         'seo_title' => 'Title in Google',

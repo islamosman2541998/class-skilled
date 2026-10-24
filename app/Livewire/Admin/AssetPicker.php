@@ -17,7 +17,7 @@ use Livewire\Component;
 
 /**
  * Global media picker modal (one instance in the admin layout).
- * Open: $dispatch('open-asset-picker', {target, multiple, kind, selected}).
+ * Open: $dispatch('open-asset-picker', {target, multiple, kind, selected}); kind = one kind or a comma list.
  * On confirm it dispatches `asset-picked` {target, ids} back to the caller
  * (see App\Livewire\Admin\AssetField). Includes the uploader (drag & drop,
  * per-file progress, video poster capture).
@@ -58,13 +58,24 @@ class AssetPicker extends Component
 
         $this->target = $target;
         $this->multiple = $multiple;
-        $this->kind = in_array($kind, AssetKind::values(), true) ? $kind : null;
+        $kinds = array_values(array_intersect(explode(',', (string) $kind), AssetKind::values()));
+        $this->kind = $kinds === [] ? null : implode(',', $kinds);
         $this->selected = array_values(array_filter(array_map('intval', (array) $selected)));
         $this->tab = 'library';
         $this->search = '';
         $this->limit = 24;
         $this->open = true;
         unset($this->assets);
+    }
+
+    /**
+     * Allowed kinds (`kind` may be one kind or a comma list, e.g. "image,video,embed"); empty = all.
+     *
+     * @return list<string>
+     */
+    public function kinds(): array
+    {
+        return $this->kind === null ? [] : explode(',', $this->kind);
     }
 
     public function close(): void
@@ -106,7 +117,7 @@ class AssetPicker extends Component
 
     protected function afterUpload(Asset $asset): void
     {
-        if ($this->kind === null || $this->kind === $asset->kind->value) {
+        if ($this->kinds() === [] || in_array($asset->kind->value, $this->kinds(), true)) {
             $this->selected = $this->multiple ? [...$this->selected, $asset->id] : [$asset->id];
         }
 
@@ -131,7 +142,7 @@ class AssetPicker extends Component
 
         return Asset::query()
             ->with(['media', 'poster.media'])
-            ->when($this->kind, fn ($q) => $q->where('kind', $this->kind))
+            ->when($this->kinds() !== [], fn ($q) => $q->whereIn('kind', $this->kinds()))
             ->when($this->folder, fn ($q) => $q->where('folder_id', $this->folder))
             ->when($this->missingAlt, fn ($q) => $q->missingAlt(app()->getLocale()))
             ->when(trim($this->search) !== '', fn ($q) => Search::apply($q, $this->search, ['original_name'], ['alt', 'title']))

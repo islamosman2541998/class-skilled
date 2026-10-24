@@ -34,7 +34,7 @@
             <x-admin.panel :title="__('admin.content.images')">
                 <div class="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)]">
                     <livewire:admin.asset-field wire:model="form.cover" kind="image" :label="__('admin.content.cover')" wire:key="cover" />
-                    <livewire:admin.asset-field wire:model="form.gallery" multiple kind="image" :label="__('admin.content.gallery')" wire:key="gallery" />
+                    <livewire:admin.asset-field wire:model="form.gallery" multiple kind="image,video,embed" :label="__('admin.content.gallery')" :hint="__('admin.content.project_gallery_hint')" wire:key="gallery" />
                 </div>
                 <div class="mt-6 border-t border-a-border pt-6">
                     <x-admin.repeater model="form.pairs" :label="__('admin.projects.before_after')" :hint="__('admin.projects.before_after_hint')" :template="['before' => null, 'after' => null]">

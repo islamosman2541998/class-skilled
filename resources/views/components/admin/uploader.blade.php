@@ -10,7 +10,7 @@
      x-data="assetUploader({
         maxImageMb: {{ $media->max_image_mb }},
         maxVideoMb: {{ $media->max_video_mb }},
-        accept: @js($kind ? [$kind] : []),
+        accept: @js((array) ($kind ?? [])),
         messages: { type: @js(__('admin.media.unsupported_type')), size: @js(__('admin.media.too_large')), failed: @js(__('admin.media.upload_failed')) },
      })"
      @if ($onFinished) @uploads-finished="$wire.{{ $onFinished }}()" @endif

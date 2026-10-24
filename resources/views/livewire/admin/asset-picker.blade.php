@@ -65,7 +65,7 @@
 
                 {{-- Upload --}}
                 @can('create', \App\Models\Asset::class)
-                    <x-admin.uploader :kind="$kind" on-finished="uploadsFinished" :class="\Illuminate\Support\Arr::toCssClasses(['min-h-0 flex-1 overflow-y-auto p-5', 'hidden' => $tab !== 'upload'])" />
+                    <x-admin.uploader :kind="$this->kinds()" on-finished="uploadsFinished" :class="\Illuminate\Support\Arr::toCssClasses(['min-h-0 flex-1 overflow-y-auto p-5', 'hidden' => $tab !== 'upload'])" />
                 @endcan
 
                 <div class="flex items-center justify-between gap-3 border-t border-a-border px-5 py-3">

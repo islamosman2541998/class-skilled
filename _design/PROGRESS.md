@@ -397,3 +397,7 @@ the live host.
   arrows, swipe/drag, keyboard, 5 s autoplay (pauses on hover and while the lightbox is open), image counter and
   synced thumbnails (Swiper Thumbs module); a click opens the existing lightbox. Images = cover + gallery from
   Dashboard → Projects. Demo projects now have 4–5 photos each.
+- Project gallery accepts videos: the asset picker takes a comma list of kinds (`kind="image,video,embed"`); the
+  project gallery field uses it (images, MP4/WebM uploads, YouTube/Vimeo embeds from the library). On the project page
+  a video shows as its poster with a play button (slide + thumbnail) and plays in the lightbox when clicked. New UI
+  string `lightbox.play_video`.

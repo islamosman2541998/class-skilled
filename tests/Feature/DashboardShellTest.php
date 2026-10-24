@@ -179,6 +179,11 @@ test('the asset picker returns the chosen ids to the field', function () {
         ->call('confirm')
         ->assertDispatched('asset-picked', target: 'af-test', ids: [5, 7]);
 
+    // A comma list limits the picker to several kinds; unknown kinds are dropped.
+    $picker = Livewire::test(AssetPicker::class)->call('openPicker', 'af-media', true, 'image,video,embed,nope', []);
+    expect($picker->get('kind'))->toBe('image,video,embed')
+        ->and($picker->instance()->kinds())->toBe(['image', 'video', 'embed']);
+
     $field = Livewire::test(AssetField::class, ['multiple' => true]);
     $field->call('picked', $field->get('fieldId'), [3, 4])->assertSet('value', [3, 4])
         ->call('reorder', [4, 3])->assertSet('value', [4, 3])

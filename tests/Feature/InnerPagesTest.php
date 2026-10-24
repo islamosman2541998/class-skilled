@@ -88,6 +88,7 @@ test('project detail shows facts, gallery lightbox and related projects', functi
     $project->syncAssets('gallery', [
         $uploader->uploadImage(UploadedFile::fake()->image('a.jpg', 900, 600))->id,
         $uploader->uploadImage(UploadedFile::fake()->image('b.jpg', 900, 600))->id,
+        $uploader->createEmbed('https://www.youtube.com/watch?v=dQw4w9WgXcQ', $uploader->uploadImage(UploadedFile::fake()->image('poster.jpg', 900, 600))->id)->id,
     ]);
 
     $this->get($project->localizedUrl('ar'))->assertOk()
@@ -95,6 +96,8 @@ test('project detail shows facts, gallery lightbox and related projects', functi
         ->assertSee('x-data="gallerySlider', false)
         ->assertSee('gallery-thumbs', false)
         ->assertSee('x-ref="next"', false)
+        ->assertSee(__('lightbox.play_video'))
+        ->assertSee('dQw4w9WgXcQ', false)
         ->assertSee('role="dialog"', false)
         ->assertSee('850 م²')
         ->assertSee('مشروع مشابه')
