@@ -34,7 +34,7 @@
 
             @if ($categories->count() > 1)
                 <x-slot:filters>
-                    <div class="-mt-2 mb-6 flex gap-2 overflow-x-auto pb-1" role="group" aria-label="{{ __('projects.category') }}" data-reveal="fade">
+                    <div class="-mt-2 mb-6 flex flex-wrap gap-2" role="group" aria-label="{{ __('projects.category') }}" data-reveal="fade">
                         <button type="button" class="chip shrink-0" :aria-pressed="(filterKey === null).toString()" aria-pressed="true" @click="filter(null)">{{ __('projects.all_categories') }}</button>
                         @foreach ($categories as $category)
                             <button type="button" class="chip shrink-0" :aria-pressed="(filterKey === '{{ $category->id }}').toString()" aria-pressed="false" @click="filter('{{ $category->id }}')">{{ $category->name }}</button>

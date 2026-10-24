@@ -429,3 +429,5 @@ the live host.
   `AppServiceProvider::optimizes(key: 'routes')`; System → Health / `site:check` fails "translated route cache" when a
   plain route cache has no per-locale files; DEPLOY.md warns against `route:cache` alone; test added.
 - Card sliders: prev/next arrows now visible on mobile too (section header row: "view all" at the start, arrows at the end).
+- Projects section filters: the category chips wrap onto several lines (all visible) instead of a sideways-scrolling
+  row; chip padding 12px on mobile, 16px from 640px.

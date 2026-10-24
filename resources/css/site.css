@@ -444,7 +444,7 @@
         display: inline-flex;
         align-items: center;
         min-height: 40px;
-        padding-inline: 16px;
+        padding-inline: 12px;
         border-radius: 9999px;
         border: 1px solid var(--c-line);
         background: #fff;
@@ -453,6 +453,12 @@
         font-weight: 600;
         transition: background-color 0.2s, border-color 0.2s, color 0.2s;
         cursor: pointer;
+    }
+
+    @media (width >= 640px) {
+        .chip {
+            padding-inline: 16px;
+        }
     }
 
     .chip[aria-pressed='true'] {
