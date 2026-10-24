@@ -374,3 +374,7 @@ the live host.
 - Sidebar badges = unread requests per type (`read_at` empty), cached 60 s and reset when a request is opened or
   marked; the bell = their sum. The blue dot in request lists = unread (not a status).
 - Fixed: textarea character counter showed 0 until typing; requests list number/phone line no longer wraps.
+- Fixed (unstyled site after rebuilding assets): the page cache key now includes the asset version (build manifest
+  hash, or the Vite dev server when `public/hot` exists), so cached HTML never points to deleted CSS/JS. The CSP header
+  is skipped only while the local Vite dev server runs (it may listen on `[::1]`, which CSP cannot express);
+  production always sends it.

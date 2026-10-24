@@ -27,8 +27,13 @@ class SecurityHeaders
             'X-Content-Type-Options' => 'nosniff',
             'Referrer-Policy' => 'strict-origin-when-cross-origin',
             'Permissions-Policy' => 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()',
-            'Content-Security-Policy' => $this->csp(),
         ];
+
+        // Local `npm run dev` only: Vite may listen on an IPv6 literal ([::1]) that CSP source
+        // syntax cannot express, so the policy is sent only for built assets (always in production).
+        if (! Vite::isRunningHot()) {
+            $headers['Content-Security-Policy'] = $this->csp();
+        }
 
         if (app()->isProduction() && $request->isSecure()) {
             $headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains';

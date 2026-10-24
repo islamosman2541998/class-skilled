@@ -49,9 +49,22 @@ class SiteCacheProfile extends BaseCacheProfile
 
     /**
      * Guests share one cache entry per URL (the base profile would suffix the user id).
+     * The suffix carries the asset version, so a new `npm run build` (or starting
+     * the Vite dev server) never serves cached HTML that points to deleted CSS/JS files.
      */
     public function useCacheNameSuffix(Request $request): string
     {
-        return '';
+        return self::assetVersion();
+    }
+
+    public static function assetVersion(): string
+    {
+        if (is_file(public_path('hot'))) {
+            return 'hot-'.md5((string) file_get_contents(public_path('hot')));
+        }
+
+        $manifest = public_path('build/manifest.json');
+
+        return is_file($manifest) ? substr((string) md5_file($manifest), 0, 12) : 'none';
     }
 }

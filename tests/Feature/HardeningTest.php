@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Vite;
 use Livewire\Livewire;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -46,6 +47,10 @@ test('the cache is bypassed for users, query strings and form pages', function (
 });
 
 test('security headers are sent on site and dashboard responses', function () {
+    // Independent of a local `npm run dev` (public/hot): test the built-assets behaviour.
+    Vite::useHotFile(storage_path('framework/testing-no-hot'));
+    config(['responsecache.enabled' => false]);
+
     $response = $this->get('/')->assertOk();
 
     expect($response->headers->get('X-Frame-Options'))->toBe('SAMEORIGIN')
