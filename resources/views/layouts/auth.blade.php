@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex, nofollow">
     <title>{{ $title ?? __('admin.auth.login_title') }} — {{ __('admin.panel_name') }}</title>
-    <link rel="icon" href="{{ asset('images/brand/mark.png') }}">
+    <link rel="icon" href="{{ asset('images/brand/mark-sm.png') }}">
     @vite(['resources/css/admin.css', 'resources/js/admin/app.js'])
     @livewireStyles
 </head>
@@ -21,7 +21,7 @@
                 </form>
             </div>
             <div class="mx-auto flex w-full max-w-[480px] flex-1 flex-col justify-center py-10">
-                <img src="{{ asset('images/brand/mark.png') }}" alt="{{ __('admin.brand') }}" class="mb-8 h-14 w-14 object-contain">
+                <img src="{{ asset('images/brand/mark-sm.png') }}" alt="{{ __('admin.brand') }}" class="mb-8 h-14 w-14 object-contain">
                 {{ $slot }}
             </div>
         </main>

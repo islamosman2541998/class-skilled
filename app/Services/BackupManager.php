@@ -26,7 +26,10 @@ class BackupManager
             throw new RuntimeException('The PHP zip extension is required.');
         }
 
-        @set_time_limit(300);
+        // Give web requests room for the archive; the CLI has no limit and must keep none.
+        if (! app()->runningInConsole()) {
+            @set_time_limit(300);
+        }
         File::ensureDirectoryExists($this->directory());
 
         $name = 'backup-'.now()->format('Y-m-d-His').'.zip';

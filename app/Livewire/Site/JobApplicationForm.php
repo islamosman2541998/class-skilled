@@ -6,6 +6,7 @@ use App\Enums\SiteEventType;
 use App\Livewire\Site\Concerns\WithSpamProtection;
 use App\Models\JobApplication;
 use App\Models\JobPost;
+use App\Rules\SafeUpload;
 use App\Services\RequestIntake;
 use App\Settings\FormSettings;
 use Illuminate\Contracts\View\View;
@@ -69,7 +70,7 @@ class JobApplicationForm extends Component
             'email' => ['required', 'email', 'max:150'],
             'specialty' => ['nullable', 'string', 'max:150'],
             'message' => ['nullable', 'string', 'max:3000'],
-            'cv' => ['required', 'file', 'mimes:pdf', 'extensions:pdf', 'max:'.(app(FormSettings::class)->max_upload_mb * 1024)],
+            'cv' => ['required', 'file', 'mimes:pdf', 'extensions:pdf', new SafeUpload, 'max:'.(app(FormSettings::class)->max_upload_mb * 1024)],
         ];
     }
 

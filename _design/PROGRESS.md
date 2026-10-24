@@ -14,7 +14,7 @@ Update this file at the end of every phase. Keep entries short and factual.
 | 07 Inner pages | done | 2026-10-24 | phase-07 |
 | 08 Forms & requests | done | 2026-10-24 | phase-08 |
 | 09 SEO, analytics, dashboard home | done | 2026-10-24 | phase-09 |
-| 10 Hardening & deploy | not started | | |
+| 10 Hardening & deploy | done | 2026-10-24 | phase-10 |
 
 ## Installed versions
 PHP 8.3.16, Laravel 12.70.1, Livewire 4.4.8, Fortify 1.41.0, mcamara/laravel-localization 2.4.2,
@@ -152,7 +152,23 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
   latest, attention, pages) with skeleton placeholders; numbers from `Services\DashboardStats`, cached 5 minutes per
   widget/period/locale. Request widgets need `view quote_requests`.
 
+- Full-page cache: `CacheResponse` on the public route group with `Http\CacheProfiles\SiteCacheProfile` (guests only;
+  no query strings, Livewire/AJAX, flashed errors/toasts, previews; quote/contact/careers/search never cached). As a
+  route middleware it caches before the `web` group adds session/XSRF cookies, so cookies are never replayed.
+- `SecurityHeaders` (global): CSP that opens third parties only for integrations in use (GA4/GTM/Meta in production,
+  Turnstile, YouTube/Vimeo, Google Maps; Vite dev origin when hot), X-Frame-Options, nosniff, Referrer-Policy,
+  Permissions-Policy, HSTS on HTTPS production. Livewire/Alpine require `unsafe-inline`/`unsafe-eval` for scripts.
+- Visitor uploads are also checked by sniffed MIME (`Rules\SafeUpload`); `storage/app/public/.htaccess` blocks scripts;
+  hosts without symlinks get the `/storage/{path}` fallback (`PublicStorageController`, media types only).
+- `php artisan site:check` and Dashboard → System → Health share `Support\SiteCheck` (PHP, extensions, folders,
+  storage link/fallback, build manifest, DB, cache, mail, queue, debug, caches).
+- `public/.htaccess`: gzip, long-lived caching for build assets/fonts/media, dotfiles denied, HTTPS redirect ready.
+
 ## Changes to earlier phases
+- Phase 03: `BackupManager` only raises the time limit for web requests (it leaked a 300 s limit into the CLI/test run).
+- Phase 06: brand marks use small `-sm.webp` / `-sm.png` files (the originals are 170–230 KB); dark-photo section
+  backgrounds use `sm` on mobile and `lg` on desktop instead of `xl`; hero slides 2+ are injected after page load.
+- Phase 07: `ResolvesPublicModels::ensurePublic()` split out so the job page looks the job up once.
 - Phase 00: the placeholder controller/view and the `setup.*` UI strings were removed (every route has its page now).
 - Phase 01: `QuoteRequest`, `ContactMessage`, `JobApplication` now extend `VisitorRequest` (same trait, moved to the base).
 - Phase 07: careers page gained the general application form section; the job page `#apply` slot renders the form.
@@ -164,6 +180,10 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
 - Phase 03: `AppServiceProvider` registers `SiteContext`/`SeoManager` and an extra view composer.
 
 ## Known gaps / follow-ups
+- Lighthouse performance on local Laragon is 56–73 (a11y 100 everywhere): the local server has no HTTPS, no gzip, no
+  HTTP/2 and slow PHP; robots.txt disallows non-production. Re-run on the production host and record the numbers.
+- Items marked "☐ manual" in `_design/QA.md` (keyboard/screen-reader passes, 360/768/1024 widths, real SMTP rendering,
+  Turnstile with real keys, GA4/Meta firing, 500 page with the DB down) need a person before launch.
 - Home JS budget: Livewire+Alpine runtime alone is ~85 KB gzip, so home ships ~108 KB (shared chunk incl. Notyf)
   + 28 KB Swiper chunk (lazy) — above the 90 KB target; the only way under it is dropping Livewire from pages
   without components (revisit in phase 10).
@@ -309,3 +329,21 @@ sortablejs 1.15.7, tom-select 2.6.2, flatpickr 4.6.13, chart.js 4.6.1, @tiptap/*
   view). 99 tests green, larastan clean, log clean after `migrate:fresh --seed`.
 - Not checked visually: the dashboard home (no authenticated browser session in headless Chrome); covered by tests.
 - Next: Phase 10
+
+### Phase 10 — Hardening & deploy (2026-10-24)
+- Built: page cache profile + middleware, security headers, MIME-sniffing upload rule, public storage `.htaccess` and
+  fallback route, `site:check` command + System → Health page (with cache buttons), production-ready `.env.example`,
+  `public/.htaccess` compression/caching, lighter brand marks and hero/background images, `DEPLOY.md` (AR + EN),
+  `_design/QA.md`.
+- Measured: warm query counts 2–12 per public page; cache hit verified by the debug header; `optimize` +
+  `route:trans:cache` work; Lighthouse results recorded in QA.md.
+- Tests: `HardeningTest` (6: cache served + flushed, bypass rules, headers, upload sniffing, site:check + health
+  permissions, storage fallback safety). Final gates: `migrate:fresh --seed` ✔, Pint ✔, Larastan level 5 ✔,
+  Pest 105 passed ✔, `npm run build` ✔, laravel.log empty ✔.
+
+## Final summary
+All eleven phases are built: bilingual public site (home with sliders and motion, every inner page, forms with
+uploads), custom Livewire dashboard (content, media, menus, settings, SEO, requests, users/roles, backups, health),
+SEO (meta, hreflang, JSON-LD, sitemaps, robots), first-party analytics, full-page caching and a shared-hosting
+deployment guide. Before launch: follow DEPLOY.md, then complete the "☐ manual" items in QA.md and run Lighthouse on
+the live host.

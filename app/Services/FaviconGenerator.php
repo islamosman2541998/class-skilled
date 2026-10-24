@@ -49,7 +49,7 @@ class FaviconGenerator
         $disk = Storage::disk('public');
 
         if (! $disk->exists('favicons/favicon-32.png')) {
-            return [32 => asset('images/brand/mark.png')];
+            return [32 => asset('images/brand/mark-sm.png')];
         }
 
         $version = trim((string) $disk->get('favicons/version.txt'));

@@ -2,7 +2,8 @@
 {{-- Wrapper for a home section: background variant (white / paper / dark / dark photo) from the dashboard. --}}
 @php
     $bg = $section['background'] ?? $default ?? 'white';
-    $photo = $bg === 'dark_photo' && ($section['bg_image'] ?? null) ? $section['bg_image']->url('xl') : null;
+    $photo = $bg === 'dark_photo' && ($section['bg_image'] ?? null) ? $section['bg_image']->url('lg') : null;
+    $photoSmall = $photo ? $section['bg_image']->url('sm') : null;
     $bg = $bg === 'dark_photo' && ! $photo ? 'dark' : $bg;
     $dark = in_array($bg, ['dark', 'dark_photo'], true);
 @endphp
@@ -16,7 +17,7 @@
         'on-dark' => $dark,
         'on-light' => ! $dark,
     ]) }}
-    @if ($photo) style="--section-bg: url('{{ $photo }}')" @endif
+    @if ($photo) style="--section-bg: url('{{ $photo }}'); --section-bg-sm: url('{{ $photoSmall }}')" @endif
     @if ($section['title'] !== '') aria-labelledby="sec-{{ $section['id'] }}-title" @endif
     data-section="{{ $section['type'] }}"
 >

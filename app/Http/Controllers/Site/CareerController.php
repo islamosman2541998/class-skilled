@@ -34,8 +34,8 @@ class CareerController extends Controller
             return response()->view('site.pages.careers.closed', ['job' => $job], 410);
         }
 
-        /** @var JobPost $job */
-        $job = $this->findPublic(JobPost::query()->with('seo'), $slug);
+        abort_if($job === null, 404);
+        $job = $this->ensurePublic($job);
         $seo->schema(app(SchemaBuilder::class)->jobPosting($job));
 
         return view('site.pages.careers.show', ['job' => $job, 'preview' => $this->preview]);

@@ -4,6 +4,9 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+// The suite processes real images (GD) and exceeds the CLI default time limit on slow disks.
+set_time_limit(0);
+
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
     ->in('Feature');

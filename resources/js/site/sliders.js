@@ -27,8 +27,19 @@ function syncHero(swiper) {
     });
 }
 
+// Media of slides 2+ ships in <template data-hero-defer> and is added once the page has loaded.
+function revealDeferredMedia(root) {
+    const inject = () => root.querySelectorAll('template[data-hero-defer]').forEach((tpl) => tpl.replaceWith(tpl.content.cloneNode(true)));
+    if (document.readyState === 'complete') {
+        inject();
+    } else {
+        window.addEventListener('load', inject, { once: true });
+    }
+}
+
 export function initHero(component, { delay = 6000 } = {}) {
     const root = component.$root;
+    revealDeferredMedia(root);
     const motion = !reduced();
     const bars = () => root.querySelectorAll('.progress-bars .bar');
 

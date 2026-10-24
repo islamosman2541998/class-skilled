@@ -1268,4 +1268,15 @@ return [
         'status_in_use' => 'This status is used by requests or is the default, so it cannot be deleted.',
         'types' => ['quote' => 'Quote requests', 'message' => 'Contact messages', 'application' => 'Job applications'],
     ],
+    'health' => [
+        'subtitle' => 'Hosting environment check (same report as php artisan site:check).',
+        'all_good' => 'All required checks pass.',
+        'has_failures' => 'Some required checks fail. Fix them before going live.',
+        'optimize' => 'Cache config & routes',
+        'clear' => 'Clear caches',
+        'optimized' => 'Configuration and routes cached',
+        'cleared' => 'Caches cleared',
+        'groups' => ['php' => 'PHP', 'files' => 'Files & folders', 'services' => 'Services', 'app' => 'Application'],
+        'status' => ['ok' => 'OK', 'warn' => 'Warning', 'fail' => 'Failed'],
+    ],
 ];

@@ -6,6 +6,7 @@ use App\Enums\SiteEventType;
 use App\Livewire\Site\Concerns\WithSpamProtection;
 use App\Models\QuoteRequest;
 use App\Models\Service;
+use App\Rules\SafeUpload;
 use App\Services\RequestIntake;
 use App\Settings\FormSettings;
 use App\Support\Translate;
@@ -130,7 +131,7 @@ class QuoteForm extends Component
             ],
             3 => [
                 'files' => ['array', 'max:'.self::MAX_FILES],
-                'files.*' => ['file', 'extensions:'.implode(',', $settings->allowed_extensions), 'max:'.($settings->max_upload_mb * 1024)],
+                'files.*' => ['file', 'extensions:'.implode(',', $settings->allowed_extensions), 'max:'.($settings->max_upload_mb * 1024), new SafeUpload],
             ],
             default => [
                 'name' => ['required', 'string', 'min:2', 'max:120'],
@@ -186,7 +187,7 @@ class QuoteForm extends Component
         $this->resetErrorBag('newFiles.*');
 
         $this->validate([
-            'newFiles.*' => ['file', 'extensions:'.implode(',', $settings->allowed_extensions), 'max:'.($settings->max_upload_mb * 1024)],
+            'newFiles.*' => ['file', 'extensions:'.implode(',', $settings->allowed_extensions), 'max:'.($settings->max_upload_mb * 1024), new SafeUpload],
         ], [
             'newFiles.*.extensions' => __('forms.file_type'),
             'newFiles.*.max' => __('forms.file_size', ['max' => $settings->max_upload_mb]),

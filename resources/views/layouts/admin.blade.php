@@ -11,7 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex, nofollow">
     <title>{{ isset($title) && $title ? $title.' — ' : '' }}{{ __('admin.panel_name') }}</title>
-    <link rel="icon" href="{{ asset('images/brand/mark.png') }}">
+    <link rel="icon" href="{{ asset('images/brand/mark-sm.png') }}">
     @vite(['resources/css/admin.css', 'resources/js/admin/app.js'])
     @livewireStyles
     @stack('head')
@@ -32,7 +32,7 @@
         >
             <div class="flex h-[84px] items-center justify-between gap-3 border-b border-white/10 px-5">
                 <a href="{{ route('admin.dashboard') }}" wire:navigate class="flex items-center gap-3">
-                    <img src="{{ asset('images/brand/mark-white.png') }}" alt="" class="h-11 w-11 object-contain">
+                    <img src="{{ asset('images/brand/mark-white-sm.png') }}" alt="" class="h-11 w-11 object-contain">
                     <span class="leading-tight">
                         <span class="block font-[family-name:var(--font-head)] text-[16px] font-extrabold">{{ __('admin.brand') }}</span>
                         <span class="block text-[12.5px] text-white/60">{{ __('admin.panel_name') }}</span>

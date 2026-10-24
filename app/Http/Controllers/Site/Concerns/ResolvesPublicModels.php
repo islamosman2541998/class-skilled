@@ -30,6 +30,17 @@ trait ResolvesPublicModels
 
         abort_if($model === null, 404);
 
+        return $this->ensurePublic($model);
+    }
+
+    /**
+     * @template TModel of Model
+     *
+     * @param  TModel  $model
+     * @return TModel
+     */
+    protected function ensurePublic(Model $model): Model
+    {
         $this->preview = ! LinkResolver::isPublic($model);
 
         abort_if($this->preview && ! Preview::allows($model), 404);

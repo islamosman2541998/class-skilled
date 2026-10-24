@@ -5,6 +5,7 @@ use App\Http\Controllers\Site\HomeController;
 use App\Http\Controllers\Site\PageController;
 use App\Http\Controllers\Site\PostController;
 use App\Http\Controllers\Site\ProjectController;
+use App\Http\Controllers\Site\PublicStorageController;
 use App\Http\Controllers\Site\RobotsController;
 use App\Http\Controllers\Site\SearchController;
 use App\Http\Controllers\Site\ServiceController;
@@ -15,6 +16,7 @@ use App\Http\Middleware\MaintenanceMode;
 use App\Http\Middleware\SetAdminLocale;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Spatie\ResponseCache\Middlewares\CacheResponse;
 
 // Infrastructure endpoints stay outside the localized route group.
 Route::post('/t', TrackController::class)->middleware('throttle:60,1')->name('track');
@@ -22,13 +24,18 @@ Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 Route::get('/sitemaps/{type}.xml', SitemapController::class)->where('type', '[a-z-]+')->name('sitemap.type');
 Route::get('/robots.txt', RobotsController::class)->name('robots');
 
+// Hosts without symlink support: serve the public disk at /storage (see DEPLOY.md).
+if (! file_exists(public_path('storage'))) {
+    Route::get('/storage/{path}', PublicStorageController::class)->where('path', '.*')->name('storage.fallback');
+}
+
 Route::prefix(config('admin.path'))
     ->middleware(SetAdminLocale::class)
     ->name('admin.')
     ->group(base_path('routes/admin.php'));
 
 Route::prefix(LaravelLocalization::setLocale())
-    ->middleware(['localize', 'localizationRedirect', MaintenanceMode::class, CaptureFirstTouch::class])
+    ->middleware(['localize', 'localizationRedirect', MaintenanceMode::class, CaptureFirstTouch::class, CacheResponse::class])
     ->group(function (): void {
         Route::get('/', HomeController::class)->name('home');
 

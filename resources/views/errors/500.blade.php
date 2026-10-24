@@ -28,7 +28,7 @@
 </head>
 <body>
     <main>
-        <img src="{{ asset('images/brand/mark-white.png') }}" alt="" width="105" height="72">
+        <img src="{{ asset('images/brand/mark-white-sm.png') }}" alt="" width="105" height="72">
         <h1>{{ $t('errors.500_title', 'حدث خطأ في الخادم', 'Server error') }}</h1>
         <p>{{ $t('errors.500_text', 'نعتذر، حدث خطأ غير متوقع. حاول مرة أخرى بعد قليل.', 'Sorry, something went wrong. Please try again shortly.') }}</p>
         <a href="{{ url('/') }}">{{ $t('site.back_home', 'العودة إلى الرئيسية', 'Back to home') }}</a>

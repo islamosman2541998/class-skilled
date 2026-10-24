@@ -372,9 +372,15 @@
         position: absolute;
         inset: 0;
         z-index: -2;
-        background-image: var(--section-bg);
+        background-image: var(--section-bg-sm, var(--section-bg));
         background-size: cover;
         background-position: center;
+    }
+
+    @media (width >= 1024px) {
+        .section--dark-photo::before {
+            background-image: var(--section-bg);
+        }
     }
 
     .section--dark-photo::after {

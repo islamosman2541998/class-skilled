@@ -24,6 +24,8 @@
             @foreach ($slides as $i => $slide)
                 <div @class(['swiper-slide hero-slide', 'is-active' => $i === 0]) style="--overlay: {{ $slide['overlay'] }}" role="group" aria-roledescription="slide" aria-label="{{ \App\Support\Translate::swiper(__('slider.slide_of'), ['index' => $i + 1, 'slidesLength' => count($slides)]) }}">
                     <div class="hero-slide__media">
+                        {{-- Slides after the first are injected after page load (sliders.js) to keep the first paint light. --}}
+                        @if ($i > 0)<template data-hero-defer>@endif
                         @if ($slide['video'] && $slide['video']->file())
                             <video autoplay muted loop playsinline preload="{{ $i === 0 ? 'auto' : 'none' }}" @if ($slide['image']) poster="{{ $slide['image']->url('xl') }}" @endif aria-hidden="true">
                                 <source src="{{ $slide['video']->url() }}" type="{{ $slide['video']->mime }}">
@@ -31,6 +33,7 @@
                         @elseif ($slide['image'])
                             <x-site.picture :asset="$slide['image']" :mobile="$slide['mobile_image']" sizes="100vw" :eager="$i === 0" fallback="xl" />
                         @endif
+                        @if ($i > 0)</template>@endif
                     </div>
                     <div class="hero-slide__overlay"></div>
 

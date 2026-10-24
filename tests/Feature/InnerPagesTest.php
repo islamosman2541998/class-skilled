@@ -15,7 +15,6 @@ use App\Models\Service;
 use App\Services\AssetUploader;
 use App\Support\LocalizedRoute;
 use App\Support\Preview;
-use Database\Seeders\DemoContentSeeder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
@@ -204,9 +203,11 @@ test('faq, careers and closed jobs', function () {
 });
 
 test('seeded legal pages render', function () {
-    $this->seed(DemoContentSeeder::class);
+    $pages = Page::query()->published()->get();
 
-    foreach (Page::query()->published()->get() as $page) {
+    expect($pages)->not->toBeEmpty();
+
+    foreach ($pages as $page) {
         $this->get($page->localizedUrl('ar'))->assertOk();
     }
-})->skip(fn () => ! class_exists(DemoContentSeeder::class));
+});

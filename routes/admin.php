@@ -87,5 +87,6 @@ Route::middleware(['auth', 'active'])->group(function (): void {
     Route::get('/roles', Admin\System\Roles\Index::class)->name('roles.index');
     Route::get('/activity', Admin\System\ActivityLog::class)->name('activity.index');
     Route::get('/backups', Admin\System\Backups::class)->name('backups.index');
+    Route::get('/health', Admin\System\Health::class)->name('health');
     Route::get('/backups/{name}', BackupDownloadController::class)->middleware('signed')->name('backups.download');
 });
