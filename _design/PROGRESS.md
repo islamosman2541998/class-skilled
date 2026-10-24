@@ -358,3 +358,10 @@ the live host.
 - Two-factor authentication removed everywhere (see Decisions). Tests updated: `DashboardShellTest` now asserts that
   login goes straight to the dashboard and that no 2FA route or UI exists.
 
+- Demo activity (local only, `DemoActivitySeeder`, chained after `DemoContentSeeder`): sales/editor users, 5
+  testimonials, 8 clients, 4 team members, 26 quote requests / 10 messages / 8 applications spread over 90 days with
+  statuses, assignment, notes and attachments, 90 days of page views and contact clicks, 3 redirects; the testimonials
+  and clients home sections are switched on. Users: `sales@`, `sales2@`, `editor@class-skilled.test` (same local
+  password as the admin).
+- Fixed: contact-message and job-application detail screens returned 500 (media eager load / quote-only follow-up
+  date); regression test added.

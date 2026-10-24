@@ -218,3 +218,14 @@ test('admins manage statuses with a single default', function () {
 
     expect(RequestStatus::query()->for(RequestType::Quote)->where('is_default', true)->get()->map(fn ($s) => $s->getTranslation('name', 'ar'))->all())->toBe(['بانتظار الدفعة']);
 });
+
+test('message and application details open for every request type', function () {
+    Storage::fake('private');
+    $this->actingAs(userWithRole('admin'));
+    $message = ContactMessage::create(['name' => 'زائر', 'email' => 'v@example.com', 'message' => 'رسالة تجريبية', 'locale' => 'ar']);
+    $application = JobApplication::create(['name' => 'متقدم', 'phone' => '0501234567', 'email' => 'a@example.com', 'locale' => 'ar']);
+    $application->addMedia(UploadedFile::fake()->create('cv.pdf', 40, 'application/pdf'))->toMediaCollection('cv');
+
+    $this->get(route('admin.messages.show', $message->id))->assertOk()->assertSee('رسالة تجريبية');
+    $this->get(route('admin.applications.show', $application->id))->assertOk()->assertSee('cv');
+});

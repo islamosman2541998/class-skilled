@@ -21,6 +21,7 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
+use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
@@ -68,15 +69,24 @@ abstract class RequestShow extends Component
 
         $this->statusId = (string) $request->getAttribute('status_id');
         $this->assignee = (string) $request->getAttribute('assigned_to');
-        $this->followUp = (string) $request->getAttribute('follow_up_at')?->format('Y-m-d');
+        // Only quote requests have a follow-up date.
+        $this->followUp = array_key_exists('follow_up_at', $request->getAttributes())
+            ? (string) $request->getAttribute('follow_up_at')?->format('Y-m-d')
+            : '';
     }
 
     #[Computed]
     public function request(): VisitorRequest
     {
-        return ($this->modelClass())::query()
-            ->with(['status', 'assignee', 'activities.user', 'media'])
-            ->findOrFail($this->requestId);
+        $class = $this->modelClass();
+        $relations = ['status', 'assignee', 'activities.user'];
+
+        // Contact messages have no attachments.
+        if (is_subclass_of($class, HasMedia::class)) {
+            $relations[] = 'media';
+        }
+
+        return $class::query()->with($relations)->findOrFail($this->requestId);
     }
 
     public function type(): RequestType
@@ -108,6 +118,10 @@ abstract class RequestShow extends Component
      */
     public function attachments(): array
     {
+        if (! $this->request instanceof HasMedia) {
+            return [];
+        }
+
         return $this->request->getRelationValue('media')->map(fn (Media $media) => [
             'name' => $media->name.'.'.pathinfo($media->file_name, PATHINFO_EXTENSION),
             'size' => $media->human_readable_size,
