@@ -79,6 +79,8 @@ php artisan optimize
 php artisan route:trans:cache
 php artisan site:check
 ```
+
+> **مهم:** لا تشغّل `php artisan route:cache` وحده أبدًا: يحفظ روابط العربية فقط فتصبح كل صفحات `/en` خطأ 404. استخدم `php artisan optimize` (يبني روابط اللغتين تلقائيًا) أو `php artisan route:trans:cache`. صفحة النظام ← الفحص في لوحة التحكم تنبّه لهذه الحالة.
 - **إذا لم تُتح الاستضافة الروابط الرمزية (symlink):** لا تشغّل `storage:link`. الموقع يكتشف غياب `public/storage` ويخدم الملفات تلقائيًا عبر المسار الاحتياطي `/storage/...` (صور وفيديو وPDF فقط، ولا يخدم أي سكربت). بعدها شغّل `php artisan optimize` من جديد.
 - **إذا لم يتوفر Terminal:** نفّذ الأوامر من cPanel ← "Terminal" أو "Cron Jobs (Run once)"، أو افتح لوحة التحكم ← النظام ← فحص النظام لرؤية التقرير، وزر "تخزين الإعدادات والمسارات".
 
@@ -150,6 +152,8 @@ php artisan optimize
 php artisan route:trans:cache
 php artisan site:check
 ```
+
+> **Important:** never run `php artisan route:cache` on its own: it caches only the Arabic routes, so every `/en` page returns 404. Use `php artisan optimize` (builds both locales) or `php artisan route:trans:cache`. Dashboard → System → Health flags this case.
 - **No symlinks allowed?** Skip `storage:link`. When `public/storage` does not exist, the app registers a fallback
   route that serves the public disk at `/storage/...` (images, video, PDF only — never scripts). Run `optimize` again.
 - **No terminal?** Use cPanel Terminal / a one-off cron entry, or Dashboard → System → Health (same report as
