@@ -16,7 +16,6 @@ use App\Models\Project;
 use App\Models\Service;
 use App\Models\Testimonial;
 use App\Services\HomeSectionResolver;
-use App\Settings\CompanySettings;
 use App\Support\LinkOptions;
 use App\Support\LinkResolver;
 use App\Support\Translate;
@@ -43,7 +42,7 @@ class HomeSections extends Component
     public const LIST_TYPES = ['services', 'projects', 'posts', 'testimonials', 'clients', 'certificates'];
 
     /** Repeater lists inside `data` per type. */
-    public const LISTS = ['hero' => ['slides'], 'facts' => ['items'], 'about' => ['meta'], 'feature_band' => ['bullets'], 'why_us' => ['items'], 'process' => ['steps'], 'stats' => ['items']];
+    public const LISTS = ['hero' => ['slides'], 'feature_band' => ['bullets'], 'why_us' => ['items'], 'process' => ['steps'], 'stats' => ['items']];
 
     public ?int $editing = null;
 
@@ -177,19 +176,6 @@ class HomeSections extends Component
         $this->toast('success', __('admin.common.deleted'));
     }
 
-    public function fillFacts(): void
-    {
-        $company = app(CompanySettings::class);
-        $label = fn (string $key) => ['ar' => __('site.'.$key, [], 'ar'), 'en' => __('site.'.$key, [], 'en')];
-
-        $this->section['data']['items'] = $this->withRepeaterKeys([
-            ['label' => $label('trade_licence'), 'value' => ['ar' => $company->trade_licence_no, 'en' => $company->trade_licence_no]],
-            ['label' => $label('classification'), 'value' => Translate::pair($company->classification)],
-            ['label' => $label('classification_authority'), 'value' => Translate::pair($company->classification_authority)],
-            ['label' => $label('adcci_membership'), 'value' => ['ar' => (string) $company->adcci_no, 'en' => (string) $company->adcci_no]],
-        ]);
-    }
-
     /**
      * @return array<string, mixed>
      */
@@ -225,13 +211,8 @@ class HomeSections extends Component
                     ...$pair('section.data.slides.*.secondary.label', false, 60),
                 ];
                 break;
-            case 'facts':
             case 'about':
-                $list = $type === 'facts' ? 'items' : 'meta';
-                $rules += [...$pair('section.data.'.$list.'.*.label', true, 80), ...$pair('section.data.'.$list.'.*.value', true, 160)];
-                if ($type === 'about') {
-                    $rules += [...$pair('section.data.text', false, 1500), 'section.data.image_asset_ids' => ['array', 'max:2'], 'section.data.image_asset_ids.*' => ['integer', 'exists:assets,id']];
-                }
+                $rules += [...$pair('section.data.text', false, 1500), 'section.data.image_asset_id' => ['nullable', 'integer', 'exists:assets,id']];
                 break;
             case 'feature_band':
                 $rules += [...$pair('section.data.bullets.*', true, 160), 'section.data.image_asset_ids' => ['array', 'max:3'], 'section.data.image_asset_ids.*' => ['integer', 'exists:assets,id']];

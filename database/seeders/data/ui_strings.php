@@ -360,7 +360,6 @@ return [
         'hero_media_type.pdf' => ['ar' => 'ملف PDF', 'en' => 'PDF'],
         'hero_media_type.none' => ['ar' => 'بدون', 'en' => 'None'],
         'section_type.hero' => ['ar' => 'السلايدر الرئيسي', 'en' => 'Hero slider'],
-        'section_type.facts' => ['ar' => 'شريط البيانات', 'en' => 'Facts bar'],
         'section_type.about' => ['ar' => 'نبذة عن الشركة', 'en' => 'About'],
         'section_type.services' => ['ar' => 'الخدمات', 'en' => 'Services'],
         'section_type.feature_band' => ['ar' => 'قسم مميز', 'en' => 'Feature band'],

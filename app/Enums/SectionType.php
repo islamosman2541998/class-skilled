@@ -9,7 +9,6 @@ enum SectionType: string
     use HasLabel;
 
     case Hero = 'hero';
-    case Facts = 'facts';
     case About = 'about';
     case Services = 'services';
     case FeatureBand = 'feature_band';

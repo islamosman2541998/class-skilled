@@ -725,19 +725,14 @@
     /* Hero slider */
     .hero {
         position: relative;
-        height: 78svh;
+        height: 100vh;
+        height: 100svh;
         min-height: 520px;
         background: var(--c-deep);
         color: #fff;
         overflow: hidden;
     }
 
-    @media (width >= 1024px) {
-        .hero {
-            height: min(86vh, 760px);
-            min-height: 600px;
-        }
-    }
 
     .hero .swiper,
     .hero .swiper-wrapper,
@@ -768,29 +763,18 @@
         background: rgb(27 42 71 / var(--overlay, 0.45));
     }
 
-    .hero-slide.is-active .hero-slide__media img {
-        animation: kenburns 7s ease-out both;
-    }
 
-    @keyframes kenburns {
-        from {
-            transform: scale(1.08);
-        }
-
-        to {
-            transform: scale(1);
-        }
-    }
-
+    /* Text sits directly on the photo; the overlay + a soft shadow keep it readable. */
     .hero-panel {
-        max-width: 600px;
-        padding: 24px;
+        max-width: 640px;
+        text-shadow: 0 2px 18px rgb(0 0 0 / 0.35);
     }
 
-    @media (width >= 1024px) {
-        .hero-panel {
-            padding: 36px 40px;
-        }
+    .hero-slide__overlay::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgb(27 42 71 / 0.55), transparent 55%);
     }
 
     .hero-panel .t-lead {
@@ -1052,9 +1036,6 @@
             transform: none;
         }
 
-        .hero-slide.is-active .hero-slide__media img {
-            animation: none;
-        }
 
         .g-card:hover,
         .g-card:focus-within {

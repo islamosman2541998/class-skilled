@@ -1104,15 +1104,11 @@ return [
         'slide_caption' => 'وصف الصورة',
         'overlay' => 'قوة التعتيم (%)',
         'overlay_hint' => 'بين 30 و60.',
-        'fill_from_company' => 'تعبئة من بيانات الشركة',
-        'facts' => 'البيانات',
         'label' => 'العنوان',
         'value' => 'القيمة',
         'suffix' => 'اللاحقة',
         'text' => 'النص',
-        'two_images' => 'صورتان',
         'three_images' => 'ثلاث صور',
-        'meta' => 'معلومات مختصرة',
         'bullets' => 'النقاط',
         'items' => 'العناصر',
         'steps' => 'الخطوات (مرقمة تلقائيًا)',
@@ -1124,6 +1120,7 @@ return [
             'images' => ':count صور',
             'count' => ':count عنصر',
         ],
+        'about_image' => 'الصورة',
     ],
 
     'menus' => [

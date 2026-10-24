@@ -494,7 +494,7 @@ class DemoContentSeeder extends Seeder
                     }
                     break;
                 case SectionType::About:
-                    $data['image_asset_ids'] = array_values(array_filter([$photo('office-2'), $photo('helmet')]));
+                    $data['image_asset_id'] = $photo('office-2');
                     $section->cta_link = ['type' => 'page', 'model_type' => 'page', 'model_id' => $aboutPage->id];
                     break;
                 case SectionType::Services:

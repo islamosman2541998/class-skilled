@@ -4,11 +4,15 @@ use App\Enums\DataSource;
 use App\Enums\DynamicSource;
 use App\Enums\MenuItemType;
 use App\Enums\SectionType;
+use App\Livewire\Admin\Content\HomeSections;
 use App\Models\HomeSection;
 use App\Models\Menu;
 use App\Models\Service;
+use App\Services\AssetUploader;
 use App\Services\SeoManager;
 use App\Support\LocalizedRoute;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 function homeSection(SectionType $type): HomeSection
 {
@@ -108,4 +112,27 @@ test('every home section view exists', function () {
     foreach (SectionType::cases() as $type) {
         expect(view()->exists('site.sections.'.str_replace('_', '-', $type->value)))->toBeTrue($type->value);
     }
+});
+
+test('the about section has a title, text and one image, and there is no facts section', function () {
+    Storage::fake('public');
+    $image = app(AssetUploader::class)->uploadImage(UploadedFile::fake()->image('about.jpg', 1200, 900));
+    $about = homeSection(SectionType::About);
+    $this->actingAs(userWithRole('editor'));
+
+    Livewire\Livewire::test(HomeSections::class)
+        ->call('edit', $about->id)
+        ->set('section.data.text', ['ar' => 'نص تعريفي كامل عن الشركة', 'en' => 'Full company text'])
+        ->set('section.data.image_asset_id', $image->id)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    expect($about->fresh()->data)->not->toHaveKey('meta')->not->toHaveKey('image_asset_ids');
+    expect(collect(SectionType::cases())->map->value->all())->not->toContain('facts');
+
+    auth()->logout();
+    $html = $this->get('/')->assertOk()->getContent();
+    expect($html)->toContain('نص تعريفي كامل عن الشركة')
+        ->and(substr_count($html, 'data-reveal="image"'))->toBeGreaterThanOrEqual(1)
+        ->and($html)->not->toContain('data-section="facts"');
 });

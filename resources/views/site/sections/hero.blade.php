@@ -39,7 +39,7 @@
 
                     <div class="container-site relative z-[2] flex h-full items-end pb-36 lg:items-center lg:pt-24 lg:pb-16">
                         @if ($slide['title'] !== '' || $slide['text'] !== '')
-                            <div class="hero-panel glass-dark">
+                            <div class="hero-panel">
                                 @if ($slide['caption'] !== '')
                                     <p class="hero-line mb-3 inline-flex rounded-full bg-white/12 px-3 py-1 text-[13px] font-semibold text-white ring-1 ring-white/20" style="--i: 0">{{ $slide['caption'] }}</p>
                                 @endif

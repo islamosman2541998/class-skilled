@@ -90,11 +90,9 @@ class HomeSectionResolver
 
         $specific = match ($section->type) {
             SectionType::Hero => $this->hero($data, $locale, $asset, $text),
-            SectionType::Facts => ['items' => $this->labelValues($data['items'] ?? [], $text)],
             SectionType::About => [
                 'text' => $text($data['text'] ?? []),
-                'images' => array_values(array_filter(array_map($asset, (array) ($data['image_asset_ids'] ?? [])))),
-                'meta' => $this->labelValues($data['meta'] ?? [], $text),
+                'image' => $asset($data['image_asset_id'] ?? null),
             ],
             SectionType::FeatureBand => [
                 'bullets' => array_values(array_filter(array_map($text, (array) ($data['bullets'] ?? [])))),
@@ -134,7 +132,7 @@ class HomeSectionResolver
     {
         return match ($view['type']) {
             'hero' => $view['slides'] === [],
-            'facts', 'why_us', 'stats' => $view['items'] === [],
+            'why_us', 'stats' => $view['items'] === [],
             'process' => $view['steps'] === [],
             'rich_text' => trim(strip_tags($view['html'])) === '',
             'services', 'projects', 'posts', 'testimonials', 'clients', 'certificates' => $view['items']->isEmpty(),
@@ -177,25 +175,6 @@ class HomeSectionResolver
             'show_arrows' => (bool) ($data['show_arrows'] ?? true),
             'show_progress' => (bool) ($data['show_progress'] ?? true),
         ];
-    }
-
-    /**
-     * @param  array<int, mixed>  $items
-     * @return list<array{label: string, value: string}>
-     */
-    private function labelValues(array $items, callable $text): array
-    {
-        $out = [];
-
-        foreach ($items as $item) {
-            $value = $text($item['value'] ?? []);
-
-            if ($value !== '') {
-                $out[] = ['label' => $text($item['label'] ?? []), 'value' => $value];
-            }
-        }
-
-        return $out;
     }
 
     /**
@@ -278,9 +257,10 @@ class HomeSectionResolver
 
         return match ($section->type) {
             SectionType::Hero => __('admin.home.summary.slides', ['count' => count((array) ($data['slides'] ?? []))]),
-            SectionType::Facts, SectionType::WhyUs, SectionType::Stats => __('admin.home.summary.items', ['count' => count((array) ($data['items'] ?? []))]),
+            SectionType::WhyUs, SectionType::Stats => __('admin.home.summary.items', ['count' => count((array) ($data['items'] ?? []))]),
             SectionType::Process => __('admin.home.summary.steps', ['count' => count((array) ($data['steps'] ?? []))]),
-            SectionType::About, SectionType::FeatureBand => __('admin.home.summary.images', ['count' => count((array) ($data['image_asset_ids'] ?? []))]),
+            SectionType::About => __('admin.home.summary.images', ['count' => filled($data['image_asset_id'] ?? null) ? 1 : 0]),
+            SectionType::FeatureBand => __('admin.home.summary.images', ['count' => count((array) ($data['image_asset_ids'] ?? []))]),
             SectionType::Cta, SectionType::RichText => (string) $section->getTranslation('subtitle', 'ar', false),
             default => $section->source->label().' · '.__('admin.home.summary.count', ['count' => $this->items($section)->count()]),
         };

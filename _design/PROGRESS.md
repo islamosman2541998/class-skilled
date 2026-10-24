@@ -378,3 +378,7 @@ the live host.
   hash, or the Vite dev server when `public/hot` exists), so cached HTML never points to deleted CSS/JS. The CSP header
   is skipped only while the local Vite dev server runs (it may listen on `[::1]`, which CSP cannot express);
   production always sends it.
+- Home (owner request): hero text sits directly on the photo (no glass box), no Ken Burns zoom, hero = full viewport
+  height (100svh) on every screen; the facts bar section type is removed from the site, dashboard, defaults and
+  enum (migration `2026_10_24_140000_remove_facts_section_and_simplify_about` deletes it and converts the about
+  section); the about section is title + full text on one side and a single image on the other.

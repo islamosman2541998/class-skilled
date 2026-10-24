@@ -55,18 +55,6 @@ class DefaultHomeSections
                 ],
             ],
             [
-                'type' => SectionType::Facts,
-                'background' => SectionBackground::White,
-                'data' => [
-                    'items' => [
-                        ['label' => ['ar' => 'رخصة تجارية', 'en' => 'Trade licence'], 'value' => ['ar' => 'CN-5898460', 'en' => 'CN-5898460']],
-                        ['label' => ['ar' => 'التصنيف', 'en' => 'Classification'], 'value' => ['ar' => 'الفئة الخامسة، مقاولات المباني', 'en' => 'Fifth category, Building Contracting']],
-                        ['label' => ['ar' => 'جهة التصنيف', 'en' => 'Classified by'], 'value' => ['ar' => 'بلدية مدينة أبوظبي', 'en' => 'Abu Dhabi City Municipality']],
-                        ['label' => ['ar' => 'عضوية غرفة أبوظبي', 'en' => 'ADCCI membership'], 'value' => ['ar' => '8800105771', 'en' => '8800105771']],
-                    ],
-                ],
-            ],
-            [
                 'type' => SectionType::About,
                 'title' => ['ar' => 'شريك حقيقي في نجاح مشروعك', 'en' => 'A true partner in your success'],
                 'cta_label' => ['ar' => 'تعرّف علينا', 'en' => 'About us'],
@@ -76,12 +64,7 @@ class DefaultHomeSections
                         'ar' => 'نسعى لأن نُحدث فرقًا ملموسًا في قطاع البناء، وننقل مفهوم المقاول من منفّذ للأعمال إلى شريك حقيقي في النجاح.',
                         'en' => 'We aim to make a real difference in construction, moving the contractor from someone who executes to a genuine partner in success.',
                     ],
-                    'image_asset_ids' => [],
-                    'meta' => [
-                        ['label' => ['ar' => 'تأسست', 'en' => 'Founded'], 'value' => ['ar' => '2025', 'en' => '2025']],
-                        ['label' => ['ar' => 'المقر', 'en' => 'Based in'], 'value' => ['ar' => 'مصفح، أبوظبي', 'en' => 'Mussafah, Abu Dhabi']],
-                        ['label' => ['ar' => 'الشكل القانوني', 'en' => 'Legal form'], 'value' => ['ar' => 'ذ.م.م', 'en' => 'L.L.C']],
-                    ],
+                    'image_asset_id' => null,
                 ],
             ],
             [

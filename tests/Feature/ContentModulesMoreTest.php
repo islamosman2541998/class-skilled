@@ -154,7 +154,7 @@ test('home sections are edited, reordered and resolved per type', function () {
     $resolved = collect(app(HomeSectionResolver::class)->resolve('en'))->keyBy('type');
     expect($resolved['services']['title'])->toBe('Our services')
         ->and($resolved['services']['items']->pluck('id')->all())->toBe([$service->id])
-        ->and($resolved['facts']['items'])->toHaveCount(4)
+        ->and($resolved)->not->toHaveKey('facts')
         ->and($resolved['process']['steps'])->toHaveCount(4)
         ->and($resolved['why_us']['items'])->toHaveCount(4)
         ->and($resolved['cta']['primary']['url'])->toContain('/en/request-a-quote')

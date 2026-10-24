@@ -48,7 +48,7 @@
                     <form wire:submit="save" class="max-h-[calc(100vh-12rem)] space-y-5 overflow-y-auto p-5">
                         @include('livewire.admin.content.home-sections.types.'.$section['type'])
 
-                        @unless (in_array($section['type'], ['hero', 'facts'], true))
+                        @unless ($section['type'] === 'hero')
                             <x-admin.segmented model="section.background" live :label="__('admin.home.background')" :options="\App\Enums\SectionBackground::options()" />
                             @if (($section['background'] ?? '') === 'dark_photo')
                                 <livewire:admin.asset-field wire:model="section.data.bg_asset_id" kind="image" :label="__('admin.home.bg_image')" wire:key="bg-{{ $editing }}" />

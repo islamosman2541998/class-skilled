@@ -162,7 +162,7 @@ test('essential seeder creates roles, statuses, menus and home sections', functi
     expect(Role::pluck('name')->sort()->values()->all())->toBe(['admin', 'editor', 'sales'])
         ->and(RequestStatus::count())->toBe(16)
         ->and(Menu::count())->toBe(7)
-        ->and(HomeSection::count())->toBe(12)
+        ->and(HomeSection::count())->toBe(11)
         ->and(__('site.request_quote', [], 'en'))->toBe('Request a quote')
         ->and(ProjectStatus::Ongoing->label())->toBe('قيد التنفيذ');
 });
