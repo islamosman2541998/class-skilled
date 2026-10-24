@@ -1,5 +1,4 @@
 @php
-    $hours = $site->workingHours()[0] ?? null;
     $email = $site->emails()[0] ?? null;
     $otherLocale = app()->getLocale() === 'ar' ? 'en' : 'ar';
 @endphp
@@ -25,11 +24,16 @@
         </ul>
 
         <div class="flex items-center gap-5">
-            @if ($hours && $hours['days'] !== '')
-                <p class="inline-flex items-center gap-1.5">
-                    <x-heroicon-m-clock class="size-3.5 text-sky" aria-hidden="true" />
-                    <span>{{ $hours['days'] }}: {{ $hours['hours'] }}</span>
-                </p>
+            @if ($social = $site->social())
+                <ul class="flex items-center gap-1" aria-label="{{ __('site.follow_us') }}">
+                    @foreach ($social as $network => $url)
+                        <li>
+                            <a href="{{ $url }}" target="_blank" rel="noopener me" class="grid size-8 place-items-center rounded-full text-[#C9D3E3] transition-colors hover:bg-white/10 hover:text-sky" aria-label="{{ __('site.social_'.$network) }}" title="{{ __('site.social_'.$network) }}">
+                                <x-site.social-icon :network="$network" class="size-4" />
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
             @endif
             @foreach ($menus['topbar'] ?? [] as $node)
                 @if ($node->url && $node->showOn('desktop'))
