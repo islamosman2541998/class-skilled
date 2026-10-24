@@ -76,9 +76,15 @@
                 </ul>
             </nav>
 
-            <div class="flex items-center justify-between border-t border-white/10 px-6 py-4 text-[12.5px] text-white/50">
-                <span>{{ __('admin.version', ['version' => config('admin.version')]) }}</span>
-                <a href="{{ url('/') }}" target="_blank" rel="noopener" class="hover:text-white">{{ __('admin.topbar.view_site') }}</a>
+            {{-- Developer credit --}}
+            <div class="border-t border-white/10 px-4 py-4">
+                <a href="https://wa.me/201122071593" target="_blank" rel="noopener" class="group block rounded-xl bg-white px-3 pt-2 pb-2.5 shadow-[0_8px_20px_-12px_rgb(0_0_0/0.6)] ring-1 ring-white/10 transition hover:-translate-y-0.5" title="{{ __('admin.developer.contact') }}">
+                    <span class="mb-1 flex items-center justify-between text-[11px] font-semibold text-[#5d6a80]">
+                        <span>{{ __('admin.developer.credit') }}</span>
+                        <span dir="ltr">v{{ config('admin.version') }}</span>
+                    </span>
+                    <img src="{{ asset('images/developer/islam-web-studio.webp') }}" alt="Islam Web Studio" width="480" height="130" class="h-auto w-full" loading="lazy" decoding="async">
+                </a>
             </div>
         </aside>
 

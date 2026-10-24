@@ -1243,4 +1243,8 @@ return [
         'groups' => ['php' => 'PHP', 'files' => 'الملفات والمجلدات', 'services' => 'الخدمات', 'app' => 'التطبيق'],
         'status' => ['ok' => 'سليم', 'warn' => 'تنبيه', 'fail' => 'فشل'],
     ],
+    'developer' => [
+        'credit' => 'تصميم وتطوير',
+        'contact' => 'تواصل مع Islam Web Studio على واتساب',
+    ],
 ];
