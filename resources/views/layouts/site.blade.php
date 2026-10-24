@@ -8,7 +8,7 @@
 <head>
     @include('site.partials.head')
 </head>
-<body @class(['has-overlay-header' => $overlayHeader, 'has-topbar' => true, 'pb-24 lg:pb-0' => true])>
+<body @class(['has-overlay-header' => $overlayHeader, 'has-topbar' => true])>
     @include('site.partials.tracking-body')
     <a href="#main" class="skip-link">{{ __('site.skip_to_content') }}</a>
 

@@ -758,13 +758,39 @@
         }
     }
 
+    /* On mobile the footer reserves room for the fixed bottom bar (so the gap stays navy). */
     .site-footer {
         background: var(--c-deep);
         color: #c9d3e3;
+        padding-bottom: 6rem;
+    }
+
+    @media (width >= 1024px) {
+        .site-footer {
+            padding-bottom: 0;
+        }
     }
 
     .site-footer a:hover {
         color: #fff;
+    }
+
+    .footer-social {
+        display: inline-grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 9999px;
+        border: 1px solid rgb(255 255 255 / 0.18);
+        background: rgb(255 255 255 / 0.06);
+        transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+    }
+
+    .footer-social:hover,
+    .footer-social:focus-visible {
+        background: var(--c-sky);
+        border-color: var(--c-sky);
+        color: var(--c-deep) !important;
     }
 
     /* Hero slider */

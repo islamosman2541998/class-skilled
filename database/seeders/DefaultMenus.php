@@ -77,7 +77,7 @@ class DefaultMenus
                     'system_route' => 'services.index',
                     'dynamic_source' => DynamicSource::Services,
                     'dynamic_mode' => DataSource::All,
-                    'dynamic_limit' => 6,
+                    'dynamic_limit' => 12,
                     'show_all_link' => false,
                     'show_descriptions' => false,
                 ],

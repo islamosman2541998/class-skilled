@@ -405,3 +405,7 @@ the live host.
   paper band, so it no longer merges with the footer. Footer is shorter (smaller logo, tighter spacing, two link
   columns per row on mobile); working hours and the licence/classification row are removed; contact shows one mobile
   number (first phone that is not the WhatsApp number) and the WhatsApp number with its icon, from Settings → Contact.
+- Footer, round 2: horizontal logo (white mark + site name + tagline, larger); social links as round icon buttons
+  (`x-site.social-icon`, label in aria-label/title); dynamic menu groups in footer columns expand to their items (the
+  "Services" column lists the services; default limit 12); desktop columns follow the number of footer menus with
+  links; mobile room for the bottom bar is now footer padding (navy) instead of body padding.
