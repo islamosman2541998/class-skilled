@@ -98,7 +98,7 @@ abstract class SettingsPage extends Component
     public function save(): void
     {
         abort_unless(auth()->user()?->can($this->permission()), 403);
-        $this->validate($this->rules(), [], $this->attributes());
+        $this->validate($this->rules(), [], [...$this->fieldNames(array_keys($this->rules())), ...$this->attributes()]);
 
         $settings = app($this->settingsClass());
         $values = $this->prepare($this->stripRepeaterKeys($this->data));
@@ -113,6 +113,38 @@ abstract class SettingsPage extends Component
 
         $this->dispatch('form-saved');
         $this->toast('success', __('admin.settings.saved'));
+    }
+
+    /**
+     * Readable names for "data.field" / "data.field.ar|en" keys, taken from the field labels in lang/<locale>/admin.php,
+     * e.g. "data.home_title.en" => "Home page title (English)".
+     *
+     * @param  list<string>  $keys
+     * @return array<string, string>
+     */
+    protected function fieldNames(array $keys): array
+    {
+        $names = [];
+
+        foreach ($keys as $key) {
+            $parts = explode('.', $key);
+
+            if ($parts[0] !== 'data' || ! isset($parts[1])) {
+                continue;
+            }
+
+            $label = collect(['admin.'.$this->group().'.'.$parts[1], 'admin.'.$this->group().'.search.'.$parts[1], 'admin.settings.fields.'.$parts[1]])
+                ->first(fn (string $k) => is_string(trans($k)) && trans($k) !== $k);
+
+            if ($label === null) {
+                continue;
+            }
+
+            $locale = count($parts) === 3 && in_array($parts[2], ['ar', 'en'], true) ? $parts[2] : null;
+            $names[$key] = __($label).($locale ? ' ('.($locale === 'ar' ? __('admin.common.arabic') : 'English').')' : '');
+        }
+
+        return $names;
     }
 
     /**

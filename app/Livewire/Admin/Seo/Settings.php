@@ -44,7 +44,7 @@ class Settings extends SettingsPage
             ...$this->pair('title_suffix', false, 80),
             ...$this->pair('search_site_name', true, 70),
             ...$this->pair('search_alternate_name', false, 70),
-            ...$this->pair('home_title', true, 70),
+            ...$this->pair('home_title', true, 90),
             ...$this->pair('home_description', true, 170),
             'data.search_icon_asset_id' => ['nullable', 'integer', 'exists:assets,id'],
             'data.search_logo_asset_id' => ['nullable', 'integer', 'exists:assets,id'],

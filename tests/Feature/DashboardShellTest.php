@@ -3,6 +3,18 @@
 use App\Livewire\Admin\AssetField;
 use App\Livewire\Admin\AssetPicker;
 use App\Livewire\Admin\CommandPalette;
+use App\Livewire\Admin\Seo\Settings;
+use App\Livewire\Admin\Settings\Appearance;
+use App\Livewire\Admin\Settings\Company;
+use App\Livewire\Admin\Settings\Contact;
+use App\Livewire\Admin\Settings\Forms;
+use App\Livewire\Admin\Settings\General;
+use App\Livewire\Admin\Settings\Maintenance;
+use App\Livewire\Admin\Settings\Media;
+use App\Livewire\Admin\Settings\Notifications;
+use App\Livewire\Admin\Settings\Social;
+use App\Livewire\Admin\Settings\System;
+use App\Livewire\Admin\Settings\Tracking;
 use App\Livewire\Admin\System\ActivityLog;
 use App\Livewire\Admin\System\Roles\Index as RolesIndex;
 use App\Livewire\Admin\System\Users\Form as UserForm;
@@ -214,4 +226,35 @@ test('every system page has a dashboard label in both languages', function () {
             expect(LinkOptions::routeLabel($route))->not->toStartWith('admin.');
         }
     }
+});
+
+test('every settings page saves its default values without validation errors', function (string $page) {
+    $this->actingAs(userWithRole('admin'));
+
+    Livewire::test($page)->call('save')->assertHasNoErrors();
+})->with([
+    Settings::class,
+    Appearance::class,
+    Company::class,
+    Contact::class,
+    Forms::class,
+    General::class,
+    Maintenance::class,
+    Media::class,
+    Notifications::class,
+    Social::class,
+    System::class,
+    Tracking::class,
+]);
+
+test('a failed save raises an error toast with a readable field name', function () {
+    $this->actingAs(userWithRole('admin'));
+
+    Livewire::test(Settings::class)
+        ->set('data.home_title.en', str_repeat('a', 95))
+        ->call('save')
+        ->assertHasErrors('data.home_title.en')
+        ->assertDispatched('toast', fn (string $event, array $params) => $params['type'] === 'error'
+            && str_contains($params['message'], __('admin.seo.search.home_title'))
+            && str_contains($params['message'], 'English'));
 });

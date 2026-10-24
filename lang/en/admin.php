@@ -166,6 +166,7 @@ return [
         'phone' => 'Phone',
         'language' => 'Language',
         'arabic' => 'العربية',
+        'validation_failed' => 'Not saved: :error',
         'english' => 'English',
         'translation' => 'Translation',
         'translation_complete' => 'Complete',

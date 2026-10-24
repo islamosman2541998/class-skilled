@@ -1178,6 +1178,12 @@
     border-radius: 12px;
 }
 
+/* Notyf spaces its icon with margin-right; use the logical side so it does not touch the text in RTL. */
+.notyf__icon {
+    margin-right: 0;
+    margin-inline-end: 13px;
+}
+
 .swal2-popup {
     font-family: var(--font-body) !important;
     border-radius: 20px !important;

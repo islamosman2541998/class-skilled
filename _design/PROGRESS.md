@@ -436,3 +436,9 @@ the live host.
   bar never showed and Next stayed disabled while the file uploaded (5–8 s on the live server). Each step is now wrapped
   in `wire:key="quote-step-N"`; the Next button reads "Uploading…" during an upload; a failed upload shows
   `forms.upload_failed` (quote form + job application CV). Verified in a browser on a throttled network; test added.
+- SEO settings would not save (owner report: share image change lost, no toast): the default English home title
+  (72 chars, settings migration) broke its own 70-char rule, so every save failed on a field hidden in the English tab.
+  Limit is now 90 (the hint still recommends 50–60). Dashboard-wide: a failed validation raises an error toast with the
+  first message (`WithToasts::exception()` Livewire hook); locale tabs open the English tab (red mark) when only English
+  fields have errors; settings pages name fields by their labels ("Home page title (English)"). Notyf icon spacing fixed
+  in RTL. Test: every settings page saves its default values; error toast test.

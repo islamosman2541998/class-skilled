@@ -166,6 +166,7 @@ return [
         'phone' => 'الهاتف',
         'language' => 'اللغة',
         'arabic' => 'العربية',
+        'validation_failed' => 'لم يتم الحفظ: :error',
         'english' => 'English',
         'translation' => 'الترجمة',
         'translation_complete' => 'مكتملة',
