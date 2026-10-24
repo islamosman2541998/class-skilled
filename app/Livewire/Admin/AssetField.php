@@ -57,7 +57,7 @@ class AssetField extends Component
 
         $ids = array_map('intval', $ids);
         $this->value = $this->multiple ? $ids : ($ids[0] ?? null);
-        unset($this->assets);
+        $this->changed();
     }
 
     public function remove(int $id): void
@@ -65,7 +65,7 @@ class AssetField extends Component
         $this->value = $this->multiple
             ? array_values(array_diff($this->ids(), [$id]))
             : null;
-        unset($this->assets);
+        $this->changed();
     }
 
     /**
@@ -74,7 +74,16 @@ class AssetField extends Component
     public function reorder(array $ids): void
     {
         $this->value = array_values(array_intersect(array_map('intval', $ids), $this->ids()));
+        $this->changed();
+    }
+
+    /**
+     * Forget the cached thumbnails and tell the page (e.g. a live preview) the value changed.
+     */
+    private function changed(): void
+    {
         unset($this->assets);
+        $this->dispatch('asset-field-changed', field: $this->fieldId);
     }
 
     /**

@@ -46,6 +46,8 @@ Route::middleware(['auth', 'active'])->group(function (): void {
     Route::get('/jobs/create', Admin\Content\Jobs\Form::class)->name('jobs.create');
     Route::get('/jobs/{id}/edit', Admin\Content\Jobs\Form::class)->whereNumber('id')->name('jobs.edit');
     Route::get('/home-sections', Admin\Content\HomeSections::class)->name('home-sections.index');
+    Route::get('/home-sections/{section}/slides/create', Admin\Content\HeroSlide::class)->whereNumber('section')->name('home-sections.slides.create');
+    Route::get('/home-sections/{section}/slides/{slideKey}/edit', Admin\Content\HeroSlide::class)->whereNumber('section')->name('home-sections.slides.edit');
     Route::get('/project-categories', Admin\Content\ProjectCategories::class)->name('project-categories.index');
     Route::get('/post-categories', Admin\Content\PostCategories::class)->name('post-categories.index');
     Route::get('/faqs', Admin\Content\Faqs::class)->name('faqs.index');

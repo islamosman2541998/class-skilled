@@ -3,6 +3,7 @@
 use App\Enums\SectionType;
 use App\Livewire\Admin\Content\Certificates;
 use App\Livewire\Admin\Content\Faqs;
+use App\Livewire\Admin\Content\HeroSlide;
 use App\Livewire\Admin\Content\HomeSections;
 use App\Livewire\Admin\Content\Jobs\Form as JobForm;
 use App\Livewire\Admin\Content\Pages\Form as PageForm;
@@ -167,6 +168,62 @@ test('home sections are edited, reordered and resolved per type', function () {
 
     Livewire::test(HomeSections::class)->call('add', SectionType::Stats->value);
     expect(HomeSection::query()->where('type', 'stats')->first()->is_visible)->toBeFalse();
+});
+
+test('hero slides are added and edited on their own page, then reordered and deleted', function () {
+    $this->actingAs(userWithRole('editor'));
+    $hero = HomeSection::query()->where('type', 'hero')->first();
+    $hero->forceFill(['data' => [...$hero->data, 'slides' => []]])->save();
+    $first = img();
+    $second = img();
+
+    $this->get(route('admin.home-sections.slides.create', $hero->id))->assertOk();
+
+    Livewire::test(HeroSlide::class, ['section' => $hero->id])
+        ->call('save')
+        ->assertHasErrors(['slide.image_asset_id', 'slide.title.ar']);
+
+    Livewire::test(HeroSlide::class, ['section' => $hero->id])
+        ->set('slide.image_asset_id', $first->id)
+        ->set('slide.title.ar', 'شريحة أولى')
+        ->set('slide.primary.label.ar', 'اطلب عرض سعر')
+        ->set('slide.primary.link', ['type' => 'system_page', 'route' => 'quote'])
+        ->call('save')
+        ->assertHasNoErrors()
+        ->assertRedirect(route('admin.home-sections.index', ['edit' => $hero->id]));
+
+    Livewire::test(HeroSlide::class, ['section' => $hero->id])
+        ->set('slide.image_asset_id', $second->id)
+        ->set('slide.title.ar', 'شريحة ثانية')
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $slides = $hero->fresh()->data['slides'];
+    expect($slides)->toHaveCount(2)
+        ->and($slides[0]['id'])->toBeString()
+        ->and($slides[0]['image_asset_id'])->toBe($first->id)
+        ->and($slides[0]['primary']['link']['route'])->toBe('quote');
+
+    $this->get(route('admin.home-sections.slides.edit', [$hero->id, $slides[0]['id']]))->assertOk();
+    $this->get(route('admin.home-sections.slides.edit', [$hero->id, 'missing']))->assertNotFound();
+
+    Livewire::test(HeroSlide::class, ['section' => $hero->id, 'slideKey' => $slides[0]['id']])
+        ->assertSet('slide.title.ar', 'شريحة أولى')
+        ->set('slide.title.en', 'First slide')
+        ->set('slide.image_asset_id', $second->id)
+        ->call('save')
+        ->assertHasNoErrors();
+
+    $slides = $hero->fresh()->data['slides'];
+    expect($slides)->toHaveCount(2)
+        ->and($slides[0]['title']['en'])->toBe('First slide')
+        ->and($slides[0]['image_asset_id'])->toBe($second->id);
+
+    Livewire::test(HomeSections::class)->call('edit', $hero->id)->call('reorderSlides', [$slides[1]['id'], $slides[0]['id']]);
+    expect(array_column($hero->fresh()->data['slides'], 'id'))->toBe([$slides[1]['id'], $slides[0]['id']]);
+
+    Livewire::test(HomeSections::class)->call('edit', $hero->id)->call('deleteSlide', $slides[1]['id']);
+    expect(array_column($hero->fresh()->data['slides'], 'id'))->toBe([$slides[0]['id']]);
 });
 
 test('seeded demo content opens and saves in every form without validation errors', function () {

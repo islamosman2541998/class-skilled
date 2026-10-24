@@ -382,3 +382,10 @@ the live host.
   height (100svh) on every screen; the facts bar section type is removed from the site, dashboard, defaults and
   enum (migration `2026_10_24_140000_remove_facts_section_and_simplify_about` deletes it and converts the about
   section); the about section is title + full text on one side and a single image on the other.
+- Hero slides (owner request): each slide is added/edited on its own dashboard page
+  (`/cs-panel/home-sections/{section}/slides/create` and `/slides/{slideKey}/edit`, `Admin\Content\HeroSlide`) with
+  texts AR/EN, two buttons, overlay strength, image / mobile image / video and a live preview. The hero panel in Home
+  sections now shows the autoplay/arrows/progress settings and a sortable slide list (edit, delete with confirmation,
+  drag to reorder); slides carry a stable `id` (missing ids are added on open). The old in-panel slide editor was too
+  cramped, so elements overlapped and covered the image remove/change buttons. `AssetField` now emits
+  `asset-field-changed` after a pick/remove/reorder so a parent page can re-render (used by the slide preview).

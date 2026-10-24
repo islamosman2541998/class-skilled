@@ -42,7 +42,7 @@ class HomeSections extends Component
     public const LIST_TYPES = ['services', 'projects', 'posts', 'testimonials', 'clients', 'certificates'];
 
     /** Repeater lists inside `data` per type. */
-    public const LISTS = ['hero' => ['slides'], 'feature_band' => ['bullets'], 'why_us' => ['items'], 'process' => ['steps'], 'stats' => ['items']];
+    public const LISTS = ['feature_band' => ['bullets'], 'why_us' => ['items'], 'process' => ['steps'], 'stats' => ['items']];
 
     public ?int $editing = null;
 
@@ -52,6 +52,11 @@ class HomeSections extends Component
     public function mount(): void
     {
         $this->authorize('viewAny', HomeSection::class);
+
+        // Coming back from a slide page: reopen the hero panel.
+        if (is_numeric(request()->query('edit'))) {
+            $this->edit((int) request()->query('edit'));
+        }
     }
 
     /**
@@ -79,6 +84,10 @@ class HomeSections extends Component
         $this->editing = $model->id;
 
         $data = (array) ($model->data ?? []);
+
+        if ($model->type === SectionType::Hero) {
+            $data['slides'] = $this->ensureSlideIds($model);
+        }
 
         foreach (self::LISTS[$model->type->value] ?? [] as $list) {
             $data[$list] = $this->withRepeaterKeys((array) ($data[$list] ?? []));
@@ -195,20 +204,11 @@ class HomeSections extends Component
 
         switch ($type) {
             case 'hero':
+                // Slides are edited on their own page (HeroSlide); only the slider settings here.
                 $rules += [
                     'section.data.autoplay' => ['required', 'integer', 'min:4', 'max:10'],
                     'section.data.show_arrows' => ['boolean'],
                     'section.data.show_progress' => ['boolean'],
-                    'section.data.slides' => ['array', 'min:1'],
-                    'section.data.slides.*.image_asset_id' => ['required', 'integer', 'exists:assets,id'],
-                    'section.data.slides.*.mobile_image_asset_id' => ['nullable', 'integer', 'exists:assets,id'],
-                    'section.data.slides.*.video_asset_id' => ['nullable', 'integer', 'exists:assets,id'],
-                    'section.data.slides.*.overlay' => ['required', 'integer', 'min:30', 'max:60'],
-                    ...$pair('section.data.slides.*.title', true, 160),
-                    ...$pair('section.data.slides.*.text', false, 400),
-                    ...$pair('section.data.slides.*.caption', false, 120),
-                    ...$pair('section.data.slides.*.primary.label', false, 60),
-                    ...$pair('section.data.slides.*.secondary.label', false, 60),
                 ];
                 break;
             case 'about':
@@ -264,12 +264,8 @@ class HomeSections extends Component
         }
 
         if ($model->type === SectionType::Hero) {
-            foreach ($data['slides'] as $i => $slide) {
-                foreach (['primary', 'secondary'] as $button) {
-                    $data['slides'][$i][$button]['link'] = LinkResolver::normalize($slide[$button]['link'] ?? null);
-                }
-                $data['slides'][$i]['id'] ??= (string) Str::uuid();
-            }
+            // Slides are owned by the slide pages: keep what is stored.
+            $data['slides'] = array_values((array) ($model->data['slides'] ?? []));
         }
 
         if ($model->type === SectionType::Cta) {
@@ -300,6 +296,66 @@ class HomeSections extends Component
         unset($this->sections);
         $this->dispatch('form-saved');
         $this->toast('success', __('admin.home.saved'));
+    }
+
+    /**
+     * Every stored slide gets a stable id (needed for its edit page).
+     *
+     * @return list<array<string, mixed>>
+     */
+    private function ensureSlideIds(HomeSection $model): array
+    {
+        $data = (array) ($model->data ?? []);
+        $slides = array_values((array) ($data['slides'] ?? []));
+        $changed = false;
+
+        foreach ($slides as $i => $slide) {
+            if (blank($slide['id'] ?? null)) {
+                $slides[$i]['id'] = (string) Str::uuid();
+                $changed = true;
+            }
+        }
+
+        if ($changed) {
+            $data['slides'] = $slides;
+            $model->forceFill(['data' => $data])->saveQuietly();
+        }
+
+        return $slides;
+    }
+
+    public function deleteSlide(string $id): void
+    {
+        $model = HomeSection::query()->findOrFail((int) $this->editing);
+        $this->authorize('update', $model);
+        abort_unless($model->type === SectionType::Hero, 404);
+
+        $data = (array) ($model->data ?? []);
+        $data['slides'] = array_values(array_filter((array) ($data['slides'] ?? []), fn (array $s) => ($s['id'] ?? null) !== $id));
+        $model->forceFill(['data' => $data])->save();
+
+        $this->section['data']['slides'] = $data['slides'];
+        unset($this->sections);
+        $this->toast('success', __('admin.common.deleted'));
+    }
+
+    /**
+     * @param  array<int, string>  $ids
+     */
+    public function reorderSlides(array $ids): void
+    {
+        $model = HomeSection::query()->findOrFail((int) $this->editing);
+        $this->authorize('update', $model);
+        abort_unless($model->type === SectionType::Hero, 404);
+
+        $data = (array) ($model->data ?? []);
+        $byId = collect((array) ($data['slides'] ?? []))->keyBy('id');
+        $ordered = collect($ids)->map(fn ($id) => $byId->get((string) $id))->filter()->values();
+        $data['slides'] = $ordered->concat($byId->except($ids)->values())->values()->all();
+        $model->forceFill(['data' => $data])->save();
+
+        $this->section['data']['slides'] = $data['slides'];
+        $this->toast('success', __('admin.common.reordered'));
     }
 
     /**
