@@ -1,6 +1,6 @@
 @props(['section', 'arrows' => false, 'link' => true])
 @if ($section['title'] !== '' || $section['subtitle'] !== '' || $arrows)
-    <div class="section-head" data-reveal="fade-up">
+    <div class="section-head" data-reveal="head">
         <div class="max-w-2xl">
             @if ($section['title'] !== '')
                 <h2 id="sec-{{ $section['id'] }}-title" class="t-section">{{ $section['title'] }}</h2>
@@ -10,7 +10,7 @@
             @endif
         </div>
         {{-- On mobile this row spans the full width: "view all" link at the start, arrows at the end. --}}
-        <div @class(['flex items-center gap-5', 'w-full justify-between sm:w-auto sm:justify-start' => $arrows])>
+        <div @class(['section-head-actions flex items-center gap-5', 'w-full justify-between sm:w-auto sm:justify-start' => $arrows])>
             @if ($link && $section['cta'])
                 <a href="{{ $section['cta']['url'] }}" class="text-link" @if ($section['cta']['target_blank']) target="_blank" rel="noopener" @endif>{{ $section['cta']['label'] }}</a>
             @endif

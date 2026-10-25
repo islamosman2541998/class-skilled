@@ -17,7 +17,7 @@
         'on-dark' => $dark,
         'on-light' => ! $dark,
     ]) }}
-    @if ($photo) style="--section-bg: url('{{ $photo }}'); --section-bg-sm: url('{{ $photoSmall }}')" @endif
+    @if ($photo) data-reveal="bg" style="--section-bg: url('{{ $photo }}'); --section-bg-sm: url('{{ $photoSmall }}')" @endif
     @if ($section['title'] !== '') aria-labelledby="sec-{{ $section['id'] }}-title" @endif
     data-section="{{ $section['type'] }}"
 >

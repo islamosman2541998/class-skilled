@@ -454,9 +454,9 @@ class DemoContentSeeder extends Seeder
                 ]],
             ],
             'attachments_config' => [
-                'files' => ['visible' => true, 'title' => ['ar' => 'ملفات الشركة', 'en' => 'Company files'], 'display' => 'list'],
+                'files' => ['visible' => false, 'title' => ['ar' => 'ملفات الشركة', 'en' => 'Company files'], 'display' => 'list'],
                 'videos' => ['visible' => false, 'title' => ['ar' => 'فيديو', 'en' => 'Videos'], 'display' => 'grid'],
-                'images' => ['visible' => true, 'title' => ['ar' => 'من مواقع العمل', 'en' => 'From our sites'], 'display' => 'grid', 'columns' => 3],
+                'images' => ['visible' => false, 'title' => ['ar' => 'من مواقع العمل', 'en' => 'From our sites'], 'display' => 'grid', 'columns' => 3],
             ],
         ]);
 

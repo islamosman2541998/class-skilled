@@ -29,23 +29,19 @@
                                 <x-heroicon-m-chevron-down class="size-4 opacity-70 transition" ::class="open && 'rotate-180'" aria-hidden="true" />
                             </button>
                             <div class="dropdown-panel" x-cloak x-show="open" x-transition.opacity.duration.150ms x-ref="panel" @keydown.arrow-down.prevent="move(1)" @keydown.arrow-up.prevent="move(-1)">
-                                <ul class="grid gap-1 sm:grid-cols-2">
+                                <ul class="dropdown-list">
                                     @foreach ($node->children as $child)
                                         @continue(! $child->url || ! $child->showOn('desktop'))
                                         <li>
-                                            <a href="{{ $child->url }}" class="dropdown-link" data-dropdown-item @if ($child->active) aria-current="page" @endif @if ($child->newTab) target="_blank" rel="noopener" @endif>
-                                                <span class="block text-[14.5px] font-bold text-navy">{{ $child->label }}</span>
-                                                @if ($child->description)
-                                                    <span class="clamp-2 mt-0.5 block text-[13px] leading-relaxed text-muted">{{ $child->description }}</span>
-                                                @endif
-                                            </a>
+                                            <a href="{{ $child->url }}" class="dropdown-link" data-dropdown-item @if ($child->active) aria-current="page" @endif @if ($child->newTab) target="_blank" rel="noopener" @endif>{{ $child->label }}</a>
                                         </li>
                                     @endforeach
                                 </ul>
                                 @if ($viewAll)
-                                    <div class="mt-2 border-t border-line px-3 pt-3 pb-1">
-                                        <a href="{{ $viewAll['url'] }}" class="text-link text-[14px]" data-dropdown-item>{{ $viewAll['label'] }}</a>
-                                    </div>
+                                    <a href="{{ $viewAll['url'] }}" class="dropdown-all" data-dropdown-item>
+                                        {{ $viewAll['label'] }}
+                                        <x-heroicon-m-chevron-right class="size-4" aria-hidden="true" />
+                                    </a>
                                 @endif
                             </div>
                         @elseif ($node->url)

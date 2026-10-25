@@ -659,29 +659,189 @@
         top: calc(100% + 8px);
         inset-inline-start: 50%;
         translate: 50% 0;
-        width: min(560px, 90vw);
-        padding: 12px;
+        width: 300px;
+        padding: 8px;
         border-radius: 16px;
         border: 1px solid var(--c-line);
+        border-top: 2px solid var(--c-sky);
         background: #fff;
         box-shadow: 0 24px 48px -20px rgb(27 42 71 / 0.35);
         color: var(--c-ink);
+    }
+
+    /* Hover bridge over the gap between the trigger and the panel. */
+    .dropdown-panel::before {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        bottom: 100%;
+        height: 10px;
     }
 
     html[dir='ltr'] .dropdown-panel {
         translate: -50% 0;
     }
 
+    .dropdown-list {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        max-height: min(60vh, 420px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
     .dropdown-link {
+        position: relative;
         display: block;
-        padding: 10px 12px;
+        padding: 9px 14px;
         border-radius: 10px;
-        transition: background-color 0.2s;
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.5;
+        color: var(--c-ink);
+        transition: background-color 0.2s, color 0.2s, padding 0.2s;
+    }
+
+    .dropdown-link::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0;
+        top: 50%;
+        width: 3px;
+        height: 0;
+        border-radius: 9999px;
+        background: var(--c-sky);
+        translate: 0 -50%;
+        transition: height 0.2s;
     }
 
     .dropdown-link:hover,
-    .dropdown-link:focus-visible {
+    .dropdown-link:focus-visible,
+    .dropdown-link[aria-current='page'] {
+        padding-inline-start: 18px;
         background: var(--c-paper);
+        color: var(--c-navy);
+    }
+
+    .dropdown-link:hover::before,
+    .dropdown-link:focus-visible::before,
+    .dropdown-link[aria-current='page']::before {
+        height: 60%;
+    }
+
+    .dropdown-all {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-top: 6px;
+        padding: 11px 14px 5px;
+        border-top: 1px solid var(--c-line);
+        font-size: 13.5px;
+        font-weight: 700;
+        color: var(--c-navy);
+        transition: color 0.2s;
+    }
+
+    .dropdown-all:hover,
+    .dropdown-all:focus-visible {
+        color: var(--c-sky);
+    }
+
+    html[dir='rtl'] .dropdown-all svg {
+        transform: scaleX(-1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .dropdown-link,
+        .dropdown-link::before {
+            transition: none;
+        }
+    }
+
+    /* Mobile menu sub-items: same card look as the desktop dropdown. */
+    .mnav-sub {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin: 0 4px 12px;
+        padding: 6px;
+        border-radius: 14px;
+        border: 1px solid var(--c-line);
+        border-top: 2px solid var(--c-sky);
+        background: #fff;
+        box-shadow: 0 16px 32px -20px rgb(27 42 71 / 0.3);
+    }
+
+    .mnav-sub[hidden] {
+        display: none;
+    }
+
+    .mnav-sub-link {
+        position: relative;
+        display: flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 8px 14px;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.5;
+        color: var(--c-ink);
+        transition: background-color 0.2s, color 0.2s, padding 0.2s;
+    }
+
+    .mnav-sub-link::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: 0;
+        top: 50%;
+        width: 3px;
+        height: 0;
+        border-radius: 9999px;
+        background: var(--c-sky);
+        translate: 0 -50%;
+        transition: height 0.2s;
+    }
+
+    .mnav-sub-link:active,
+    .mnav-sub-link:focus-visible,
+    .mnav-sub-link[aria-current='page'] {
+        padding-inline-start: 18px;
+        background: var(--c-paper);
+        color: var(--c-navy);
+    }
+
+    .mnav-sub-link:active::before,
+    .mnav-sub-link:focus-visible::before,
+    .mnav-sub-link[aria-current='page']::before {
+        height: 60%;
+    }
+
+    .mnav-sub-all {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        min-height: 44px;
+        margin-top: 4px;
+        padding: 8px 14px 4px;
+        border-top: 1px solid var(--c-line);
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--c-navy);
+    }
+
+    html[dir='rtl'] .mnav-sub-all svg {
+        transform: scaleX(-1);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .mnav-sub-link,
+        .mnav-sub-link::before {
+            transition: none;
+        }
     }
 
     /* Bottom bar + floating WhatsApp */
@@ -1064,50 +1224,166 @@
 
 /* ----------------------------------------------------------- reveal (§6.6) */
 @layer utilities {
+    /* Entrances are keyframe animations with `backwards` fill: they hold the hidden state
+       during their delay, then hand control back to the element's own styles, so card and
+       button hover transitions are never delayed or locked by the reveal. */
     .js [data-reveal] {
-        --reveal-d: 480ms;
-        transition: opacity var(--reveal-d) cubic-bezier(.2, .7, .2, 1), transform var(--reveal-d) cubic-bezier(.2, .7, .2, 1), clip-path var(--reveal-d) cubic-bezier(.2, .7, .2, 1);
+        --rv-d: 560ms;
+        --rv-ease: cubic-bezier(.2, .7, .2, 1);
+        --rv-y: 22px;
+        --rv-x: 40px;
+        --rv-step: 70ms;
+    }
+
+    [dir='rtl'] [data-reveal] {
+        --rv-x: -40px;
     }
 
     @media (width >= 640px) {
         .js [data-reveal] {
-            --reveal-d: 650ms;
+            --rv-d: 800ms;
+            --rv-y: 30px;
+            --rv-x: 56px;
+            --rv-step: 90ms;
+        }
+
+        [dir='rtl'] [data-reveal] {
+            --rv-x: -56px;
         }
     }
 
-    .js [data-reveal='fade-up']:not(.is-revealed) {
-        opacity: 0;
-        transform: translateY(18px);
+    @keyframes rv-up {
+        from {
+            opacity: 0;
+            transform: translateY(var(--rv-y));
+            filter: blur(6px);
+        }
     }
 
+    /* No blur here: a filter on a glass card's ancestor would switch its backdrop blur off mid-animation. */
+    @keyframes rv-rise {
+        from {
+            opacity: 0;
+            transform: translateY(var(--rv-y));
+        }
+    }
+
+    @keyframes rv-fade {
+        from {
+            opacity: 0;
+        }
+    }
+
+    @keyframes rv-slide {
+        from {
+            opacity: 0;
+            transform: translateX(var(--rv-x)) scale(.96);
+        }
+    }
+
+    @keyframes rv-wipe {
+        from {
+            clip-path: var(--rv-clip);
+        }
+
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes rv-zoom {
+        from {
+            transform: scale(1.16);
+        }
+    }
+
+    /* fade-up / fade: the whole block. */
+    .js [data-reveal='fade-up']:not(.is-revealed),
     .js [data-reveal='fade']:not(.is-revealed) {
         opacity: 0;
     }
 
+    .js [data-reveal='fade-up'].is-revealed {
+        animation: rv-up var(--rv-d) var(--rv-ease) backwards;
+    }
+
+    .js [data-reveal='fade'].is-revealed {
+        animation: rv-fade var(--rv-d) var(--rv-ease) backwards;
+    }
+
+    /* head: section title, then subtitle, then the link / slider arrows. */
+    .js [data-reveal='head']:not(.is-revealed) :is(h2, p, .section-head-actions) {
+        opacity: 0;
+    }
+
+    .js [data-reveal='head'].is-revealed :is(h2, p, .section-head-actions) {
+        animation: rv-up var(--rv-d) var(--rv-ease) backwards;
+    }
+
+    .js [data-reveal='head'].is-revealed p {
+        animation-delay: 110ms;
+    }
+
+    .js [data-reveal='head'].is-revealed .section-head-actions {
+        animation-name: rv-fade;
+        animation-delay: 240ms;
+    }
+
+    /* stagger: direct children one after another (capped so long lists do not drag). */
+    .js [data-reveal='stagger']:not(.is-revealed) > * {
+        opacity: 0;
+    }
+
+    .js [data-reveal='stagger'].is-revealed > * {
+        animation: rv-rise var(--rv-d) var(--rv-ease) backwards;
+        animation-delay: calc(min(var(--i, 0), 8) * var(--rv-step));
+    }
+
+    /* slides: slider cards glide in from the end side, one after another. */
+    .js [data-reveal='slides']:not(.is-revealed) .swiper-slide > * {
+        opacity: 0;
+    }
+
+    .js [data-reveal='slides'].is-revealed .swiper-slide > * {
+        animation: rv-slide var(--rv-d) var(--rv-ease) backwards;
+        animation-delay: calc(min(var(--i, 0), 5) * 110ms + 120ms);
+    }
+
+    /* image: curtain wipe from the start side while the photo settles from a zoom. */
     .js [data-reveal='image'] {
+        --rv-clip: inset(0 100% 0 0);
         overflow: hidden;
     }
 
-    .js [data-reveal='image'] img {
-        transition: transform calc(var(--reveal-d) * 1.4) cubic-bezier(.2, .7, .2, 1);
+    [dir='rtl'] [data-reveal='image'] {
+        --rv-clip: inset(0 0 0 100%);
     }
 
     .js [data-reveal='image']:not(.is-revealed) {
-        clip-path: inset(6% 6% 6% 6% round 14px);
+        clip-path: var(--rv-clip);
     }
 
-    .js [data-reveal='image']:not(.is-revealed) img {
-        transform: scale(1.06);
+    .js [data-reveal='image'].is-revealed {
+        animation: rv-wipe calc(var(--rv-d) * 1.4) cubic-bezier(.77, 0, .18, 1) backwards;
+        animation-delay: calc(var(--i, 0) * 140ms);
     }
 
-    .js [data-reveal='stagger'] > * {
-        transition: opacity var(--reveal-d) cubic-bezier(.2, .7, .2, 1), transform var(--reveal-d) cubic-bezier(.2, .7, .2, 1);
-        transition-delay: calc(var(--i, 0) * 70ms);
+    .js [data-reveal='image'].is-revealed img {
+        animation: rv-zoom calc(var(--rv-d) * 2.2) var(--rv-ease) backwards;
+        animation-delay: calc(var(--i, 0) * 140ms);
     }
 
-    .js [data-reveal='stagger']:not(.is-revealed) > * {
-        opacity: 0;
-        transform: translateY(18px);
+    /* bg: dark photo sections, the background photo eases out of a slow zoom. */
+    .js .section--dark-photo[data-reveal='bg'] {
+        overflow: clip;
+    }
+
+    .js .section--dark-photo[data-reveal='bg']::before {
+        transition: transform 2.4s var(--rv-ease);
+    }
+
+    .js .section--dark-photo[data-reveal='bg']:not(.is-revealed)::before {
+        transform: scale(1.12);
     }
 
     .js [data-reveal='draw-line'] .process-line {
@@ -1129,7 +1405,7 @@
     }
 
     .js [data-reveal='draw-line'] .process-step {
-        transition: opacity var(--reveal-d) ease, transform var(--reveal-d) ease;
+        transition: opacity var(--rv-d) ease, transform var(--rv-d) ease;
         transition-delay: calc(var(--i, 0) * 180ms + 200ms);
     }
 
@@ -1146,9 +1422,18 @@
             scroll-behavior: auto !important;
         }
 
+        .js [data-reveal],
+        .js [data-reveal] *,
+        .js [data-reveal]::before {
+            animation: none !important;
+        }
+
         .js [data-reveal]:not(.is-revealed),
         .js [data-reveal]:not(.is-revealed) > *,
         .js [data-reveal]:not(.is-revealed) img,
+        .js [data-reveal='head']:not(.is-revealed) :is(h2, p, .section-head-actions),
+        .js [data-reveal='slides']:not(.is-revealed) .swiper-slide > *,
+        .js .section--dark-photo[data-reveal='bg']::before,
         .js [data-reveal] .process-step,
         .js [data-reveal] .process-line {
             opacity: 1 !important;

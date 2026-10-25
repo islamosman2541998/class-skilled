@@ -1,6 +1,6 @@
 <x-site.section :section="$section">
     <div class="container-site grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-        <div data-reveal="fade-up">
+        <div data-reveal="stagger">
             @if ($section['title'] !== '')
                 <h2 id="sec-{{ $section['id'] }}-title" class="t-section">{{ $section['title'] }}</h2>
             @endif
@@ -27,7 +27,7 @@
                         'min-h-0 min-w-0 overflow-hidden rounded-[14px]',
                         'row-span-2' => count($images) === 3 && $loop->first,
                         'aspect-[4/3]' => count($images) !== 3,
-                    ]) data-reveal="image">
+                    ]) data-reveal="image" style="--i: {{ $loop->index }}">
                         <x-site.picture :asset="$image" sizes="(min-width: 1024px) 25vw, 50vw" class="size-full object-cover" />
                     </div>
                 @endforeach

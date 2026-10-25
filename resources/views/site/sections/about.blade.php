@@ -1,6 +1,6 @@
 <x-site.section :section="$section">
     <div @class(['container-site grid items-center gap-10 lg:gap-16', 'lg:grid-cols-2' => $section['image']])>
-        <div data-reveal="fade-up">
+        <div data-reveal="stagger">
             @if ($section['title'] !== '')
                 <h2 id="sec-{{ $section['id'] }}-title" class="t-section">{{ $section['title'] }}</h2>
             @endif

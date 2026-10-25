@@ -1,5 +1,5 @@
 // Scroll reveal (§6.6): one IntersectionObserver for every [data-reveal]
-// (fade-up, fade, image, stagger, draw-line) plus count-up for [data-count]. Runs once.
+// (fade-up, fade, head, stagger, slides, image, bg, draw-line) plus count-up for [data-count]. Runs once.
 // CSS holds the states (`.js [data-reveal]:not(.is-revealed)`), so no-JS shows everything.
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -34,30 +34,40 @@ export function initReveal(root = document) {
         return;
     }
 
+    const items = { stagger: (el) => [...el.children], slides: (el) => [...el.querySelectorAll('.swiper-slide')] };
     targets.forEach((el) => {
-        if (el.dataset.reveal === 'stagger') {
-            [...el.children].forEach((child, index) => {
-                if (!child.style.getPropertyValue('--i')) child.style.setProperty('--i', String(index));
-            });
-        }
+        items[el.dataset.reveal]?.(el).forEach((child, index) => {
+            if (!child.style.getPropertyValue('--i')) child.style.setProperty('--i', String(index));
+        });
     });
+
+    // A fully clipped image (curtain wipe) has no visible area, so the observer would never
+    // see it: watch its parent instead and reveal every image waiting on that parent.
+    const waiting = new Map();
+    const watch = (el) => {
+        const target = el.dataset.reveal === 'image' && el.parentElement ? el.parentElement : el;
+        if (!waiting.has(target)) waiting.set(target, []);
+        waiting.get(target).push(el);
+    };
 
     const observer = new IntersectionObserver(
         (entries) => {
             entries.forEach((entry) => {
                 if (!entry.isIntersecting) return;
-                const el = entry.target;
-                observer.unobserve(el);
-                if (el.hasAttribute('data-count')) {
-                    countUp(el);
-                } else {
-                    el.classList.add('is-revealed');
-                }
+                observer.unobserve(entry.target);
+                waiting.get(entry.target)?.forEach((el) => {
+                    if (el.hasAttribute('data-count')) {
+                        countUp(el);
+                    } else {
+                        el.classList.add('is-revealed');
+                    }
+                });
             });
         },
         { threshold: 0.15, rootMargin: '0px 0px -5% 0px' },
     );
 
-    targets.forEach((el) => observer.observe(el));
-    counters.forEach((el) => observer.observe(el));
+    targets.forEach(watch);
+    counters.forEach(watch);
+    waiting.forEach((_, target) => observer.observe(target));
 }

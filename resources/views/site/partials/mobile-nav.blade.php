@@ -32,15 +32,20 @@
                                 <span @class(['text-navy' => $node->active])>{{ $node->label }}</span>
                                 <x-heroicon-m-chevron-down class="size-5 text-muted transition-transform" aria-hidden="true" />
                             </button>
-                            <ul id="mnav-sub-{{ $i }}" class="pb-2" hidden>
+                            <ul id="mnav-sub-{{ $i }}" class="mnav-sub" hidden>
                                 @foreach ($node->children as $child)
                                     @continue(! $child->url || ! $child->showOn('mobile'))
                                     <li>
-                                        <a href="{{ $child->url }}" class="flex min-h-11 items-center rounded-lg px-4 text-[15px] text-ink hover:bg-paper" @if ($child->active) aria-current="page" @endif @if ($child->newTab) target="_blank" rel="noopener" @endif>{{ $child->label }}</a>
+                                        <a href="{{ $child->url }}" class="mnav-sub-link" @if ($child->active) aria-current="page" @endif @if ($child->newTab) target="_blank" rel="noopener" @endif>{{ $child->label }}</a>
                                     </li>
                                 @endforeach
                                 @if ($viewAll)
-                                    <li><a href="{{ $viewAll['url'] }}" class="flex min-h-11 items-center px-4 text-[15px] font-bold text-navy">{{ $viewAll['label'] }}</a></li>
+                                    <li>
+                                        <a href="{{ $viewAll['url'] }}" class="mnav-sub-all">
+                                            {{ $viewAll['label'] }}
+                                            <x-heroicon-m-chevron-right class="size-4" aria-hidden="true" />
+                                        </a>
+                                    </li>
                                 @endif
                             </ul>
                         @elseif ($node->url)

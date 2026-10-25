@@ -16,7 +16,7 @@
     >
         <x-site.section-head :section="$section" :arrows="true" />
         {{ $filters ?? '' }}
-        <div class="slider-clip" data-reveal="fade-up">
+        <div class="slider-clip" data-reveal="slides">
             <div class="swiper card-slider" x-ref="swiper">
                 <div {{ $attributes->class(['swiper-wrapper']) }}>
                     {{ $slot }}
