@@ -165,7 +165,7 @@ class HomeSectionResolver
                 'primary' => LinkResolver::button($slide['primary'] ?? null, $locale),
                 'secondary' => LinkResolver::button($slide['secondary'] ?? null, $locale),
                 'caption' => $text($slide['caption'] ?? []),
-                'overlay' => max(30, min(60, (int) ($slide['overlay'] ?? 45))) / 100,
+                'overlay' => max(0, min(100, (int) ($slide['overlay'] ?? 45))) / 100,
             ];
         }
 

@@ -240,6 +240,32 @@ test('hero slides are added and edited on their own page, then reordered and del
     expect(array_column($hero->fresh()->data['slides'], 'id'))->toBe([$slides[0]['id']]);
 });
 
+test('a hero slide overlay goes from 0 (none) to 100', function () {
+    $this->actingAs(userWithRole('editor'));
+    $hero = HomeSection::query()->where('type', 'hero')->first();
+    $hero->forceFill(['data' => [...$hero->data, 'slides' => []]])->save();
+    $image = img();
+
+    foreach ([0 => 0.0, 100 => 1.0] as $overlay => $expected) {
+        Livewire::test(HeroSlide::class, ['section' => $hero->id])
+            ->set('slide.image_asset_id', $image->id)
+            ->set('slide.title.ar', 'شريحة '.$overlay)
+            ->set('slide.overlay', $overlay)
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $slides = collect(app(HomeSectionResolver::class)->resolve('ar'))->firstWhere('type', 'hero')['slides'] ?? [];
+        expect((float) collect($slides)->last()['overlay'])->toBe($expected);
+    }
+
+    Livewire::test(HeroSlide::class, ['section' => $hero->id])
+        ->set('slide.image_asset_id', $image->id)
+        ->set('slide.title.ar', 'شريحة')
+        ->set('slide.overlay', 101)
+        ->call('save')
+        ->assertHasErrors(['slide.overlay']);
+});
+
 test('seeded demo content opens and saves in every form without validation errors', function () {
     $this->seed(DemoContentSeeder::class);
     $this->actingAs(userWithRole('admin'));

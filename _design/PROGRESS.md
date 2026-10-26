@@ -484,3 +484,6 @@ the live host.
   while files upload the picker cannot be closed or confirmed (`uploader-busy`), so an upload is never dropped.
   Create titles agree in gender (`admin.content.create_titles`: خدمة جديدة / مشروع جديد). Verified in a browser with
   1.2 s added to every request.
+- Hero slide overlay (owner request): 0–100 % instead of 30–60 (slider, validation, preview, HomeSectionResolver
+  clamp); 0 = no overlay at all, so the bottom text shade (`.hero-slide__overlay::after`) now fades with the value
+  and is gone at 0. Test added.

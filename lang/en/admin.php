@@ -1115,7 +1115,7 @@ return [
         'slide_text' => 'Text',
         'slide_caption' => 'Image caption',
         'overlay' => 'Overlay strength (%)',
-        'overlay_hint' => 'Between 30 and 60.',
+        'overlay_hint' => 'From 0 (no overlay) to 100. A darker overlay keeps the text readable on light photos.',
         'label' => 'Label',
         'value' => 'Value',
         'suffix' => 'Suffix',

@@ -46,7 +46,7 @@
                     @if ($previewImage)
                         <img src="{{ $previewImage }}" alt="" class="absolute inset-0 h-full w-full object-cover">
                     @endif
-                    <div class="absolute inset-0" style="background: color-mix(in srgb, var(--c-deep) {{ max(30, min(60, (int) $slide['overlay'])) }}%, transparent)"></div>
+                    <div class="absolute inset-0" style="background: color-mix(in srgb, var(--c-deep) {{ max(0, min(100, (int) $slide['overlay'])) }}%, transparent)"></div>
                     <div class="absolute inset-x-4 bottom-4 text-white [text-shadow:0_2px_12px_rgb(0_0_0/.4)]">
                         @if (filled($slide['caption']['ar']))
                             <span class="mb-1.5 inline-block rounded-full bg-white/15 px-2 py-0.5 text-[10.5px] font-semibold">{{ $slide['caption']['ar'] }}</span>
@@ -59,7 +59,7 @@
                 </div>
                 <div class="mt-4">
                     <label for="overlay" class="a-label">{{ __('admin.home.overlay') }} <span class="font-normal text-[var(--a-muted)]" dir="ltr">({{ (int) $slide['overlay'] }}%)</span></label>
-                    <input id="overlay" type="range" min="30" max="60" step="5" wire:model.live="slide.overlay" class="w-full accent-[var(--c-navy)]">
+                    <input id="overlay" type="range" min="0" max="100" step="5" wire:model.live="slide.overlay" class="w-full accent-[var(--c-navy)]">
                     <p class="a-hint">{{ __('admin.home.overlay_hint') }}</p>
                     @error('slide.overlay')<p class="a-error">{{ $message }}</p>@enderror
                 </div>

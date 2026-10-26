@@ -117,7 +117,7 @@ class HeroSlide extends Component
             'slide.image_asset_id' => ['required', 'integer', 'exists:assets,id'],
             'slide.mobile_image_asset_id' => ['nullable', 'integer', 'exists:assets,id'],
             'slide.video_asset_id' => ['nullable', 'integer', 'exists:assets,id'],
-            'slide.overlay' => ['required', 'integer', 'min:30', 'max:60'],
+            'slide.overlay' => ['required', 'integer', 'min:0', 'max:100'],
             ...$this->pairRules('slide.title', true, 160),
             ...$this->pairRules('slide.text', false, 400),
             ...$this->pairRules('slide.caption', false, 120),
