@@ -25,8 +25,10 @@ export function registerSelect(Alpine) {
                     maxOptions: 500,
                     hidePlaceholder: false,
                     render: { no_results: () => `<div class="no-results">${noResults}</div>` },
+                    // Tom Select hands over its own items array and changes it in place when an item is removed,
+                    // so it is copied: assigning the same array again would not notify Livewire.
                     onChange: (value) => {
-                        this.value = multiple ? (Array.isArray(value) ? value : String(value).split(',').filter(Boolean)) : value;
+                        this.value = multiple ? (Array.isArray(value) ? [...value] : String(value).split(',').filter(Boolean)) : value;
                     },
                 });
                 this.sync(this.value);

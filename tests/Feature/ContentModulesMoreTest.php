@@ -89,6 +89,20 @@ test('projects save services, before/after pairs and appear in the list', functi
         ->call('export')->assertFileDownloaded();
 });
 
+test('a project can be published again with all of its services removed', function () {
+    $this->actingAs(userWithRole('editor'));
+    $project = Project::create(['title' => ['ar' => 'أعمال حديد التسليح'], 'status' => 'published', 'published_at' => now()->subDay()]);
+    $project->services()->sync([Service::create(['title' => ['ar' => 'خرسانة']])->id, Service::create(['title' => ['ar' => 'بنية تحتية']])->id]);
+
+    Livewire::test(ProjectForm::class, ['id' => $project->id])
+        ->set('form.service_ids', [])
+        ->call('publish')
+        ->assertHasNoErrors()
+        ->assertDispatched('toast', type: 'success');
+
+    expect($project->fresh()->services()->count())->toBe(0);
+});
+
 test('posts compute reading time and jobs save requirements', function () {
     $this->actingAs(userWithRole('editor'));
 

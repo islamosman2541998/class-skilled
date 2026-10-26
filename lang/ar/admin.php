@@ -167,6 +167,8 @@ return [
         'language' => 'اللغة',
         'arabic' => 'العربية',
         'validation_failed' => 'لم يتم الحفظ: :error',
+        'server_error' => 'لم يتم الحفظ: حدث خطأ في الخادم. حاول مرة أخرى.',
+        'connection_error' => 'تعذر الاتصال بالخادم. تحقق من الإنترنت ثم حاول مرة أخرى.',
         'english' => 'English',
         'translation' => 'الترجمة',
         'translation_complete' => 'مكتملة',

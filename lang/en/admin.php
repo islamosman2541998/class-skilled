@@ -167,6 +167,8 @@ return [
         'language' => 'Language',
         'arabic' => 'العربية',
         'validation_failed' => 'Not saved: :error',
+        'server_error' => 'Not saved: the server returned an error. Try again.',
+        'connection_error' => 'Could not reach the server. Check your connection and try again.',
         'english' => 'English',
         'translation' => 'Translation',
         'translation_complete' => 'Complete',

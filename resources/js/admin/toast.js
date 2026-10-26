@@ -37,6 +37,17 @@ export function registerToasts(Alpine, Livewire) {
         toast(data?.type, data?.message);
     });
 
+    // A request that fails on the server or never arrives is never silent. 419 (expired page) keeps
+    // Livewire's own prompt; with APP_DEBUG the error page modal stays for the developer.
+    Livewire.interceptRequest(({ onError, onFailure }) => {
+        onError(({ response, preventDefault }) => {
+            if (response.status === 419) return;
+            if (!window.csDebug) preventDefault();
+            toast('error', window.csLang?.server_error);
+        });
+        onFailure(() => toast('error', window.csLang?.connection_error));
+    });
+
     const flash = () => {
         document.querySelectorAll('[data-cs-toast]').forEach((el) => {
             toast(el.dataset.type, el.dataset.message);

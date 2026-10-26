@@ -462,3 +462,9 @@ the live host.
   returned to the library. The uploader now keeps the root `$wire`/element from `init()`. Poster processing shows
   "Processing". Picker multiple mode opens empty and adds to the field; the amber "alt missing" badge is removed from
   asset thumbnails. Verified in a browser with three videos.
+- Multi-selects (owner report: removed a project's services, published, nothing happened): Tom Select passes its own
+  items array to onChange and removes items in place, so after an add the next removal assigned the same array and
+  Alpine/Livewire never saw it; the removed services stayed. `select.js` now copies the array (all multi-selects).
+  Dashboard: any failed Livewire request now shows an error toast (`admin.common.server_error` / `connection_error`,
+  `Livewire.interceptRequest` in `admin/toast.js`; 419 keeps Livewire's prompt, APP_DEBUG keeps the error modal).
+  Test: a project publishes with all services removed.

@@ -16,7 +16,8 @@
     @livewireStyles
     @stack('head')
     <script>
-        window.csLang = {{ Illuminate\Support\Js::from(['confirm' => __('admin.common.confirm'), 'cancel' => __('admin.common.cancel'), 'leave' => __('admin.common.leave'), 'copied' => __('admin.common.copied')]) }};
+        window.csLang = {{ Illuminate\Support\Js::from(['confirm' => __('admin.common.confirm'), 'cancel' => __('admin.common.cancel'), 'leave' => __('admin.common.leave'), 'copied' => __('admin.common.copied'), 'server_error' => __('admin.common.server_error'), 'connection_error' => __('admin.common.connection_error')]) }};
+        window.csDebug = {{ Illuminate\Support\Js::from((bool) config('app.debug')) }};
     </script>
 </head>
 <body class="admin">
