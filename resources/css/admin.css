@@ -109,6 +109,44 @@
         opacity: 0.55;
         cursor: not-allowed;
     }
+
+    /* Livewire v4 sets data-loading on the button that sent a request (wire:click or a form's submit
+       button): its label gives way to a spinner until the response, so a slow save is visibly working. */
+    .a-btn[data-loading] {
+        position: relative;
+        color: transparent !important;
+        pointer-events: none;
+    }
+
+    .a-btn[data-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        width: 18px;
+        height: 18px;
+        margin: auto;
+        border-radius: 9999px;
+        border: 2px solid var(--a-spin, #fff);
+        border-top-color: transparent;
+        animation: a-spin 0.7s linear infinite;
+    }
+
+    .a-btn-secondary[data-loading],
+    .a-btn-ghost[data-loading] {
+        --a-spin: var(--c-navy);
+    }
+
+    @keyframes a-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .a-btn[data-loading]::after {
+            animation-duration: 2s;
+        }
+    }
     .a-btn-sm {
         height: 34px;
         padding-inline: 0.8rem;

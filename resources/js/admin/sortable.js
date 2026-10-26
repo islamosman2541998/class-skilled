@@ -1,7 +1,8 @@
 // Drag & drop ordering (SortableJS).
 // <tbody x-sortable="reorder"> with children carrying data-sort-id; on drop the
 // new id order is sent to the Livewire method (`reorder(array $ids)`).
-// Optional modifiers: x-sortable.handle uses [data-sort-handle] as handle.
+// Optional modifiers: x-sortable.handle uses [data-sort-handle] as handle; x-sortable.scope="reorder"
+// calls the enclosing Alpine component's reorder(ids) instead of the Livewire method.
 // For nested trees use x-sortable-tree="saveTree" (lists with data-sort-list).
 import Sortable from 'sortablejs';
 
@@ -14,7 +15,10 @@ function ids(container) {
 export function registerSortable(Alpine) {
     Alpine.directive('sortable', (el, { expression, modifiers }, { evaluateLater, cleanup }) => {
         // "reorder" → $wire.call('reorder', ids); "sortRepeater('form.items', __ids)" → called as written.
-        const callback = evaluateLater(expression.includes('(') ? `$wire.${expression}` : `$wire.call('${expression}', __ids)`);
+        const target = modifiers.includes('scope')
+            ? `${expression}(__ids)`
+            : expression.includes('(') ? `$wire.${expression}` : `$wire.call('${expression}', __ids)`;
+        const callback = evaluateLater(target);
         const sortable = Sortable.create(el, {
             animation: 150,
             ghostClass: 'a-sort-ghost',

@@ -8,6 +8,7 @@ import { registerEditor } from './editor';
 import { registerSelect } from './select';
 import { registerDatepicker } from './datepicker';
 import { registerUploader } from './uploader';
+import { registerAssetField } from './asset-field';
 import { registerCharts } from './charts';
 
 registerToasts(Alpine, Livewire);
@@ -17,6 +18,7 @@ registerEditor(Alpine);
 registerSelect(Alpine);
 registerDatepicker(Alpine);
 registerUploader(Alpine);
+registerAssetField(Alpine);
 registerCharts(Alpine);
 
 // Persisted UI state (sidebar groups, table columns). Storage may be unavailable.

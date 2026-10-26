@@ -468,3 +468,9 @@ the live host.
   Dashboard: any failed Livewire request now shows an error toast (`admin.common.server_error` / `connection_error`,
   `Livewire.interceptRequest` in `admin/toast.js`; 419 keeps Livewire's prompt, APP_DEBUG keeps the error modal).
   Test: a project publishes with all services removed.
+- Asset fields on a slow host (owner report: changed a service image, saved, no toast): the field took a pick only
+  after its own Livewire round trip, so a Save pressed before it returned was sent without the new image (lost) and
+  the button showed nothing for seconds. `js/admin/asset-field.js` (Alpine `assetField`) now applies picks, removals
+  and new order to `$wire.value` in the browser at once (server methods still run for the thumbnails);
+  `x-sortable.scope` calls the Alpine method. Every `.a-btn` that sent a request shows a spinner (Livewire v4
+  `data-loading`, `admin.css`). Verified in a browser with 1.5 s added to every request.
