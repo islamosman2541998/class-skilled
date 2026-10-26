@@ -76,7 +76,7 @@ class DefaultHomeSections
                 'source' => DataSource::All,
                 'items_limit' => 8,
                 'background' => SectionBackground::Dark,
-                'data' => ['item_ids' => [], 'display' => 'slider', 'autoplay' => false, 'bg_asset_id' => null],
+                'data' => ['item_ids' => [], 'display' => 'slider', 'autoplay' => true, 'bg_asset_id' => null],
             ],
             [
                 'type' => SectionType::FeatureBand,
@@ -104,7 +104,7 @@ class DefaultHomeSections
                 'source' => DataSource::Latest,
                 'items_limit' => 8,
                 'background' => SectionBackground::Paper,
-                'data' => ['item_ids' => [], 'display' => 'slider', 'autoplay' => false, 'show_filters' => true, 'bg_asset_id' => null],
+                'data' => ['item_ids' => [], 'display' => 'slider', 'autoplay' => true, 'show_filters' => true, 'bg_asset_id' => null],
             ],
             [
                 'type' => SectionType::WhyUs,
@@ -140,7 +140,7 @@ class DefaultHomeSections
                 'source' => DataSource::All,
                 'items_limit' => 8,
                 'background' => SectionBackground::DarkPhoto,
-                'data' => ['item_ids' => [], 'display' => 'slider', 'autoplay' => false, 'bg_asset_id' => null],
+                'data' => ['item_ids' => [], 'display' => 'slider', 'autoplay' => true, 'bg_asset_id' => null],
             ],
             [
                 'type' => SectionType::Clients,
@@ -160,7 +160,7 @@ class DefaultHomeSections
                 'source' => DataSource::Latest,
                 'items_limit' => 6,
                 'background' => SectionBackground::White,
-                'data' => ['item_ids' => [], 'display' => 'slider', 'autoplay' => false, 'bg_asset_id' => null],
+                'data' => ['item_ids' => [], 'display' => 'slider', 'autoplay' => true, 'bg_asset_id' => null],
             ],
             [
                 'type' => SectionType::Cta,

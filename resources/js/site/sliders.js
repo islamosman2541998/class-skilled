@@ -52,6 +52,11 @@ export function initHero(component, { delay = 6000 } = {}) {
         speed: motion ? 900 : 0,
         rewind: true,
         grabCursor: true,
+        // Swiper's default needs a slow drag over half the slide; the hero is full screen, so 15% will do.
+        // No edge resistance: it rewinds, so a drag back from the first slide goes to the last one.
+        longSwipesRatio: 0.15,
+        threshold: 6,
+        resistance: false,
         keyboard: { enabled: true, onlyInViewport: true },
         a11y: a11y(),
         navigation: component.$refs.prev ? { prevEl: component.$refs.prev, nextEl: component.$refs.next } : false,
@@ -91,7 +96,38 @@ export function initHero(component, { delay = 6000 } = {}) {
     });
 }
 
-export function initCards(component, { autoplay = false, per = [1, 2, 3, 4] } = {}) {
+// Card autoplay runs only while the slider is on screen and nothing inside it has keyboard focus.
+function holdAutoplay(component, swiper) {
+    const root = component.$root;
+    let visible = false;
+    let focused = false;
+    const sync = () => {
+        if (!swiper.autoplay || swiper.destroyed) return;
+        if (visible && !focused) swiper.autoplay.start();
+        else swiper.autoplay.stop();
+    };
+    root.addEventListener('focusin', () => {
+        focused = true;
+        sync();
+    });
+    root.addEventListener('focusout', (event) => {
+        focused = root.contains(event.relatedTarget);
+        sync();
+    });
+    if ('IntersectionObserver' in window) {
+        component.observer = new IntersectionObserver(([entry]) => {
+            visible = entry.isIntersecting;
+            sync();
+        }, { threshold: 0.3 });
+        component.observer.observe(root);
+    } else {
+        visible = true;
+        sync();
+    }
+}
+
+export function initCards(component, { autoplay = true, per = [1, 2, 3, 4] } = {}) {
+    const auto = autoplay && !reduced();
     const update = (s) => {
         const total = Math.max(1, s.slides.filter((slide) => !slide.hidden).length);
         const view = typeof s.params.slidesPerView === 'number' ? s.params.slidesPerView : 1;
@@ -105,11 +141,15 @@ export function initCards(component, { autoplay = false, per = [1, 2, 3, 4] } = 
         spaceBetween: 16,
         speed: reduced() ? 0 : 500,
         grabCursor: true,
+        longSwipesRatio: 0.25,
+        // With autoplay the slider goes back to the first card after the last one, and keeps going
+        // after a drag or an arrow click.
+        rewind: auto,
         watchSlidesProgress: true,
         keyboard: { enabled: true, onlyInViewport: true },
         a11y: a11y(),
         navigation: component.$refs.prev ? { prevEl: component.$refs.prev, nextEl: component.$refs.next } : false,
-        autoplay: autoplay && !reduced() ? { delay: 5000, pauseOnMouseEnter: true, disableOnInteraction: true } : false,
+        autoplay: auto ? { delay: 5000, pauseOnMouseEnter: true, disableOnInteraction: false } : false,
         breakpoints: {
             640: { slidesPerView: per[1], spaceBetween: 20 },
             1024: { slidesPerView: per[2], spaceBetween: 24 },
@@ -123,6 +163,7 @@ export function initCards(component, { autoplay = false, per = [1, 2, 3, 4] } = 
     });
 
     component.swiper = swiper;
+    if (auto) holdAutoplay(component, swiper);
 
     // Client-side category filter (projects section): hide slides, no reload.
     component.filter = (key) => {
@@ -158,6 +199,7 @@ export function initGallery(component, { delay = 5000 } = {}) {
         speed: motion ? 600 : 0,
         rewind: true,
         grabCursor: count > 1,
+        longSwipesRatio: 0.2,
         allowTouchMove: count > 1,
         keyboard: { enabled: true, onlyInViewport: true },
         a11y: a11y(),
@@ -217,6 +259,7 @@ export function initMedia(component, { delay = 6000 } = {}) {
         speed: motion ? 650 : 0,
         rewind: true,
         grabCursor: count > 1,
+        longSwipesRatio: 0.2,
         allowTouchMove: count > 1,
         keyboard: { enabled: true, onlyInViewport: true },
         a11y: a11y(),

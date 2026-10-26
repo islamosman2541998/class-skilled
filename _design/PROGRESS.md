@@ -495,3 +495,9 @@ the live host.
   `appearance` settings (DB) and is cached (settings cache + theme style + page cache), so uploading files alone
   changes nothing. The settings migration now also clears the settings caches and flushes SiteCache, so
   `php artisan migrate --force` is enough; without a terminal, saving Dashboard → Settings → Appearance does the same.
+- Sliders (owner request: every slider works with arrows, drag and autoplay): the hero ignored normal drags —
+  Swiper's default long-swipe needs half the slide (720 px on a 1440 px hero) and edge resistance shrank drags back
+  from the first slide; now `longSwipesRatio` 0.15 + `resistance: false` (it rewinds). Card sliders: autoplay on by
+  default (resolver, seeds, migration `2026_10_27_120000_turn_on_home_slider_autoplay`; the per-section toggle stays),
+  `disableOnInteraction: false`, rewind at the end, paused off screen / on keyboard focus / on hover. Galleries
+  `longSwipesRatio` 0.2. Verified in a browser (mouse and touch).

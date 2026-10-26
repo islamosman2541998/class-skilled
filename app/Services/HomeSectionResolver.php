@@ -85,7 +85,7 @@ class HomeSectionResolver
             'subtitle' => (string) ($section->getTranslation('subtitle', $locale, false) ?: $section->getTranslation('subtitle', 'ar', false)),
             'cta' => LinkResolver::button(['label' => $section->getTranslations('cta_label'), 'link' => $section->cta_link], $locale),
             'display' => ($data['display'] ?? 'slider') === 'grid' ? 'grid' : 'slider',
-            'autoplay' => (bool) ($data['autoplay'] ?? false),
+            'autoplay' => (bool) ($data['autoplay'] ?? true),
         ];
 
         $specific = match ($section->type) {
