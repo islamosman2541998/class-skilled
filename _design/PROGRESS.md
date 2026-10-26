@@ -474,3 +474,13 @@ the live host.
   and new order to `$wire.value` in the browser at once (server methods still run for the thumbnails);
   `x-sortable.scope` calls the Alpine method. Every `.a-btn` that sent a request shows a spinner (Livewire v4
   `data-loading`, `admin.css`). Verified in a browser with 1.5 s added to every request.
+- Dashboard toasts after wire:navigate (root cause of the "no toast" reports): Notyf appends its container to
+  <body> once; wire:navigate swaps <body>, so after moving between pages every toast went to a detached node.
+  `toast.js` (admin + site) makes a new instance when the container is gone.
+- Create forms (owner review of "new service"): after a successful create the unsaved-changes guard blocked the
+  redirect to the edit page (Livewire v4 redirects before `form-saved` arrives); "Cancel" there and a second Save
+  made a duplicate. Server redirects now pass the guard (`interceptRequest` onRedirect → `cs-server-redirect`); the
+  guard's `form-saved` listener is removed on destroy. Media picker: tabs switch in the browser (entangled `tab`), and
+  while files upload the picker cannot be closed or confirmed (`uploader-busy`), so an upload is never dropped.
+  Create titles agree in gender (`admin.content.create_titles`: خدمة جديدة / مشروع جديد). Verified in a browser with
+  1.2 s added to every request.

@@ -82,6 +82,12 @@ Alpine.data('linkPicker', (options) => ({
     },
 }));
 
+// A redirect sent by the server (after a successful save or a delete) is intended: the
+// unsaved-changes guard below lets it through. Livewire may start it before `form-saved` arrives.
+Livewire.interceptRequest(({ onRedirect }) => {
+    onRedirect(() => window.dispatchEvent(new CustomEvent('cs-server-redirect')));
+});
+
 // Warn before leaving a form with unsaved changes (full reloads and wire:navigate).
 Alpine.data('dirtyGuard', (message) => ({
     dirty: false,
@@ -89,7 +95,9 @@ Alpine.data('dirtyGuard', (message) => ({
         this.$el.addEventListener('input', () => (this.dirty = true));
         this.$el.addEventListener('change', () => (this.dirty = true));
         this.$el.addEventListener('form-saved', () => (this.dirty = false));
-        Livewire.on('form-saved', () => (this.dirty = false));
+        this.offSaved = Livewire.on('form-saved', () => (this.dirty = false));
+        this.onServerRedirect = () => (this.dirty = false);
+        window.addEventListener('cs-server-redirect', this.onServerRedirect);
 
         this.beforeUnload = (event) => {
             if (this.dirty) {
@@ -112,6 +120,8 @@ Alpine.data('dirtyGuard', (message) => ({
         document.addEventListener('livewire:navigate', this.onNavigate);
     },
     destroy() {
+        this.offSaved?.();
+        window.removeEventListener('cs-server-redirect', this.onServerRedirect);
         window.removeEventListener('beforeunload', this.beforeUnload);
         document.removeEventListener('livewire:navigate', this.onNavigate);
     },

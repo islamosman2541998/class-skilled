@@ -821,6 +821,13 @@ return [
         ],
         'edit_title' => 'Edit :module: :name',
         'create_title' => 'New :module',
+        'create_titles' => [
+            'page' => 'New page',
+            'service' => 'New service',
+            'project' => 'New project',
+            'post' => 'New article',
+            'job' => 'New job',
+        ],
         'add_item' => 'Add :module',
         'edit_item' => 'Edit :module',
         'delete_title' => 'Delete this :module?',

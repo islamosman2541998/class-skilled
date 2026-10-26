@@ -821,6 +821,14 @@ return [
         ],
         'edit_title' => 'تعديل :module: :name',
         'create_title' => ':module جديد',
+        // The adjective follows the noun's gender (خدمة جديدة / مشروع جديد); create_title is the fallback.
+        'create_titles' => [
+            'page' => 'صفحة جديدة',
+            'service' => 'خدمة جديدة',
+            'project' => 'مشروع جديد',
+            'post' => 'مقال جديد',
+            'job' => 'وظيفة جديدة',
+        ],
         'add_item' => 'إضافة :module',
         'edit_item' => 'تعديل :module',
         'delete_title' => 'حذف :module؟',

@@ -20,6 +20,14 @@ export function registerUploader(Alpine) {
             init() {
                 wire = this.$wire;
                 root = this.$root;
+                // Tells the enclosing picker whether files are still on their way (it stays open meanwhile).
+                this.$watch('queue', () => {
+                    root.dispatchEvent(new CustomEvent('uploader-busy', { bubbles: true, detail: this.pending() }));
+                });
+            },
+
+            pending() {
+                return this.queue.some((i) => ['waiting', 'poster', 'uploading', 'processing'].includes(i.status));
             },
 
             kindOf(file) {

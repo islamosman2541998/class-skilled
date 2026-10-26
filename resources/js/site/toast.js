@@ -4,8 +4,10 @@ import { Notyf } from 'notyf';
 
 let notyf;
 
+// Notyf adds its container to <body> once. wire:navigate swaps <body>, which leaves that container
+// detached and every later toast invisible, so a new instance is made when it is gone.
 function instance() {
-    if (!notyf) {
+    if (!notyf || !notyf.view?.container?.isConnected) {
         const mobile = window.matchMedia('(max-width: 639px)').matches;
         const rtl = document.documentElement.dir === 'rtl';
         notyf = new Notyf({

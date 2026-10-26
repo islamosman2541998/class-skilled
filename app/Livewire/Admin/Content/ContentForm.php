@@ -15,6 +15,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
@@ -307,9 +309,13 @@ abstract class ContentForm extends Component
     {
         $name = Translate::pick($this->form[$this->titleField()] ?? []);
 
-        return $this->recordId
-            ? __('admin.content.edit_title', ['module' => __($this->moduleLabel()), 'name' => $name])
-            : __('admin.content.create_title', ['module' => __($this->moduleLabel())]);
+        if ($this->recordId) {
+            return __('admin.content.edit_title', ['module' => __($this->moduleLabel()), 'name' => $name]);
+        }
+
+        $own = 'admin.content.create_titles.'.Str::afterLast($this->moduleLabel(), '.');
+
+        return Lang::has($own) ? __($own) : __('admin.content.create_title', ['module' => __($this->moduleLabel())]);
     }
 
     /**
