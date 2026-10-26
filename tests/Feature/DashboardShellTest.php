@@ -200,6 +200,7 @@ test('the asset picker returns the chosen ids to the field', function () {
 
     $field = Livewire::test(AssetField::class, ['multiple' => true]);
     $field->call('picked', $field->get('fieldId'), [3, 4])->assertSet('value', [3, 4])
+        ->call('picked', $field->get('fieldId'), [4, 9])->assertSet('value', [3, 4, 9])
         ->call('reorder', [4, 3])->assertSet('value', [4, 3])
         ->call('remove', 4)->assertSet('value', [3]);
 });

@@ -17,7 +17,7 @@ use Livewire\Component;
  *   <livewire:admin.asset-field wire:model="form.cover_id" kind="image" :label="…" :error="$errors->first('form.cover_id')" />
  *   <livewire:admin.asset-field wire:model="form.gallery_ids" multiple kind="image" :label="…" />
  * Single mode holds an id (or null); multiple mode an ordered list of ids
- * (drag to reorder). Opens the global AssetPicker.
+ * (drag to reorder; the picker adds to it, × removes). Opens the global AssetPicker.
  */
 class AssetField extends Component
 {
@@ -56,7 +56,10 @@ class AssetField extends Component
         }
 
         $ids = array_map('intval', $ids);
-        $this->value = $this->multiple ? $ids : ($ids[0] ?? null);
+        // Multiple mode: the picker opens empty and its choice is added after the current items.
+        $this->value = $this->multiple
+            ? array_values(array_unique([...$this->ids(), ...$ids]))
+            : ($ids[0] ?? null);
         $this->changed();
     }
 

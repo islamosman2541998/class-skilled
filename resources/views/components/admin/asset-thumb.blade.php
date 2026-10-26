@@ -27,7 +27,4 @@
             <x-heroicon-s-play class="h-4 w-4" />
         </span>
     @endif
-    @if ($kind === 'image' && blank($asset->getTranslation('alt', 'ar', false)))
-        <span class="absolute bottom-1 start-1 rounded bg-amber-500 px-1.5 text-[10px] font-bold text-white">{{ __('admin.media.no_alt') }}</span>
-    @endif
 </span>

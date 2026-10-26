@@ -23,7 +23,7 @@
     @endif
 
     <button type="button" @class(['a-btn a-btn-secondary a-btn-sm', 'mt-3' => $assets->isNotEmpty()])
-            x-on:click="$dispatch('open-asset-picker', { target: @js($fieldId), multiple: @js($multiple), kind: @js($kind), selected: @js($this->ids()) })">
+            x-on:click="$dispatch('open-asset-picker', { target: @js($fieldId), multiple: @js($multiple), kind: @js($kind), selected: @js($multiple ? [] : $this->ids()) })">
         <x-heroicon-m-photo class="h-4 w-4" />
         {{ $assets->isNotEmpty() && ! $multiple ? __('admin.media.replace') : __('admin.media.pick') }}
     </button>
