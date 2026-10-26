@@ -487,3 +487,11 @@ the live host.
 - Hero slide overlay (owner request): 0–100 % instead of 30–60 (slider, validation, preview, HomeSectionResolver
   clamp); 0 = no overlay at all, so the bottom text shade (`.hero-slide__overlay::after`) now fades with the value
   and is gone at 0. Test added.
+- Hero text on bright photos (owner chose option 1 of 4 mock-ups): a fixed text-side shade independent of the slide
+  overlay — from the start side from 1024px (RTL right / LTR left, `--scrim-to`), from the bottom on smaller screens —
+  plus a top band under the transparent header (`.hero-slide__overlay::before/::after`). The slide overlay (0–100)
+  now only darkens the whole photo; the dashboard preview shows the same shade and the hint says so.
+- Deep colour on the live server (owner report: footer still old after upload): the colour lives in the
+  `appearance` settings (DB) and is cached (settings cache + theme style + page cache), so uploading files alone
+  changes nothing. The settings migration now also clears the settings caches and flushes SiteCache, so
+  `php artisan migrate --force` is enough; without a terminal, saving Dashboard → Settings → Appearance does the same.

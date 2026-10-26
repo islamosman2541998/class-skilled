@@ -1,6 +1,8 @@
 <?php
 
+use App\Services\SiteCache;
 use Spatie\LaravelSettings\Migrations\SettingsMigration;
+use Spatie\LaravelSettings\Support\SettingsCacheFactory;
 
 /**
  * New default for the deep colour (top bar, footer, dark sections): #0C122B.
@@ -19,5 +21,12 @@ return new class extends SettingsMigration
 
             return $colors;
         });
+
+        // The settings cache and the theme/page caches still hold the old colour: clear them,
+        // so running `php artisan migrate` on the server is enough to see the new one.
+        foreach (app(SettingsCacheFactory::class)->all() as $cache) {
+            $cache->clear();
+        }
+        app(SiteCache::class)->flush();
     }
 };

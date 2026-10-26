@@ -47,6 +47,8 @@
                         <img src="{{ $previewImage }}" alt="" class="absolute inset-0 h-full w-full object-cover">
                     @endif
                     <div class="absolute inset-0" style="background: color-mix(in srgb, var(--c-deep) {{ max(0, min(100, (int) $slide['overlay'])) }}%, transparent)"></div>
+                    {{-- Same text shade as the site (small screens: from the bottom). --}}
+                    <div class="absolute inset-0" style="background: linear-gradient(to top, color-mix(in srgb, var(--c-deep) 90%, transparent), color-mix(in srgb, var(--c-deep) 65%, transparent) 38%, transparent 70%)"></div>
                     <div class="absolute inset-x-4 bottom-4 text-white [text-shadow:0_2px_12px_rgb(0_0_0/.4)]">
                         @if (filled($slide['caption']['ar']))
                             <span class="mb-1.5 inline-block rounded-full bg-white/15 px-2 py-0.5 text-[10.5px] font-semibold">{{ $slide['caption']['ar'] }}</span>

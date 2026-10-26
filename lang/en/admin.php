@@ -1115,7 +1115,7 @@ return [
         'slide_text' => 'Text',
         'slide_caption' => 'Image caption',
         'overlay' => 'Overlay strength (%)',
-        'overlay_hint' => 'From 0 (no overlay) to 100. A darker overlay keeps the text readable on light photos.',
+        'overlay_hint' => 'Darkens the whole photo, from 0 (none) to 100. The text side always has its own shade, so the text stays readable on any photo.',
         'label' => 'Label',
         'value' => 'Value',
         'suffix' => 'Suffix',
