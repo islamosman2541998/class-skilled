@@ -838,6 +838,7 @@ return [
         'images' => 'Images & media',
         'cover' => 'Cover image',
         'gallery' => 'Gallery',
+        'service_gallery_hint' => 'Photos and videos for the "From our work" section (MP4/WebM or a YouTube/Vimeo link from the library). Shown in this order and rotate automatically; videos play inside the gallery.',
         'project_gallery_hint' => 'Project photos and videos (MP4/WebM or a YouTube/Vimeo link from the library). Shown after the cover in this order; a video plays when clicked.',
         'slug_hint' => 'Generated from the title; changing it creates a 301 redirect from the old URL.',
         'slug_hint_short' => 'Leave empty to generate it from the name.',

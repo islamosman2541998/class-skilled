@@ -442,3 +442,15 @@ the live host.
   first message (`WithToasts::exception()` Livewire hook); locale tabs open the English tab (red mark) when only English
   fields have errors; settings pages name fields by their labels ("Home page title (English)"). Notyf icon spacing fixed
   in RTL. Test: every settings page saves its default values; error toast test.
+- Deep colour (owner request): `--c-deep` is now `#0C122B` (footer, top bar, dark sections, hero, dashboard sidebar,
+  e-mails, 500 page). Settings migration `2026_10_26_120000_update_deep_colour` replaces only the old default. Hardcoded
+  `rgb(27 42 71 / x)` overlays/shadows now use `color-mix(... var(--c-deep) ...)` so they follow Appearance.
+- Service "From our work" section (owner request): the 6-tile image grid is replaced by a media gallery
+  (`site/partials/media-gallery`, Alpine `mediaGallery` → `sliders.js` `initMedia`): stage slider with images,
+  uploaded videos and YouTube/Vimeo, glass arrows, counter, autoplay pause button, swipe/drag, keyboard, thumbnail
+  strip whose active thumb fills with the autoplay timer. Autoplay holds while a video plays, moves on when it ends,
+  pauses off screen / hidden tab / lightbox. New custom video player `<x-site.video>` (`js/site/video-player.js`):
+  play, seek with buffered range, time, mute + volume, full screen (iPhone fallback), auto-hide, keys k/space/m/f;
+  timeline stays LTR in Arabic (media controls are not mirrored). Also used by `site/partials/video-player` (video
+  block, page hero video). Dashboard: service gallery accepts image, video and embed. UI strings group `media`
+  (+ migration `2026_10_26_130000_add_media_player_ui_strings` for existing databases). Test added.

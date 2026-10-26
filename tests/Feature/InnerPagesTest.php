@@ -47,6 +47,31 @@ test('services index and detail render in both locales; inactive services are 40
     $this->get($service->localizedUrl('en'))->assertOk()->assertSee('Thermal insulation')->assertSee('First item');
 });
 
+test('service "our work" gallery slides images and videos with the custom player', function () {
+    Storage::fake('public');
+    $service = Service::create(['title' => ['ar' => 'أرضيات الإيبوكسي', 'en' => 'Epoxy flooring']]);
+    $uploader = app(AssetUploader::class);
+    $poster = $uploader->uploadImage(UploadedFile::fake()->image('poster.jpg', 900, 600));
+    $video = $uploader->uploadVideo(UploadedFile::fake()->create('site.mp4', 200, 'video/mp4'), ['duration' => 95, 'poster_asset_id' => $poster->id]);
+    $service->syncAssets('gallery', [
+        $uploader->uploadImage(UploadedFile::fake()->image('a.jpg', 900, 600))->id,
+        $video->id,
+        $uploader->createEmbed('https://www.youtube.com/watch?v=dQw4w9WgXcQ', $poster->id)->id,
+    ]);
+
+    $this->get($service->localizedUrl('ar'))->assertOk()
+        ->assertSee(__('services.gallery'))
+        ->assertSee('x-data="mediaGallery', false)
+        ->assertSee('x-data="videoPlayer"', false)
+        ->assertSee('mg-thumbs', false)
+        ->assertSee('x-ref="next"', false)
+        ->assertSee($video->url(), false)
+        ->assertSee('1:35')
+        ->assertSee(__('media.play').': ')
+        ->assertSee('dQw4w9WgXcQ', false)
+        ->assertSee('role="dialog"', false);
+});
+
 test('drafts are 404 unless a signed preview is active', function () {
     $draft = publishedProject(['status' => 'draft', 'published_at' => null]);
 

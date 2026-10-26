@@ -7,12 +7,14 @@ import { initHeader, registerDropdown } from './header';
 import { initMobileNav } from './mobile-nav';
 import { initReveal } from './reveal';
 import { registerLightbox } from './lightbox';
+import { registerVideoPlayer } from './video-player';
 import { initTracking } from './track';
 
 registerToasts(Livewire);
 registerConfirm(Alpine);
 registerDropdown(Alpine);
 registerLightbox(Alpine);
+registerVideoPlayer(Alpine);
 
 // Slider components: the Swiper chunk downloads only when a slider is on the page.
 const slider = (kind) => (options = {}) => ({
@@ -29,6 +31,7 @@ const slider = (kind) => (options = {}) => ({
         sliders[kind](this, options);
     },
     destroy() {
+        this.observer?.disconnect();
         this.thumbsSwiper?.destroy(true, true);
         this.swiper?.destroy(true, true);
         this.swiper = null;
@@ -37,6 +40,7 @@ const slider = (kind) => (options = {}) => ({
 Alpine.data('heroSlider', slider('initHero'));
 Alpine.data('cardSlider', slider('initCards'));
 Alpine.data('gallerySlider', slider('initGallery'));
+Alpine.data('mediaGallery', slider('initMedia'));
 
 const boot = () => {
     initHeader();

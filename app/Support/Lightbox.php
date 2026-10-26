@@ -63,6 +63,32 @@ class Lightbox
     }
 
     /**
+     * Video length as "1:05" or "1:02:05" (same format as the player's clock).
+     */
+    public static function duration(int $seconds): string
+    {
+        $h = intdiv($seconds, 3600);
+        $m = intdiv($seconds % 3600, 60);
+        $s = str_pad((string) ($seconds % 60), 2, '0', STR_PAD_LEFT);
+
+        return $h > 0 ? $h.':'.str_pad((string) $m, 2, '0', STR_PAD_LEFT).':'.$s : $m.':'.$s;
+    }
+
+    /**
+     * Assets the lightbox can show (images with a file, uploaded videos, YouTube/Vimeo),
+     * so slide indexes and lightbox indexes stay the same.
+     *
+     * @param  Collection<int, Asset>  $assets
+     * @return Collection<int, Asset>
+     */
+    public static function showable(Collection $assets): Collection
+    {
+        return $assets
+            ->filter(fn (Asset $asset) => in_array($asset->kind, [AssetKind::Image, AssetKind::Video, AssetKind::Embed], true) && static::items([$asset]) !== [])
+            ->values();
+    }
+
+    /**
      * @param  Collection<int, Asset>  $assets
      * @return Collection<int, Asset>
      */

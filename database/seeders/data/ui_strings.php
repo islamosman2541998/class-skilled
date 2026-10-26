@@ -109,6 +109,18 @@ return [
         'play_video' => ['ar' => 'تشغيل الفيديو', 'en' => 'Play video'],
     ],
 
+    'media' => [
+        'play' => ['ar' => 'تشغيل', 'en' => 'Play'],
+        'pause' => ['ar' => 'إيقاف مؤقت', 'en' => 'Pause'],
+        'mute' => ['ar' => 'كتم الصوت', 'en' => 'Mute'],
+        'unmute' => ['ar' => 'تشغيل الصوت', 'en' => 'Unmute'],
+        'volume' => ['ar' => 'مستوى الصوت', 'en' => 'Volume'],
+        'seek' => ['ar' => 'موضع التشغيل', 'en' => 'Playback position'],
+        'fullscreen' => ['ar' => 'ملء الشاشة', 'en' => 'Full screen'],
+        'exit_fullscreen' => ['ar' => 'الخروج من ملء الشاشة', 'en' => 'Exit full screen'],
+        'view_full' => ['ar' => 'عرض بالحجم الكامل', 'en' => 'View full size'],
+    ],
+
     'services' => [
         'title' => ['ar' => 'خدماتنا', 'en' => 'Our services'],
         'lead' => ['ar' => 'نغطي أعمال المقاولات من الإنشاء حتى التشطيب والتجهيزات الخاصة.', 'en' => 'We cover contracting work from construction to finishing and specialist fit-out.'],

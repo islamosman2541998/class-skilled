@@ -187,3 +187,116 @@ export function initGallery(component, { delay = 5000 } = {}) {
         });
     }
 }
+
+// Media gallery (service "our work"): stage slider of images, uploaded videos (custom player) and
+// YouTube/Vimeo embeds + a thumbnail strip whose active thumb fills with the autoplay timer.
+// Autoplay holds while a video plays, moves on when it ends, and pauses off screen or in the lightbox.
+export function initMedia(component, { delay = 6000 } = {}) {
+    const root = component.$root;
+    const motion = !reduced();
+    const count = component.$refs.swiper.querySelectorAll('.swiper-slide').length;
+    const auto = motion && count > 1;
+    const setProgress = (value) => root.style.setProperty('--mg-progress', String(value));
+    let held = false;
+
+    component.playing = auto;
+
+    const thumbs = component.$refs.thumbs
+        ? new Swiper(component.$refs.thumbs, {
+            modules: [A11y],
+            slidesPerView: 'auto',
+            spaceBetween: 10,
+            watchSlidesProgress: true,
+            slideToClickedSlide: true,
+            a11y: a11y(),
+        })
+        : null;
+
+    const swiper = new Swiper(component.$refs.swiper, {
+        modules: [Navigation, Autoplay, Keyboard, A11y, Thumbs],
+        speed: motion ? 650 : 0,
+        rewind: true,
+        grabCursor: count > 1,
+        allowTouchMove: count > 1,
+        keyboard: { enabled: true, onlyInViewport: true },
+        a11y: a11y(),
+        navigation: component.$refs.prev ? { prevEl: component.$refs.prev, nextEl: component.$refs.next } : false,
+        thumbs: thumbs ? { swiper: thumbs } : undefined,
+        autoplay: auto ? { delay, pauseOnMouseEnter: true, disableOnInteraction: false } : false,
+        on: {
+            slideChange(s) {
+                component.active = s.realIndex;
+                setProgress(0);
+                s.slides.forEach((slide, index) => {
+                    if (index !== s.activeIndex) {
+                        slide.querySelectorAll('[data-media]').forEach((el) => el.dispatchEvent(new CustomEvent('media-stop')));
+                    }
+                });
+                // The visitor moved on from a video: autoplay continues (unless they paused it).
+                if (held && component.playing) {
+                    held = false;
+                    s.autoplay.start();
+                }
+            },
+            autoplayTimeLeft(s, time, ratio) {
+                setProgress(1 - ratio);
+            },
+            autoplayStop() {
+                setProgress(0);
+            },
+        },
+    });
+
+    component.swiper = swiper;
+    component.thumbsSwiper = thumbs;
+    component.go = (index) => swiper.slideTo(index);
+    component.toggle = () => {
+        if (!swiper.autoplay || count < 2) return;
+        component.playing = !component.playing;
+        if (component.playing && !held) {
+            swiper.autoplay.start();
+        } else {
+            swiper.autoplay.stop();
+        }
+    };
+
+    root.addEventListener('media-play', () => {
+        held = true;
+        swiper.autoplay?.stop();
+    });
+    root.addEventListener('media-ended', () => {
+        held = false;
+        if (component.playing && count > 1) {
+            swiper.slideNext();
+            swiper.autoplay.start();
+        }
+    });
+
+    // Autoplay only runs while the gallery is on screen and the tab is visible.
+    const running = () => component.playing && !held && swiper.autoplay?.running;
+    if (auto && 'IntersectionObserver' in window) {
+        component.observer = new IntersectionObserver(([entry]) => {
+            if (!running()) return;
+            if (entry.isIntersecting) swiper.autoplay.resume();
+            else swiper.autoplay.pause();
+        }, { threshold: 0.35 });
+        component.observer.observe(root);
+    }
+    document.addEventListener('visibilitychange', () => {
+        if (!running()) return;
+        if (document.hidden) swiper.autoplay.pause();
+        else swiper.autoplay.resume();
+    });
+
+    // Pause while the lightbox is open; continue from the image that was last shown there.
+    if (typeof component.shown === 'boolean') {
+        component.$watch('shown', (open) => {
+            if (open) {
+                swiper.autoplay?.stop();
+            } else {
+                swiper.slideTo(component.index ?? swiper.activeIndex);
+                if (component.playing && !held) swiper.autoplay?.start();
+            }
+        });
+    }
+}

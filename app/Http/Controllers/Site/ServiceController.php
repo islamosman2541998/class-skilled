@@ -26,7 +26,7 @@ class ServiceController extends Controller
     public function show(SeoManager $seo, SchemaBuilder $schema, string $slug): View
     {
         /** @var Service $service */
-        $service = $this->findPublic(Service::query()->with(['assets.media', 'seo']), $slug);
+        $service = $this->findPublic(Service::query()->with(['assets.media', 'assets.poster.media', 'seo']), $slug);
         $faqs = $service->faqs()->active()->ordered()->get();
         $locale = app()->getLocale();
 

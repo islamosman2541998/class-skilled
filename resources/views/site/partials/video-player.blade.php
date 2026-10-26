@@ -1,4 +1,4 @@
-{{-- One video: uploaded file with poster + controls, or a lite YouTube/Vimeo embed (iframe after click). --}}
+{{-- One video: uploaded file in the custom player, or a lite YouTube/Vimeo embed (iframe after click). --}}
 @php($poster = \App\Support\Lightbox::poster($video))
 @if ($video->kind === \App\Enums\AssetKind::Embed && $video->embedUrl())
     <div x-data="liteEmbed(@js($video->embedUrl()))" class="relative aspect-video overflow-hidden rounded-[14px] bg-deep">
@@ -15,7 +15,5 @@
         </button>
     </div>
 @elseif ($video->kind === \App\Enums\AssetKind::Video && $video->url())
-    <video controls playsinline preload="none" @if ($poster) poster="{{ $poster }}" @endif class="aspect-video w-full rounded-[14px] bg-deep" aria-label="{{ $video->titleText() }}">
-        <source src="{{ $video->url() }}" type="{{ $video->mime }}">
-    </video>
+    <x-site.video :video="$video" class="aspect-video w-full rounded-[14px]" />
 @endif

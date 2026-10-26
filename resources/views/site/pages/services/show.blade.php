@@ -63,7 +63,7 @@
                 @if ($gallery->isNotEmpty())
                     <section aria-labelledby="gallery-title">
                         <h2 id="gallery-title" class="t-section mb-6">{{ __('services.gallery') }}</h2>
-                        @include('site.partials.image-grid', ['images' => $gallery, 'columns' => 3, 'limit' => 6])
+                        @include('site.partials.media-gallery', ['items' => $gallery, 'label' => __('services.gallery')])
                     </section>
                 @endif
 
