@@ -42,11 +42,11 @@
 
         <aside class="min-w-0 space-y-6 xl:sticky xl:top-24">
             <x-admin.panel :title="__('admin.home.slide_preview')">
-                <div class="relative aspect-[16/10] overflow-hidden rounded-xl bg-[#1b2a47]" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
+                <div class="relative aspect-[16/10] overflow-hidden rounded-xl bg-[var(--c-deep)]" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
                     @if ($previewImage)
                         <img src="{{ $previewImage }}" alt="" class="absolute inset-0 h-full w-full object-cover">
                     @endif
-                    <div class="absolute inset-0" style="background: rgb(27 42 71 / {{ max(30, min(60, (int) $slide['overlay'])) / 100 }})"></div>
+                    <div class="absolute inset-0" style="background: color-mix(in srgb, var(--c-deep) {{ max(30, min(60, (int) $slide['overlay'])) }}%, transparent)"></div>
                     <div class="absolute inset-x-4 bottom-4 text-white [text-shadow:0_2px_12px_rgb(0_0_0/.4)]">
                         @if (filled($slide['caption']['ar']))
                             <span class="mb-1.5 inline-block rounded-full bg-white/15 px-2 py-0.5 text-[10.5px] font-semibold">{{ $slide['caption']['ar'] }}</span>

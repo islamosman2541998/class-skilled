@@ -151,7 +151,7 @@ screens, THIS FILE WINS. In particular (newer decisions than the screens):
 | Token | Hex | Use |
 |---|---|---|
 | `--c-navy` (Class Navy) | `#2B4168` | headings, structure, secondary buttons |
-| `--c-deep` (Deep Navy) | `#1B2A47` | top bar, footer, dark sections |
+| `--c-deep` (Deep Navy) | `#0C122B` | top bar, footer, dark sections |
 | `--c-sky` (Skilled Sky) | `#4FC3EE` | primary action (main CTA), active states, slider progress |
 | `--c-ink` | `#24324D` | body text |
 | `--c-muted` | `#5D6A80` | secondary text |
@@ -197,7 +197,7 @@ no single highlighted word inside headings.
 ### 6.5 Sliders (Swiper) and the glass card style
 **Hero slider** (home, first section)
 - Full-bleed, height `min(86vh, 760px)` desktop, `78svh` mobile. Slides = image (or short muted looping
-  video) with a solid dark overlay `rgba(27,42,71,.45)`; each slide has title, text, primary + secondary CTA,
+  video) with a solid dark overlay `rgba(12,18,43,.45)`; each slide has title, text, primary + secondary CTA,
   optional caption. All from dashboard.
 - `effect: 'fade'` (crossFade) + slow Ken Burns zoom on the active slide image (scale 1.08 → 1 over 7s).
 - Autoplay 6s, `pauseOnMouseEnter`, `disableOnInteraction: false`; loop; keyboard; a11y module.
@@ -210,14 +210,14 @@ no single highlighted word inside headings.
 - `slidesPerView`: 1.15 (mobile) → 2.2 (≥640) → 3.2 (≥1024) → 3.5 (≥1280); `spaceBetween` 16/20/24.
 - Arrows (glass round buttons in the section header, end side) + bullets/progress; swipe/drag; keyboard.
 - Section background for glass to look right: deep navy with a large darkened project photo
-  (overlay `rgba(27,42,71,.78)`), selectable per section in the dashboard (dark-photo / dark / light-paper).
+  (overlay `rgba(12,18,43,.78)`), selectable per section in the dashboard (dark-photo / dark / light-paper).
 - **Glass card (dark sections)**: `background: rgba(255,255,255,.08)`; `border: 1px solid rgba(255,255,255,.16)`;
   `backdrop-filter: blur(16px) saturate(140%)`; radius 20px; shadow `0 24px 48px -24px rgba(0,0,0,.55)`;
   inner image radius 14px; title white, text `#C9D3E3`. Hover/focus: lift 4px, border `rgba(79,195,238,.55)`,
   image scale 1.04 (300ms). 
 - **Glass card (light sections)**: `background: rgba(255,255,255,.62)`; border `rgba(255,255,255,.7)`;
-  same blur; shadow `0 20px 40px -24px rgba(27,42,71,.35)`; text in navy/ink.
-- Fallback when `backdrop-filter` is unsupported: solid `rgba(27,42,71,.9)` (dark) / `#fff` (light).
+  same blur; shadow `0 20px 40px -24px rgba(12,18,43,.35)`; text in navy/ink.
+- Fallback when `backdrop-filter` is unsupported: solid `rgba(12,18,43,.9)` (dark) / `#fff` (light).
 - Swiper is loaded only on pages that use it (dynamic `import()`), initialised through Alpine components
   so it survives Livewire updates; `dir` taken from `<html dir>`.
 
@@ -247,7 +247,7 @@ no single highlighted word inside headings.
 
 ## 7. Dashboard design (custom Livewire)
 Follow `_design/screens/dashboard/*.jpg`:
-- Right sidebar (start side, RTL) in deep navy `#1B2A47`, 268px, collapsible groups, active item navy
+- Right sidebar (start side, RTL) in deep navy `#0C122B`, 268px, collapsible groups, active item navy
   with a sky inset bar, count badges in sky. Topbar white 64px: global search (Ctrl/Cmd+K), "View site",
   language toggle, notifications, user menu.
 - Content area `#F5F7FA`, white panels with 1px `#E3E8EF` border, radius 12px, 14–15px text.

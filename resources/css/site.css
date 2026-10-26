@@ -222,7 +222,7 @@
         border: 1px solid rgb(255 255 255 / 0.7);
         -webkit-backdrop-filter: blur(16px) saturate(140%);
         backdrop-filter: blur(16px) saturate(140%);
-        box-shadow: 0 20px 40px -24px rgb(27 42 71 / 0.35);
+        box-shadow: 0 20px 40px -24px color-mix(in srgb, var(--c-deep) 35%, transparent);
         border-radius: var(--radius-glass);
     }
 
@@ -269,7 +269,7 @@
 
     @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
         .glass-dark {
-            background: rgb(27 42 71 / 0.9);
+            background: color-mix(in srgb, var(--c-deep) 90%, transparent);
         }
 
         .glass-light {
@@ -277,7 +277,7 @@
         }
 
         .glass-btn {
-            background: rgb(27 42 71 / 0.85);
+            background: color-mix(in srgb, var(--c-deep) 85%, transparent);
         }
     }
 
@@ -421,7 +421,7 @@
         position: absolute;
         inset: 0;
         z-index: -1;
-        background: rgb(27 42 71 / 0.78);
+        background: color-mix(in srgb, var(--c-deep) 78%, transparent);
     }
 
     .section-head {
@@ -576,7 +576,7 @@
         background: rgb(255 255 255 / 0.86);
         -webkit-backdrop-filter: blur(16px) saturate(140%);
         backdrop-filter: blur(16px) saturate(140%);
-        box-shadow: 0 12px 32px -24px rgb(27 42 71 / 0.45);
+        box-shadow: 0 12px 32px -24px color-mix(in srgb, var(--c-deep) 45%, transparent);
     }
 
     @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
@@ -665,7 +665,7 @@
         border: 1px solid var(--c-line);
         border-top: 2px solid var(--c-sky);
         background: #fff;
-        box-shadow: 0 24px 48px -20px rgb(27 42 71 / 0.35);
+        box-shadow: 0 24px 48px -20px color-mix(in srgb, var(--c-deep) 35%, transparent);
         color: var(--c-ink);
     }
 
@@ -771,7 +771,7 @@
         border: 1px solid var(--c-line);
         border-top: 2px solid var(--c-sky);
         background: #fff;
-        box-shadow: 0 16px 32px -20px rgb(27 42 71 / 0.3);
+        box-shadow: 0 16px 32px -20px color-mix(in srgb, var(--c-deep) 30%, transparent);
     }
 
     .mnav-sub[hidden] {
@@ -855,7 +855,7 @@
         gap: 4px;
         padding: 6px;
         border-radius: 9999px;
-        background: rgb(27 42 71 / 0.78);
+        background: color-mix(in srgb, var(--c-deep) 78%, transparent);
         border: 1px solid rgb(255 255 255 / 0.16);
         -webkit-backdrop-filter: blur(16px) saturate(140%);
         backdrop-filter: blur(16px) saturate(140%);
@@ -888,7 +888,7 @@
 
     @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
         .bottom-bar {
-            background: rgb(27 42 71 / 0.96);
+            background: color-mix(in srgb, var(--c-deep) 96%, transparent);
         }
     }
 
@@ -997,7 +997,7 @@
     .hero-slide__overlay {
         position: absolute;
         inset: 0;
-        background: rgb(27 42 71 / var(--overlay, 0.45));
+        background: color-mix(in srgb, var(--c-deep) calc(var(--overlay, 0.45) * 100%), transparent);
     }
 
 
@@ -1011,7 +1011,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(to top, rgb(27 42 71 / 0.55), transparent 55%);
+        background: linear-gradient(to top, color-mix(in srgb, var(--c-deep) 55%, transparent), transparent 55%);
     }
 
     .hero-panel .t-lead {

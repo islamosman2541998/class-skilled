@@ -19,10 +19,10 @@
     <meta name="robots" content="noindex">
     <title>{{ $t('errors.500_title', 'حدث خطأ في الخادم', 'Server error') }}</title>
     <style>
-        body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #1B2A47; color: #C9D3E3; font-family: system-ui, 'Segoe UI', Tahoma, sans-serif; text-align: center; padding: 24px; }
+        body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #0C122B; color: #C9D3E3; font-family: system-ui, 'Segoe UI', Tahoma, sans-serif; text-align: center; padding: 24px; }
         h1 { color: #fff; font-size: 24px; margin: 24px 0 8px; }
         p { max-width: 46ch; margin: 0 auto; line-height: 1.8; }
-        a { display: inline-block; margin-top: 24px; padding: 12px 24px; border-radius: 9999px; background: #4FC3EE; color: #1B2A47; font-weight: 700; text-decoration: none; }
+        a { display: inline-block; margin-top: 24px; padding: 12px 24px; border-radius: 9999px; background: #4FC3EE; color: #0C122B; font-weight: 700; text-decoration: none; }
         img { height: 72px; width: auto; }
     </style>
 </head>

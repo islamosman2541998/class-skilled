@@ -19,7 +19,7 @@
 :root {
     --a-bg: #f5f7fa;
     --a-border: #e3e8ef;
-    --a-sidebar: #1b2a47;
+    --a-sidebar: var(--c-deep);
     --a-sidebar-active: #2b4168;
     --a-text: #24324d;
     --a-muted: #5d6a80;
@@ -455,7 +455,7 @@
         border-bottom: 1px solid var(--a-border);
         backdrop-filter: blur(14px) saturate(160%);
         -webkit-backdrop-filter: blur(14px) saturate(160%);
-        box-shadow: 0 1px 0 rgb(255 255 255 / 0.6), 0 8px 24px -20px rgb(27 42 71 / 0.35);
+        box-shadow: 0 1px 0 rgb(255 255 255 / 0.6), 0 8px 24px -20px color-mix(in srgb, var(--c-deep) 35%, transparent);
     }
 
     @media (width >= 1024px) {
@@ -485,7 +485,7 @@
     .a-search-pill:hover {
         background: #fff;
         border-color: #cfd7e3;
-        box-shadow: 0 4px 14px -8px rgb(27 42 71 / 0.25);
+        box-shadow: 0 4px 14px -8px color-mix(in srgb, var(--c-deep) 25%, transparent);
     }
 
     .a-kbd {
@@ -590,7 +590,7 @@
     .a-lang-switch span.is-active {
         background: #fff;
         color: var(--c-deep);
-        box-shadow: 0 1px 3px rgb(27 42 71 / 0.18);
+        box-shadow: 0 1px 3px color-mix(in srgb, var(--c-deep) 18%, transparent);
     }
 
     .a-lang-switch:hover span:not(.is-active) {
@@ -656,7 +656,7 @@
         position: fixed;
         inset: 0;
         z-index: 50;
-        background: rgb(27 42 71 / 0.45);
+        background: color-mix(in srgb, var(--c-deep) 45%, transparent);
         display: flex;
         align-items: flex-start;
         justify-content: center;

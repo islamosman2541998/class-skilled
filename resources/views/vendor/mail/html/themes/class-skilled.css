@@ -311,7 +311,7 @@ body[dir='rtl'] .content-cell, body[dir='rtl'] p, body[dir='rtl'] h1, body[dir='
 }
 
 .header {
-    background-color: #1B2A47;
+    background-color: #0C122B;
     padding: 22px 0;
 }
 
@@ -349,7 +349,7 @@ p, td {
     border-left: 18px solid #4FC3EE;
     border-right: 18px solid #4FC3EE;
     border-top: 8px solid #4FC3EE;
-    color: #1B2A47 !important;
+    color: #0C122B !important;
 }
 
 .table th {

@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Vite;
 class Appearance
 {
     public const DEFAULT_COLORS = [
-        'navy' => '#2B4168', 'deep' => '#1B2A47', 'sky' => '#4FC3EE', 'ink' => '#24324D',
+        'navy' => '#2B4168', 'deep' => '#0C122B', 'sky' => '#4FC3EE', 'ink' => '#24324D',
         'muted' => '#5D6A80', 'line' => '#E8ECF1', 'paper' => '#F5F7FA',
     ];
 

@@ -4,7 +4,7 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <title>{{ $seo->title() }}</title>
 <meta name="description" content="{{ $seo->description() }}">
-<meta name="theme-color" content="{{ app(\App\Settings\AppearanceSettings::class)->colors['deep'] ?? '#1B2A47' }}">
+<meta name="theme-color" content="{{ app(\App\Settings\AppearanceSettings::class)->colors['deep'] ?? '#0C122B' }}">
 @if ($seo->noindex())
     <meta name="robots" content="noindex, nofollow">
 @endif
