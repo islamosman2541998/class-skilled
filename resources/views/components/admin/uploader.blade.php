@@ -26,11 +26,11 @@
 
     <template x-if="video">
         <div class="mt-5 rounded-xl border border-a-border p-4">
-            <p class="font-bold">{{ __('admin.media.video_poster_title') }}</p>
+            <p class="font-bold">{{ __('admin.media.video_poster_title') }}: <span class="font-semibold" dir="auto" x-text="video.name"></span></p>
             <p class="text-[13px] text-[var(--a-muted)]">{{ __('admin.media.video_poster_text') }}</p>
-            <video x-ref="video" :src="video.url" controls muted playsinline class="mt-3 max-h-72 w-full rounded-lg bg-black" @loadedmetadata="readDuration($event.target)"></video>
+            <video x-ref="video" :src="video.url" controls muted playsinline preload="auto" class="mt-3 max-h-72 w-full rounded-lg bg-black" @loadedmetadata="readDuration($event.target)" @loadeddata="markReady($event.target)"></video>
             <div class="mt-3 flex gap-2">
-                <button type="button" class="a-btn a-btn-primary a-btn-sm" @click="capturePoster($refs.video)">{{ __('admin.media.capture') }}</button>
+                <button type="button" class="a-btn a-btn-primary a-btn-sm" :disabled="!video.ready" @click="capturePoster($refs.video)">{{ __('admin.media.capture') }}</button>
                 <button type="button" class="a-btn a-btn-secondary a-btn-sm" @click="skipPoster()">{{ __('admin.media.skip_poster') }}</button>
             </div>
         </div>

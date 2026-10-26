@@ -454,3 +454,11 @@ the live host.
   timeline stays LTR in Arabic (media controls are not mirrored). Also used by `site/partials/video-player` (video
   block, page hero video). Dashboard: service gallery accepts image, video and embed. UI strings group `media`
   (+ migration `2026_10_26_130000_add_media_player_ui_strings` for existing databases). Test added.
+- Media uploader, videos (owner report: "after capturing the poster it stops"): (1) several videos added at once
+  shared one poster panel, so only the last got one and the others stayed at "poster" forever; the panel now takes
+  them one by one (file name shown, Capture enabled once a frame is loaded). (2) With Livewire v4, `this.$wire` /
+  `this.$dispatch` called from the poster panel's button belonged to the panel element, which is removed on capture:
+  `storeUpload` never reached the server, so every video with a poster ended as failed/stuck and the picker never
+  returned to the library. The uploader now keeps the root `$wire`/element from `init()`. Poster processing shows
+  "Processing". Picker multiple mode opens empty and adds to the field; the amber "alt missing" badge is removed from
+  asset thumbnails. Verified in a browser with three videos.
