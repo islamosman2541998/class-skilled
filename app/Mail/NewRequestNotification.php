@@ -4,23 +4,25 @@ namespace App\Mail;
 
 use App\Enums\RequestType;
 use App\Settings\NotificationSettings;
+use App\Support\RequestMail;
 use App\Support\RequestPresenter;
 use Illuminate\Bus\Queueable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Mail\Attachment;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 /**
- * Team notification for a new visitor request (Arabic, the dashboard default), with every field and a dashboard link.
+ * Team notification for a new visitor request (Arabic, the dashboard default): every field grouped
+ * in sections, call / WhatsApp / reply / dashboard actions and the visitor's files attached when small enough.
  */
 class NewRequestNotification extends Mailable
 {
     use Queueable, SerializesModels;
-
-    public $theme = 'class-skilled';
 
     public function __construct(public Model $request)
     {
@@ -46,10 +48,25 @@ class NewRequestNotification extends Mailable
 
     public function content(): Content
     {
-        return new Content(markdown: 'mail.requests.notification', with: [
-            'number' => RequestPresenter::number($this->request),
-            'fields' => RequestPresenter::fields($this->request, 'ar'),
-            'url' => RequestPresenter::adminUrl($this->request),
-        ]);
+        return new Content(
+            view: 'mail.requests.notification',
+            text: 'mail.requests.notification-text',
+            with: RequestMail::notification($this->request, 'ar'),
+        );
+    }
+
+    /**
+     * The visitor's files (quote attachments, CV) when their total size fits an e-mail.
+     *
+     * @return list<Attachment>
+     */
+    public function attachments(): array
+    {
+        return RequestMail::attachable($this->request)
+            ->map(fn (Media $media) => Attachment::fromStorageDisk($media->disk, $media->getPathRelativeToRoot())
+                ->as($media->file_name)
+                ->withMime((string) $media->mime_type))
+            ->values()
+            ->all();
     }
 }
